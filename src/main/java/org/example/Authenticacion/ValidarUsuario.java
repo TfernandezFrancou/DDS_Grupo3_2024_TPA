@@ -1,7 +1,5 @@
-package org.example.validaciones;
+package org.example.Authenticacion;
 
-
-import org.example.Authenticacion.Usuario;
 
 public class ValidarUsuario {
   private static ValidarUsuario instancia;

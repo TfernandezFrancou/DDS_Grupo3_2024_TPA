@@ -22,7 +22,7 @@ public class Usuario {
     public Usuario() {
     }
 
-    void cambiarContrasenia(String nuevaContrasenia){
+    public void cambiarContrasenia(String nuevaContrasenia){
         this.setContrasenia(nuevaContrasenia);
         this.setFechaExpiracionContrasenia(LocalDateTime.now());
     }

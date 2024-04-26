@@ -2,17 +2,16 @@ package org.example.Authenticacion;
 
 
 import org.example.excepciones.UserException;
-import org.example.validaciones.ValidarUsuario;
 
 import java.time.LocalDateTime;
 
 public class IniciarSesion {
-  private int cont = 0;
-  int agregarSegundos = 0;
+  private int intentosRealizados = 0;
+  private int agregarSegundos = 0;
 
   public boolean iniciarSesion(String username, String password) {
     boolean pudoIniciarSesion = false; // por el momento devuelvo un boolean para identificar si se pudo iniciar sesión
-    if (cont == 3) {
+    if (intentosRealizados == 3) {
       try {
         System.out.println("No puede probar iniciar sesión nuevamente hasta en..."); //Cambiar por un redirect
 
@@ -21,7 +20,7 @@ public class IniciarSesion {
           System.out.println(segundos);
           segundos--;
           Thread.sleep(1000);
-          cont = 0;
+          intentosRealizados = 0;
         }
         agregarSegundos += 5;
       } catch (InterruptedException ie) {
@@ -36,11 +35,11 @@ public class IniciarSesion {
       } else {
         System.out.println("Pudo iniciar sesión correctamente");
       }
-      cont = 0;
+      intentosRealizados = 0;
       pudoIniciarSesion = true;
     } catch (UserException e) {
       System.out.println(e.getMessage());
-      cont++;
+      intentosRealizados++;
     }
     return pudoIniciarSesion;
   }

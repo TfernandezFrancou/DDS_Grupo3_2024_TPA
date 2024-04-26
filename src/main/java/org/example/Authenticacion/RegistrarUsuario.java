@@ -1,4 +1,4 @@
-package org.example.registradores;
+package org.example.Authenticacion;
 
 import org.example.Authenticacion.Registrados;
 import org.example.Authenticacion.Usuario;
@@ -12,7 +12,7 @@ import java.util.List;
 public class RegistrarUsuario {
   private Registrados registrados;
 
-  private List<ValidacionContrasenia> validaciones = Arrays.asList(new CaracterRepetido(), new LongitudMinimaContrasenia(), new ValidacionTopPeoresContrasenia(), new FormatoContrasenia());
+  private final List<ValidacionContrasenia> validaciones = Arrays.asList(new CaracterRepetido(), new LongitudMinimaContrasenia(), new LongitudMaximaContrasenia(), new ValidacionTopPeoresContrasenia(), new FormatoContrasenia());
 
   public RegistrarUsuario() {
 
