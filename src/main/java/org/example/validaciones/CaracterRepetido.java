@@ -7,7 +7,7 @@ public class CaracterRepetido extends ValidacionContrasenia {
   }
 
   @Override
-  public boolean condition(String username, String password) {
+  public boolean condition(String password) {
     boolean esRepetido = true;
     // Recorremos la cadena de caracteres
     for (int i = 0; i < password.length() - 1; i++) {

@@ -8,7 +8,7 @@ public class LongitudMinimaContrasenia extends ValidacionContrasenia {
   }
 
   @Override
-  public boolean condition(String username, String password) {
+  public boolean condition(String password) {
     return password.length() < LONGITUD_MINIMA;
   }
 }

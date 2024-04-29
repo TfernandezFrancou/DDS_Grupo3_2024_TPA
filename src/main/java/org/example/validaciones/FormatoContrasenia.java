@@ -6,7 +6,7 @@ public class FormatoContrasenia extends ValidacionContrasenia {
   }
 
   @Override
-  public boolean condition(String username, String password) {
+  public boolean condition(String password) {
     return !password.matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}");
     /*
       (?=.*[0-9]) Un dígito debe aparecer al menos una vez

@@ -10,13 +10,13 @@ public abstract class ValidacionContrasenia {
   }
 
 
-  public void validate(String username, String password) {
-    if (this.condition(username, password))
+  public void validate(String password) {
+    if (this.condition(password))
       throw new PasswordException(mensaje);
 
   }
 
-  protected boolean condition(String username, String password) {
+  protected boolean condition(String password) {
     return false;
   }
 }

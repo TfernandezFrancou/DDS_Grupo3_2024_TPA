@@ -1,6 +1,9 @@
 package org.example.Authenticacion;
 
 import org.example.colaboradores.Colaborador;
+import org.example.excepciones.PasswordException;
+import org.example.validaciones.VerificadorContrasenia;
+
 import java.time.LocalDateTime;
 
 public class Usuario {
@@ -23,8 +26,14 @@ public class Usuario {
     }
 
     public void cambiarContrasenia(String nuevaContrasenia){
-        this.setContrasenia(nuevaContrasenia);
-        this.setFechaExpiracionContrasenia(LocalDateTime.now());
+
+        try{
+            VerificadorContrasenia.getInstancia().validarContrasenia(nuevaContrasenia);;
+            this.setContrasenia(nuevaContrasenia);
+            this.setFechaExpiracionContrasenia(LocalDateTime.now());
+        } catch (PasswordException pEx){
+            System.out.println(pEx.getMessage());
+        }
     }
 
     public String getNombre() {
