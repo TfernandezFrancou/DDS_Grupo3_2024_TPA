@@ -12,7 +12,7 @@ import java.util.List;
 public class RegistrarUsuario {
   private Registrados registrados;
 
-  private final List<ValidacionContrasenia> validaciones = Arrays.asList(new CaracterRepetido(), new LongitudMinimaContrasenia(), new LongitudMaximaContrasenia(), new ValidacionTopPeoresContrasenia(), new FormatoContrasenia());
+  private final List<ValidacionContrasenia> validaciones = Arrays.asList(new CaracterRepetido(), new LongitudMinimaContrasenia(), new ValidacionTopPeoresContrasenia(), new FormatoContrasenia());
 
   public RegistrarUsuario() {
 
