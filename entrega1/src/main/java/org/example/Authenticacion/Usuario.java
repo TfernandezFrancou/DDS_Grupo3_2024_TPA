@@ -3,6 +3,8 @@ package org.example.Authenticacion;
 import org.example.colaboradores.Colaborador;
 import org.example.excepciones.PasswordException;
 import org.example.validaciones.VerificadorContrasenia;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
