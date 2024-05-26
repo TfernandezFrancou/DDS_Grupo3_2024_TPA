@@ -24,11 +24,6 @@ public abstract class Colaborador {
         //TODO Actualizar en el diagrama
     }
 
-    public void actuar()
-    {
-        //TODO metodo actuar
-    }
-
     public void calcularPuntuaje()
     {
         //TODO metodo calcularPuntuaje
