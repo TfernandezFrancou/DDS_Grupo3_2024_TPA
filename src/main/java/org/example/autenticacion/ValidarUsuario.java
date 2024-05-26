@@ -1,4 +1,4 @@
-package org.example.Authenticacion;
+package org.example.autenticacion;
 
 
 public class ValidarUsuario {

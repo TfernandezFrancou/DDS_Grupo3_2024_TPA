@@ -1,14 +1,10 @@
-package org.example.Authenticacion;
+package org.example.autenticacion;
 
-import org.example.Authenticacion.Registrados;
-import org.example.Authenticacion.Usuario;
 import org.example.excepciones.EmailYaRegistrado;
 import org.example.excepciones.PasswordException;
 import org.example.validaciones.*;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 public class RegistrarUsuario {
   private Registrados registrados;
