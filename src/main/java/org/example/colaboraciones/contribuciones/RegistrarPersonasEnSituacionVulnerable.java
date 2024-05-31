@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.RegistroDePersonaEnSituacionVulnerable;
+import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.heladeras.TarjetaHeladera;
 
 import java.util.ArrayList;
@@ -24,12 +25,11 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
 
     @Override
     public void ejecutarContribucion() {
-
+        //TODO
     }
 
     @Override
     public boolean puedeRealizarContribucion() {
-        //TODO
-        return false;
+        return this.getTiposDePersona().equals(TipoDePersona.HUMANA);
     }
 }

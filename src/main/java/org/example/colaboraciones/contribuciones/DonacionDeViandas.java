@@ -3,6 +3,7 @@ package org.example.colaboraciones.contribuciones;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
+import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ public class DonacionDeViandas extends Contribucion {
 
     @Override
     public boolean puedeRealizarContribucion() {
-        //TODO
-        return false;
+        return this.getTiposDePersona().equals(TipoDePersona.HUMANA);
     }
 }

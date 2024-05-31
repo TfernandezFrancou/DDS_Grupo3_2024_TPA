@@ -3,6 +3,7 @@ package org.example.colaboraciones.contribuciones;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
+import org.example.colaboraciones.TipoDePersona;
 
 import java.time.LocalDate;
 
@@ -20,8 +21,7 @@ public class DonacionDeDinero extends Contribucion {
 
     @Override
     public boolean puedeRealizarContribucion() {
-        //TODO
-        return false;
+        return this.getTiposDePersona().equals(TipoDePersona.HUMANA);
     }
 
 }

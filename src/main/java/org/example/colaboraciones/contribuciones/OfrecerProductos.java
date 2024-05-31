@@ -2,6 +2,7 @@ package org.example.colaboraciones.contribuciones;
 
 import lombok.Getter;
 import org.example.colaboraciones.Contribucion;
+import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
 
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ public class OfrecerProductos extends Contribucion {
 
     @Override
     public boolean puedeRealizarContribucion() {
-        //TODO
-        return false;
+        return this.getTiposDePersona().equals(TipoDePersona.JURIDICA);
     }
 }
