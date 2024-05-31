@@ -21,4 +21,10 @@ public class DonacionDeViandas extends Contribucion {
     public void ejecutarContribucion(){
         // TODO
     }
+
+    @Override
+    public boolean puedeRealizarContribucion() {
+        //TODO
+        return false;
+    }
 }

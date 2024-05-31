@@ -19,4 +19,10 @@ public class OfrecerProductos extends Contribucion {
     public void ejecutarContribucion(){
     //TODO
     }
+
+    @Override
+    public boolean puedeRealizarContribucion() {
+        //TODO
+        return false;
+    }
 }

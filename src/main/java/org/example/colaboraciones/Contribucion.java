@@ -1,12 +1,15 @@
 package org.example.colaboraciones;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public abstract class Contribucion {
+    @Getter
+    @Setter
     private TipoDePersona tiposDePersona;
 
     public abstract void ejecutarContribucion();
 
-    public boolean puedeRealizarContribucion(){
-        // TODO puedeRealizarContribucion()
-        return false;
-    }
+    public abstract boolean puedeRealizarContribucion();
+
 }

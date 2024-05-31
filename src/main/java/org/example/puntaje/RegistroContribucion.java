@@ -13,16 +13,7 @@ public class RegistroContribucion extends CalculadorDePuntos{
     private int viandasDistribuidas;
     private int dineroDonado;
 
-    public RegistroContribucion(){
-        Coeficiente coeficiente = new Coeficiente();
-        coeficiente.setCoeficienteDineroDonado(0.5F);
-        coeficiente.setCoeficienteViandasDistribuidas(1);
-        coeficiente.setCoeficienteViandasDonadas(1.5F);
-        coeficiente.setCoeficienteTarjetasRepartidas(2);
-        coeficiente.setCoeficienteHeladeras(5);
 
-        this.setCoeficientes(coeficiente);//setear coeficientes a la clase padre
-    }
     @Override
     public float getMesesHeladeraActiva(){
         return mesesHeladeraActiva;
