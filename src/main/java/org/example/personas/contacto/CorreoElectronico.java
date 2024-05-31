@@ -11,6 +11,6 @@ public class CorreoElectronico implements MedioDeContacto{
 
     @Override
     public void notificar(){
-        //TODO
+        //TODO notificar por email
     }
 }

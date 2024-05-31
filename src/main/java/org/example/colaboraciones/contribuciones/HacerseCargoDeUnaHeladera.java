@@ -20,12 +20,15 @@ public class HacerseCargoDeUnaHeladera extends Contribucion {
 
     @Override
     public void ejecutarContribucion(){
-    //TODO
+    //TODO guarda en la DB las nuevas heladeras
     }
-
 
     @Override
     public boolean puedeRealizarContribucion() {
         return this.getTiposDePersona().equals(TipoDePersona.JURIDICA);
+    }
+
+    public  void agregarHeladera(Heladera heladera){
+        this.heladerasColocadas.add(heladera);
     }
 }

@@ -11,6 +11,6 @@ public class Telefono implements MedioDeContacto{
 
     @Override
     public void notificar(){
-        //TODO
+        //TODO notificar por mensaje al telefono
     }
 }

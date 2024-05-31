@@ -18,18 +18,26 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
     @Setter
     private Integer tarjetasEntregadas;
 
-    public RegistrarPersonasEnSituacionVulnerable(){
+    public RegistrarPersonasEnSituacionVulnerable(List<TarjetaHeladera> tarjetasAEntregar){
         this.personasRegistradas = new ArrayList<>();
-        this.tarjetasAEntregar = new ArrayList<>();
+        this.tarjetasAEntregar = tarjetasAEntregar;
     }
 
     @Override
     public void ejecutarContribucion() {
-        //TODO
+        //TODO guarda en la DB
     }
 
     @Override
     public boolean puedeRealizarContribucion() {
         return this.getTiposDePersona().equals(TipoDePersona.HUMANA);
+    }
+
+    public void enviarTarjetasViaMail(){
+        //TODO enviar tarjetas via mail
+    }
+
+    public void agregarRegistro(RegistroDePersonaEnSituacionVulnerable registro){
+     this.personasRegistradas.add(registro);
     }
 }

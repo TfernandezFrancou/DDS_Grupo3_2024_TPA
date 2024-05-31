@@ -2,6 +2,7 @@ package org.example.personas;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.colaboraciones.contribuciones.ofertas.Oferta;
 import org.example.personas.contacto.MedioDeContacto;
 import org.example.colaboraciones.Contribucion;
 import org.example.puntaje.Coeficiente;
@@ -18,19 +19,26 @@ public abstract class Colaborador {
     private String direccion;
     private List<Contribucion> formasContribucion;
     private float puntuaje;
+    private List<Oferta> ofertasCanjeadas;
 
     public Colaborador(){
         this.mediosDeContacto = new ArrayList<>();
         this.formasContribucion = new ArrayList<>();
+        this.ofertasCanjeadas = new ArrayList<>();
+    }
+
+    public Colaborador(List<MedioDeContacto> mediosDeContacto){
+        this.mediosDeContacto = mediosDeContacto;
+        this.formasContribucion = new ArrayList<>();
+        this.ofertasCanjeadas = new ArrayList<>();
     }
 
 
     public abstract String getNombre();
 
-    public void cambiarContribuciones(Contribucion contribucion)
+    public void agregarContribucion(Contribucion contribucion)
     {
         this.formasContribucion.add(contribucion);
-        //TODO Actualizar en el diagrama
     }
 
     public void calcularPuntuaje()
@@ -48,11 +56,18 @@ public abstract class Colaborador {
 
         //TODO obtener atributos de las contribuciones para los puntos
 
-        this.puntuaje = registroContribucion.calcularPuntos();
+        int puntosCanjeados = 0;
+
+        for(Oferta oferta: this.ofertasCanjeadas){
+            puntosCanjeados = oferta.getPuntosNecesarios();
+        }
+
+        this.puntuaje = registroContribucion.calcularPuntos() - puntosCanjeados;
     }
 
-    public void canjearPuntuaje(int puntos)
+    public void canjearOferta(Oferta oferta)
     {
-        //TODO metodo canjearPuntuaje
+        this.ofertasCanjeadas.add(oferta);
+        this.puntuaje -= oferta.getPuntosNecesarios();
     }
 }

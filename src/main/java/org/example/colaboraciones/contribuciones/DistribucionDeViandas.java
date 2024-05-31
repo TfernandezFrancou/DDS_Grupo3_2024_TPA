@@ -19,7 +19,7 @@ public class DistribucionDeViandas extends Contribucion {
 
     @Override
     public void ejecutarContribucion(){
-        // TODO
+        //TODO actualiza en la DB las viandas
     }
 
     @Override

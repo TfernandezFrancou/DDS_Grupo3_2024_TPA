@@ -18,11 +18,15 @@ public class OfrecerProductos extends Contribucion {
 
     @Override
     public void ejecutarContribucion(){
-    //TODO
+        //TODO guardar en la DB las ofertas
     }
 
     @Override
     public boolean puedeRealizarContribucion() {
         return this.getTiposDePersona().equals(TipoDePersona.JURIDICA);
+    }
+
+    public void agregarOferta(Oferta oferta){
+        this.ofertas.add(oferta);
     }
 }

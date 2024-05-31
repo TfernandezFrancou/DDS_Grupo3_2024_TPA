@@ -9,22 +9,30 @@ import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import java.util.ArrayList;
 import java.util.List;
 @Getter
-@Setter
 public class DonacionDeViandas extends Contribucion {
     private List<Vianda> viandas;
+    @Setter
     private Integer cantidadDeViandas;
 
     public DonacionDeViandas(){
         this.viandas= new ArrayList<>();
     }
 
+    public DonacionDeViandas(List<Vianda> viandas){
+        this.viandas= viandas;
+    }
+
     @Override
     public void ejecutarContribucion(){
-        // TODO
+        //TODO guarda en la DB las viandas
     }
 
     @Override
     public boolean puedeRealizarContribucion() {
         return this.getTiposDePersona().equals(TipoDePersona.HUMANA);
+    }
+
+    public void agregarVianda(Vianda vianda){
+        this.viandas.add(vianda);
     }
 }

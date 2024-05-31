@@ -16,12 +16,13 @@ public class DonacionDeDinero extends Contribucion {
 
     @Override
     public void ejecutarContribucion(){
-    //TODO
+        //TODO guarda en la DB el dinero
     }
 
     @Override
     public boolean puedeRealizarContribucion() {
-        return this.getTiposDePersona().equals(TipoDePersona.HUMANA);
+        return this.getTiposDePersona().equals(TipoDePersona.HUMANA)
+                    || this.getTiposDePersona().equals(TipoDePersona.JURIDICA);
     }
 
 }
