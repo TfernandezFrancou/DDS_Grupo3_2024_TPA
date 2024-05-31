@@ -1,8 +1,10 @@
 package org.example.validaciones;
 
+import org.example.config.Configuracion;
+
 public class FormatoContrasenia extends ValidacionContrasenia {
   public FormatoContrasenia() {
-    super("No cumple con el formato de contrasenia, debe tener al menos un dígito, una mayúscula, una minúscula y un caracter especial.");
+    super(Configuracion.obtenerProperties("mensaje.validacion.formato-incorrecto"));
   }
 
   @Override

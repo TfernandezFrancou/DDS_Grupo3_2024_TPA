@@ -1,10 +1,12 @@
 package org.example.validaciones;
 
+import org.example.config.Configuracion;
+
 public class LongitudMinimaContrasenia extends ValidacionContrasenia {
   private Integer LONGITUD_MINIMA = 8;
 
   public LongitudMinimaContrasenia() {
-    super("No cumple con el minimo de caracteres!!!");
+    super(Configuracion.obtenerProperties("mensaje.validacion.longitud-pequenia"));
   }
 
   @Override

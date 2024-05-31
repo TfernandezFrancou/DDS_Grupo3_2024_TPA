@@ -2,7 +2,7 @@ package org.example.recomendacion;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.Ubicacion;
+import org.example.colaboraciones.Ubicacion;
 
 @Getter
 @Setter

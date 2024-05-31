@@ -1,6 +1,6 @@
 package org.example.recomendacion;
 
-import org.example.Ubicacion;
+import org.example.colaboraciones.Ubicacion;
 
 import java.util.List;
 

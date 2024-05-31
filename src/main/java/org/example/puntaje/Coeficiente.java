@@ -11,6 +11,6 @@ public class Coeficiente {
     private float coeficienteViandasDistribuidas;
     private float coeficienteViandasDonadas;
     private float coeficienteDineroDonado;
+    private float coeficienteTarjetasRepartidas;
 
-    //TODO DARLE VALORES creo
 }

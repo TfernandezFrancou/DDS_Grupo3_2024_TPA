@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.recomendacion.IAdapter;
 import org.example.recomendacion.Zona;
-import org.example.Ubicacion;
+import org.example.colaboraciones.Ubicacion;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class PersonaJuridica extends Colaborador{
     private IAdapter recomendadorDeUbicaciones;
 
     public void agregarHeladeraEn(Ubicacion ubicacion) {
-
+    //TODO
     }
 
     public List<Ubicacion> obtenerUbicaciones(Zona zona) {

@@ -2,22 +2,21 @@ package org.example.autenticacion;
 
 import org.example.personas.Colaborador;
 import org.example.excepciones.PasswordException;
+import org.example.personas.documentos.Documento;
 import org.example.validaciones.VerificadorContrasenia;
 
 import java.time.LocalDateTime;
 
 public class Usuario {
 
-    private String nombre;
-    private String apellido;
-    private String email;
+    private Documento documento;
+    private String nombreDeUsuario;
     private Colaborador colaborador;
     private String contrasenia;
     private LocalDateTime fechaExpiracionContrasenia;
 
-    public Usuario(String nombre, String contrasenia, String email, LocalDateTime fechaExpiracionContrasenia) {
-        this.nombre = nombre;
-        this.email = email;
+    public Usuario(String nombreDeUsuario, String contrasenia, LocalDateTime fechaExpiracionContrasenia) {
+        this.nombreDeUsuario = nombreDeUsuario;
         this.contrasenia = contrasenia;
         this.fechaExpiracionContrasenia = fechaExpiracionContrasenia;
     }
@@ -36,28 +35,20 @@ public class Usuario {
         }
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreDeUsuario() {
+        return nombreDeUsuario;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombreDeUsuario(String nombreDeUsuario) {
+        this.nombreDeUsuario = nombreDeUsuario;
     }
 
-    public String getApellido() {
-        return apellido;
+    public Documento getDocumento() {
+        return documento;
     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setDocumento(Documento documento) {
+        this.documento = documento;
     }
 
     public Colaborador getColaborador() {

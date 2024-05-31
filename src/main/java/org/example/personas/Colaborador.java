@@ -3,8 +3,9 @@ package org.example.personas;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.personas.contacto.MedioDeContacto;
-import org.example.contribuciones.Contribucion;
+import org.example.colaboraciones.Contribucion;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,6 +16,12 @@ public abstract class Colaborador {
     private String direccion;
     private List<Contribucion> formasContribucion;
     private int puntuaje;
+
+    public Colaborador(){
+        this.mediosDeContacto = new ArrayList<>();
+        this.formasContribucion = new ArrayList<>();
+    }
+
 
     public abstract String getNombre();
 

@@ -5,36 +5,27 @@ import lombok.Setter;
 
 @Getter
 @Setter
-
 public abstract class CalculadorDePuntos {
     private Coeficiente coeficientes;
 
-    public int calcularPuntos(){
-        //TODO
-        return 0;
+
+    public float calcularPuntos(){
+        return getDineroDonado() * coeficientes.getCoeficienteDineroDonado() +
+                getViandasDistribuidas() * coeficientes.getCoeficienteViandasDistribuidas() +
+                getViandasDonadas() * coeficientes.getCoeficienteViandasDonadas() +
+                getTarjetasRepartidas() * coeficientes.getCoeficienteTarjetasRepartidas() +
+                getCantidadDeHeladerasActivas() * getMesesHeladeraActiva() * coeficientes.getCoeficienteHeladeras();
     }
 
-    public void getMesesHeladeraActiva(){
-        //TODO
-    }
+    public abstract float getMesesHeladeraActiva();
 
-    public void getCantidadDeHeladerasActivas(){
-        //TODO
-    }
+    public abstract float getCantidadDeHeladerasActivas();
 
-    public void getTarjetasRepartidas(){
-        //TODO
-    }
+    public abstract float getTarjetasRepartidas();
 
-    public void getViandasDonadas(){
-        //TODO
-    }
+    public abstract float getViandasDonadas();
 
-    public void getViandasDistribuidas(){
-        //TODO
-    }
+    public abstract float getViandasDistribuidas();
 
-    public void getDineroDonado(){
-        //TODO
-    }
+    public abstract float getDineroDonado();
 }

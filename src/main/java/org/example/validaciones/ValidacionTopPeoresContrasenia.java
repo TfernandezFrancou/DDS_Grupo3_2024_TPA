@@ -1,5 +1,7 @@
 package org.example.validaciones;
 
+import org.example.config.Configuracion;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,10 +13,9 @@ import java.util.List;
 public class ValidacionTopPeoresContrasenia extends ValidacionContrasenia {
 
   private List<String> contrasenias;
-  private final String nombreDeArchivo = "Authenticacion/10-million-password-list-top-10000.txt";
 
   public ValidacionTopPeoresContrasenia() {
-    super("La contraseña es debil");
+    super(Configuracion.obtenerProperties("mensaje.validacion.contrasenia-debil"));
 
     this.contrasenias = new ArrayList<>();
     this.cargarPeoresContraseniasDesdeArchivo();
@@ -26,13 +27,10 @@ public class ValidacionTopPeoresContrasenia extends ValidacionContrasenia {
     return contrasenias.stream().anyMatch(contrasenia -> contrasenia.equals(password));
   }
 
-  public String getNombreDeArchivo() {
-    return nombreDeArchivo;
-  }
-
   private void cargarPeoresContraseniasDesdeArchivo() {
     try {
-      InputStream inputStream = getClass().getClassLoader().getResourceAsStream(this.getNombreDeArchivo());
+      String nombreDeArchivo = Configuracion.obtenerProperties("archivo.path.top-peores-contrasenias");
+      InputStream inputStream = getClass().getClassLoader().getResourceAsStream(nombreDeArchivo);
       BufferedReader lector = new BufferedReader(new InputStreamReader(inputStream));
       String linea;
       while ((linea = lector.readLine()) != null) {
