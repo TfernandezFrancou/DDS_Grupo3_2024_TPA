@@ -26,4 +26,9 @@ public class DistribucionDeViandas extends Contribucion {
     public boolean puedeRealizarContribucion() {
         return this.getTiposDePersona().equals(TipoDePersona.HUMANA);
     }
+
+    @Override
+    public float obtenerPuntaje(){
+        return cantidad * this.getCoeficientePuntaje();
+    }
 }

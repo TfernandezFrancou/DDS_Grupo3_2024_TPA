@@ -12,7 +12,7 @@ import java.util.List;
 public class DonacionDeViandas extends Contribucion {
     private List<Vianda> viandas;
     @Setter
-    private Integer cantidadDeViandas;
+    private Integer cantidadDeViandas = 0;
 
     public DonacionDeViandas(){
         this.viandas= new ArrayList<>();
@@ -34,5 +34,11 @@ public class DonacionDeViandas extends Contribucion {
 
     public void agregarVianda(Vianda vianda){
         this.viandas.add(vianda);
+        cantidadDeViandas++;
+    }
+
+    @Override
+    public float obtenerPuntaje(){
+        return cantidadDeViandas  * this.getCoeficientePuntaje();
     }
 }

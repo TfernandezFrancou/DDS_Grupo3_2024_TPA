@@ -43,18 +43,11 @@ public abstract class Colaborador {
 
     public void calcularPuntuaje()
     {
-        Coeficiente coeficiente = new Coeficiente();
-        coeficiente.setCoeficienteDineroDonado(0.5F);
-        coeficiente.setCoeficienteViandasDistribuidas(1);
-        coeficiente.setCoeficienteViandasDonadas(1.5F);
-        coeficiente.setCoeficienteTarjetasRepartidas(2);
-        coeficiente.setCoeficienteHeladeras(5);
-
-        RegistroContribucion registroContribucion = new RegistroContribucion();
-
-        registroContribucion.setCoeficientes(coeficiente);
-
         //TODO obtener atributos de las contribuciones para los puntos
+
+        for (Contribucion contribucion:this.formasContribucion) {
+            this.puntuaje += contribucion.obtenerPuntaje();
+        }
 
         int puntosCanjeados = 0;
 
@@ -62,7 +55,7 @@ public abstract class Colaborador {
             puntosCanjeados = oferta.getPuntosNecesarios();
         }
 
-        this.puntuaje = registroContribucion.calcularPuntos() - puntosCanjeados;
+        this.puntuaje  -= puntosCanjeados;
     }
 
     public void canjearOferta(Oferta oferta)

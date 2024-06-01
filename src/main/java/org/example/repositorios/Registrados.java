@@ -35,7 +35,7 @@ public class Registrados {
     return usuario.isPresent();
   }
 
-  public Usuario obtenerUsuarioPorDocumento(Documento documento){
+  public Usuario obtenerUsuarioPorDocumento(Documento documento) throws  UserException{
     Optional<Usuario> usuario = instancia.usuarios.stream().filter(x -> x.getDocumento().equals(documento)).findFirst();
 
     if(usuario.isEmpty()){

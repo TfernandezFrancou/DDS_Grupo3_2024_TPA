@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 public class DonacionDeDinero extends Contribucion {
     private LocalDate fecha;
-    private Integer monto;
+    private float monto;
     private Integer frecuencia;
 
     @Override
@@ -23,6 +23,11 @@ public class DonacionDeDinero extends Contribucion {
     public boolean puedeRealizarContribucion() {
         return this.getTiposDePersona().equals(TipoDePersona.HUMANA)
                     || this.getTiposDePersona().equals(TipoDePersona.JURIDICA);
+    }
+
+    @Override
+    public float obtenerPuntaje(){
+        return monto  * this.getCoeficientePuntaje();
     }
 
 }

@@ -10,7 +10,7 @@ public class CorreoElectronico implements MedioDeContacto{
     private String correoElectronico;
 
     @Override
-    public void notificar(){
+    public void notificar(String contenidoANotificar){
         //TODO notificar por email
     }
 }

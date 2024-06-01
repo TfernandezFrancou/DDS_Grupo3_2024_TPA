@@ -23,6 +23,11 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
         this.tarjetasAEntregar = tarjetasAEntregar;
     }
 
+    public RegistrarPersonasEnSituacionVulnerable(){
+        this.personasRegistradas = new ArrayList<>();
+        this.tarjetasAEntregar = new ArrayList<>();
+    }
+
     @Override
     public void ejecutarContribucion() {
         //TODO guarda en la DB
@@ -39,5 +44,11 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
 
     public void agregarRegistro(RegistroDePersonaEnSituacionVulnerable registro){
      this.personasRegistradas.add(registro);
+        tarjetasEntregadas++;
+    }
+
+    @Override
+    public float obtenerPuntaje(){
+        return tarjetasEntregadas  * this.getCoeficientePuntaje();
     }
 }

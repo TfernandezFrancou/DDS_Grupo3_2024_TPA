@@ -1,7 +1,6 @@
 package org.example.colaboraciones.contribuciones;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
@@ -20,7 +19,7 @@ public class HacerseCargoDeUnaHeladera extends Contribucion {
 
     @Override
     public void ejecutarContribucion(){
-    //TODO guarda en la DB las nuevas heladeras
+        //TODO guarda en la DB las nuevas heladeras
     }
 
     @Override
@@ -30,5 +29,18 @@ public class HacerseCargoDeUnaHeladera extends Contribucion {
 
     public  void agregarHeladera(Heladera heladera){
         this.heladerasColocadas.add(heladera);
+    }
+
+    @Override
+    public float obtenerPuntaje(){
+
+        List<Heladera> heladerasActivas = heladerasColocadas.stream().filter(Heladera::estaActiva).toList();
+
+        int mesesActiva = 0;
+        for (Heladera heladera: heladerasActivas) {
+            mesesActiva += heladera.obtenerMesesActivos();
+        }
+
+        return heladerasActivas.size() * mesesActiva  * this.getCoeficientePuntaje();
     }
 }

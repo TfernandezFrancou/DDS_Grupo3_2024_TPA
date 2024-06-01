@@ -29,4 +29,9 @@ public class OfrecerProductos extends Contribucion {
     public void agregarOferta(Oferta oferta){
         this.ofertas.add(oferta);
     }
+
+    @Override
+    public float obtenerPuntaje(){
+        return 0  * this.getCoeficientePuntaje();
+    }
 }
