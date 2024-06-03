@@ -21,10 +21,13 @@ public abstract class Colaborador {
     private float puntuaje;
     private List<Oferta> ofertasCanjeadas;
 
+    private boolean estaActivo; //TODO agregar al diagrama
+
     public Colaborador(){
         this.mediosDeContacto = new ArrayList<>();
         this.formasContribucion = new ArrayList<>();
         this.ofertasCanjeadas = new ArrayList<>();
+        this.estaActivo = true;
     }
 
     public Colaborador(List<MedioDeContacto> mediosDeContacto){
@@ -62,5 +65,10 @@ public abstract class Colaborador {
     {
         this.ofertasCanjeadas.add(oferta);
         this.puntuaje -= oferta.getPuntosNecesarios();
+    }
+
+    public void darDeBaja()
+    {
+        this.estaActivo = false;
     }
 }

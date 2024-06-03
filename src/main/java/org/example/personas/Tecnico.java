@@ -18,9 +18,16 @@ public class Tecnico {
     private String cuil;
     private List<MedioDeContacto> mediosDeContacto;
     private List<Zona> areasDeCobertura;
+    private boolean estaActivo; //TODO agregar al diagrama
 
     public Tecnico(){
         this.mediosDeContacto = new ArrayList<>();
         this.areasDeCobertura = new ArrayList<>();
+        this.estaActivo = true;
+    }
+
+    public void darDeBaja()
+    {
+        this.estaActivo = false;
     }
 }
