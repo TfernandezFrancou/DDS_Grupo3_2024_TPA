@@ -5,8 +5,7 @@ import lombok.Setter;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
 import org.example.personas.contacto.MedioDeContacto;
 import org.example.colaboraciones.Contribucion;
-import org.example.puntaje.Coeficiente;
-import org.example.puntaje.RegistroContribucion;
+
 
 import java.util.ArrayList;
 import java.util.List;

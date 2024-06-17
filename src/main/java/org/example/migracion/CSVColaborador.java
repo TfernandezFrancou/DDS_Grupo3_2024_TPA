@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.personas.documentos.Documento;
 import org.example.personas.documentos.TipoDocumento;
-import org.example.puntaje.RegistroContribucion;
 
 import java.time.LocalDate;
 
