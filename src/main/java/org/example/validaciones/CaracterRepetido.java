@@ -12,19 +12,15 @@ public class CaracterRepetido extends ValidacionContrasenia {
 
   @Override
   public boolean condition(String password) {
-    boolean esRepetido = true;
     // Recorremos la cadena de caracteres
-    for (int i = 0; i < password.length() - 1; i++) {
+    for (int i = 0; i < password.length() - 2; i++) {
       char caracterActual = password.charAt(i);
       char siguienteCaracter = password.charAt(i + 1);
 
-      // Si encontramos dos caracteres consecutivos diferentes, no hay repeticiones consecutivas
-      if (caracterActual != siguienteCaracter) {
-        esRepetido = false;
+      if (caracterActual == siguienteCaracter) {
+        return true;
       }
     }
-
-    // Si llegamos hasta aquí, todos los caracteres son iguales y consecutivos
-    return esRepetido;
+    return false;
   }
 }

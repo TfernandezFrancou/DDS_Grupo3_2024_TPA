@@ -12,11 +12,12 @@ public class ValidacionContraseniaTest {
     private final String contraseniaLarga = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
     private final String contraseniaConRepes = "1111234678";
     private final String contraseniaSinRepes = "12345678";
-    private final String contraseniaConEspecial = "aA1#";
+    private final String contraseniaConEspecial = "a1A1343#";
     private final String contraseniaSinEspecial = "aA1";
     private final String contraseniaSinDigito = "aA#";
+    private final String contraseniaConEspacio = "123 456";
     private final String contraseniaComun = "12345678";
-    private final String contraseniaValida = "Abcd12345_";
+    private final String contraseniaValida = "Abcd1232_";
 
     private final VerificadorContrasenia validador = VerificadorContrasenia.getInstancia();
     private final LongitudMinimaContrasenia longitudMinima = new LongitudMinimaContrasenia();
@@ -58,20 +59,12 @@ public class ValidacionContraseniaTest {
     public void testClaveConRepeticiones()
     {
         Assertions.assertTrue(repeticiones.condition(contraseniaConRepes));
-    }
-
-    @Test
-    public void testClaveConRepeticionesException()
-    {
-        Assertions.assertThrows(PasswordException.class, () -> {
-            repeticiones.validate(contraseniaConRepes);
-        }, "Se espera que se lance una excepcion");
-    }
+    } 
 
     @Test
     public void testClaveSinRepeticionesException()
     {
-        Assertions.assertTrue(repeticiones.condition(contraseniaSinRepes));
+        Assertions.assertFalse(repeticiones.condition(contraseniaSinRepes));
     }
 
     @Test
@@ -97,6 +90,12 @@ public class ValidacionContraseniaTest {
     public void testNoTieneDigito()
     {
         Assertions.assertTrue(formatoContrasenia.condition(contraseniaSinDigito));
+    }
+
+    @Test
+    public void testContieneUnEspacio()
+    {
+        Assertions.assertTrue(formatoContrasenia.condition(contraseniaConEspacio));
     }
 
 

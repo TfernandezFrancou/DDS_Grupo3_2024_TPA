@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <script
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDobH49Ls6a9qadpi4gctKSWX1YAnBtsVA&loading=async&libraries=maps,marker&v=beta" >
+        </script>
+    </head>
+    <body>
+        <gmp-map
+          center="43.4142989,-124.2301242"
+          zoom="4"
+          map-id="DEMO_MAP_ID"
+          style="height: 400px"
+        >
+            {{ #heladeras }}
+              <gmp-advanced-marker
+                position="{{ latitude }}, {{ longitude }}"
+                title="Heladera"
+              ></gmp-advanced-marker>
+            {{ /heladeras }}
+        </gmp-map>
+    </body>
+</html>

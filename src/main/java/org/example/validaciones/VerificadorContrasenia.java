@@ -11,7 +11,7 @@ public class VerificadorContrasenia {
     }
 
     public static VerificadorContrasenia getInstancia() {
-        if (instancia != null) {
+        if (instancia == null) {
             instancia = new VerificadorContrasenia();
         }
         return instancia;

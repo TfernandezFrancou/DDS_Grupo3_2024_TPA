@@ -20,7 +20,7 @@ public abstract class Colaborador {
     private float puntuaje;
     private List<Oferta> ofertasCanjeadas;
 
-    private boolean estaActivo; //TODO agregar al diagrama
+    private boolean estaActivo;
 
     public Colaborador(){
         this.mediosDeContacto = new ArrayList<>();
