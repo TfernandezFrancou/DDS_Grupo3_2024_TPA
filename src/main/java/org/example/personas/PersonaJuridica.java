@@ -1,7 +1,9 @@
 package org.example.personas;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.excepciones.ApiRequestFailedException;
 import org.example.personas.contacto.MedioDeContacto;
 import org.example.recomendacion.IAdapter;
 import org.example.recomendacion.Zona;
@@ -24,7 +26,7 @@ public class PersonaJuridica extends Colaborador{
         super(mediosDeContacto);
     }
 
-    public List<Ubicacion> obtenerUbicaciones(Zona zona) {
+    public List<Ubicacion> obtenerUbicaciones(Zona zona) throws JsonProcessingException, ApiRequestFailedException {
         return recomendadorDeUbicaciones.consultarUbicaciones(zona);
     }
 

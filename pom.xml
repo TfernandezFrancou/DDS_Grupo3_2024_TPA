@@ -48,8 +48,9 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-rs-client</artifactId>
-            <version>3.4.3</version>
+            <version>4.0.4</version>
         </dependency>
+
 
         <!--Serializacion JSON-->
         <dependency>

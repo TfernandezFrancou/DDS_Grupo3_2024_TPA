@@ -6,7 +6,6 @@ import org.example.colaboraciones.Ubicacion;
 
 @Getter
 @Setter
-
 public class Zona {
     private String nombreZona;
     private Ubicacion ubicacion;
