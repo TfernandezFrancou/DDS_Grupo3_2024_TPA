@@ -38,7 +38,8 @@ public class MigradorContribucion {
     public void cargarCSV(FileInputStream archivoCSV) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(archivoCSV.getFD()));
         String linea = "";
-        while ((linea = bufferedReader.readLine()) != null) {
+        for (int i = 0;(linea = bufferedReader.readLine()) != null; i++) {
+            if(i == 0) continue; // ignoro el nombre de las columnas
             CSVColaborador csvColaborador = new CSVColaborador();
             csvColaborador.cargarCSV(linea.split(","));
 
