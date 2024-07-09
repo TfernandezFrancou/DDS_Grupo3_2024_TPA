@@ -6,11 +6,11 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class Whatsapp implements MedioDeContacto{
+public class Whatsapp implements MedioDeContacto {
     private String telefono;
 
     @Override
-    public void notificar(String contenidoANotificar){
+    public void notificar(String subject, String contenidoANotificar){
         //TODO notificar por mensaje via whatsapp
     }
 }

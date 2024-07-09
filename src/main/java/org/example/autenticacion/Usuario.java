@@ -74,4 +74,8 @@ public class Usuario {
     public void setFechaExpiracionContrasenia(LocalDateTime fechaExpiracionContrasenia) {
         this.fechaExpiracionContrasenia = fechaExpiracionContrasenia;
     }
+
+    public String getEmail() {
+        return null;
+    }
 }

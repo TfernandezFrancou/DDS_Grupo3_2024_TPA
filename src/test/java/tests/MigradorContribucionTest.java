@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import javax.mail.MessagingException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -187,7 +188,7 @@ public class MigradorContribucionTest {
     }
 
     @Test
-    public void testMigrarColaboradores() {
+    public void testMigrarColaboradores() throws MessagingException {
 
         // Carga los datos desde el CSV
         migradorContribucion.getCsvColaboradores().add(createTestColaborador());
@@ -202,7 +203,7 @@ public class MigradorContribucionTest {
 
         MedioDeContacto medioDeContacto = colaboradorMock.getMediosDeContacto().get(0);
         Assertions.assertInstanceOf(CorreoElectronico.class, medioDeContacto);
-        Assertions.assertEquals( ((CorreoElectronico) medioDeContacto).getCorreoElectronico(),"juan.perez@example.com");
+        Assertions.assertEquals(((CorreoElectronico) medioDeContacto).getMail(),"juan.perez@example.com");
         List<Contribucion> contribuciones = colaboradorMock.getFormasContribucion();
         Assertions.assertEquals(contribuciones.size(),1);
         Contribucion contribucion = contribuciones.get(0);

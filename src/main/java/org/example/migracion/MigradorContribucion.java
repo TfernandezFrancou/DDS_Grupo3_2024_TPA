@@ -16,6 +16,7 @@ import org.example.personas.contacto.MedioDeContacto;
 import org.example.personas.documentos.Documento;
 import org.example.repositorios.Registrados;
 
+import javax.mail.MessagingException;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -47,13 +48,13 @@ public class MigradorContribucion {
         }
     }
 
-    public void migrarColaboradores(){
+    public void migrarColaboradores() throws MessagingException {
         for (CSVColaborador colaborador: this.csvColaboradores) {
             this.migrarContribucion(colaborador);
         }
     }
 
-    private void migrarContribucion(CSVColaborador csvColaborador) {
+    private void migrarContribucion(CSVColaborador csvColaborador) throws MessagingException {
         Usuario usuarioColaborador = this.buscarOCrearUsuario(csvColaborador.getDocumento());
 
         PersonaHumana colab = (PersonaHumana) usuarioColaborador.getColaborador();
@@ -80,7 +81,7 @@ public class MigradorContribucion {
         //todo guardar Colaborador y contribuciones en la DB
     }
 
-    private Usuario buscarOCrearUsuario(Documento documento){
+    private Usuario buscarOCrearUsuario(Documento documento) throws MessagingException {
         Usuario usuarioColaborador = null;
         try {
             usuarioColaborador = Registrados.getInstancia()
@@ -98,10 +99,10 @@ public class MigradorContribucion {
         }
         return usuarioColaborador;
     }
-    private void enviarCredenciales(Usuario usuario){
+    private void enviarCredenciales(Usuario usuario) throws MessagingException {
         //enviarCredenciales via Mail
         MedioDeContacto medioDeContacto= usuario.getColaborador().getMediosDeContacto().get(0);
-        medioDeContacto.notificar(usuario.getContrasenia());//TODO agregarle mensaje de bienvenida bien completo
+        medioDeContacto.notificar("Credenciales",usuario.getContrasenia());//TODO agregarle mensaje de bienvenida bien completo
     }
     private String generarCredenciales(){
         //TODO generar credenciales
