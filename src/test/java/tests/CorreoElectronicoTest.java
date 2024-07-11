@@ -21,7 +21,7 @@ public class CorreoElectronicoTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        correoElectronico.setCorreoElectronico("morasofiahidalgo@gmail.com"); // Seteo el correo electrónico
+        correoElectronico.setMail("morasofiahidalgo@gmail.com"); // Seteo el correo electrónico
     }
 
     @Test

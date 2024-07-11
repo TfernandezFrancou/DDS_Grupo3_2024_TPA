@@ -15,9 +15,7 @@ import org.example.repositorios.Registrados;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 
 import javax.mail.MessagingException;
 import java.io.FileInputStream;
@@ -39,6 +37,8 @@ public class MigradorContribucionTest {
 
 
     private final Documento documentoMock = new Documento("12345678",TipoDocumento.DNI);
+
+    private final Documento documentoMockUsuarioNoExistente = new Documento("87654321",TipoDocumento.DNI);
 
     private final Usuario usuarioMock = new Usuario("si","1234", LocalDateTime.of(2025,6,10,12,0, 0));
 
@@ -191,7 +191,14 @@ public class MigradorContribucionTest {
     public void testMigrarColaboradores() throws MessagingException {
 
         // Carga los datos desde el CSV
-        migradorContribucion.getCsvColaboradores().add(createTestColaborador());
+        migradorContribucion.getCsvColaboradores().add(createCSVColaborador(
+                documentoMock,//documento de usuario existente en el sistema
+                "Juan", "Perez",
+                "juan.perez@example.com",
+                LocalDate.of(2022,1,1),
+                TipoColaboracion.DINERO,
+                100
+        ));
 
         // Llama al método migrarColaboradores
         migradorContribucion.migrarColaboradores();
@@ -212,18 +219,6 @@ public class MigradorContribucionTest {
         Assertions.assertEquals(((DonacionDeDinero) contribucion).getMonto(), 100);
     }
 
-
-    private CSVColaborador createTestColaborador() {
-        CSVColaborador csvColaborador = new CSVColaborador();
-        csvColaborador.setDocumento(documentoMock);
-        csvColaborador.setNombre("Juan");
-        csvColaborador.setApellido("Perez");
-        csvColaborador.setMail("juan.perez@example.com");
-        csvColaborador.setFechaDeColaboracion(LocalDate.of(2022,1,1));
-        csvColaborador.setFormaDeColaboarcion(TipoColaboracion.DINERO);
-        csvColaborador.setCantidad(100);
-        return csvColaborador;
-    }
 
 
     private void verificarCsvColaborador(String nombre,
@@ -246,6 +241,68 @@ public class MigradorContribucionTest {
 
         Assertions.assertEquals(TipoColaboracion.valueOf(formaColaboracion), colaboradorObtenido.getFormaDeColaboarcion());
         Assertions.assertEquals(cantidad, colaboradorObtenido.getCantidad());
+    }
+
+    private CSVColaborador createCSVColaborador(
+                Documento documento,
+                String nombre,
+                String apellido,
+                String mail,
+                LocalDate fechaDeColaboracion,
+                TipoColaboracion formaDeColaboarcion,
+                Integer cantidad
+    ){
+        CSVColaborador csvColaborador = new CSVColaborador();
+        csvColaborador.setDocumento(documento);
+        csvColaborador.setNombre(nombre);
+        csvColaborador.setApellido(apellido);
+        csvColaborador.setMail(mail);
+        csvColaborador.setFechaDeColaboracion(fechaDeColaboracion);
+        csvColaborador.setFormaDeColaboarcion(formaDeColaboarcion);
+        csvColaborador.setCantidad(cantidad);
+        return csvColaborador;
+    }
+
+    @Test
+    public void testMigrarCSVUsuarioNoExistente() throws Exception {
+
+        // Carga los datos desde el CSV
+        migradorContribucion.getCsvColaboradores().add(
+                createCSVColaborador(
+                    documentoMockUsuarioNoExistente,
+                    "Francisco", "Mendez",
+                    "fran.mendez@example.com",
+                    LocalDate.of(2022,1,1),
+                    TipoColaboracion.DINERO,
+                    100
+                )
+        );
+
+        //para que cuando se haga new CorreoElectonico(); en realidad devuelva un mock
+        try(MockedConstruction<CorreoElectronico> mocked = Mockito.mockConstruction(CorreoElectronico.class)) {
+
+            // Llama al método migrarColaboradores
+            migradorContribucion.migrarColaboradores();
+
+            // Se busca al colaborador
+            Usuario usuario = registrados.obtenerUsuarioPorDocumento(documentoMockUsuarioNoExistente);
+
+            PersonaHumana colaboradorATestear = (PersonaHumana) usuario.getColaborador();
+
+            // Verifica que se hayan migrado los datos correctamente
+            Assertions.assertEquals(colaboradorATestear.getNombre(), "Francisco Mendez");
+            Assertions.assertEquals(colaboradorATestear.getApellido(), "Mendez");
+            Assertions.assertEquals(colaboradorATestear.getMediosDeContacto().size(), 1);
+
+            MedioDeContacto medioDeContacto = colaboradorATestear.getMediosDeContacto().get(0);
+            Assertions.assertInstanceOf(CorreoElectronico.class, medioDeContacto);
+            List<Contribucion> contribuciones = colaboradorATestear.getFormasContribucion();
+            Assertions.assertEquals(contribuciones.size(), 1);
+            Contribucion contribucion = contribuciones.get(0);
+            Assertions.assertInstanceOf(DonacionDeDinero.class, contribucion);
+
+            Assertions.assertEquals(((DonacionDeDinero) contribucion).getMonto(), 100);
+        }
     }
 
 }

@@ -8,6 +8,7 @@ import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.DistribucionDeViandas;
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.RegistrarPersonasEnSituacionVulnerable;
+import org.example.config.Configuracion;
 import org.example.excepciones.UserException;
 import org.example.migracion.estrategiasColaboracion.*;
 import org.example.personas.PersonaHumana;
@@ -31,6 +32,8 @@ public class MigradorContribucion {
     private List<CSVColaborador> csvColaboradores;
     private EstrategiaColaboracion estrategiaColaboracion;
 
+    private final String CUERPO_MENSAJE_BIENVENIDA = Configuracion.obtenerProperties("mail.mensajeDeBienvenida.cuerpo");
+    private final String ASUNTO_MENSAJE_BIENVENIDA = Configuracion.obtenerProperties("mail.mensajeDeBienvenida.asunto");
 
     public MigradorContribucion(){
         this.csvColaboradores = new ArrayList<>();
@@ -55,14 +58,18 @@ public class MigradorContribucion {
     }
 
     private void migrarContribucion(CSVColaborador csvColaborador) throws MessagingException {
-        Usuario usuarioColaborador = this.buscarOCrearUsuario(csvColaborador.getDocumento());
+
+
+        CorreoElectronico email = new CorreoElectronico();
+        email.setMail(csvColaborador.getMail());
+
+        String colaboradorNombre = csvColaborador.getNombre();
+        Usuario usuarioColaborador = this.buscarOCrearUsuario(csvColaborador.getDocumento(), email, colaboradorNombre);
 
         PersonaHumana colab = (PersonaHumana) usuarioColaborador.getColaborador();
 
-        colab.setNombre(csvColaborador.getNombre());
+        colab.setNombre(colaboradorNombre);
         colab.setApellido(csvColaborador.getApellido());
-        CorreoElectronico email = new CorreoElectronico();
-            email.setCorreoElectronico(csvColaborador.getMail());
         colab.setMediosDeContacto(List.of(email));
 
         TipoColaboracion tipoColaboracion = csvColaborador.getFormaDeColaboarcion();
@@ -81,17 +88,19 @@ public class MigradorContribucion {
         //todo guardar Colaborador y contribuciones en la DB
     }
 
-    private Usuario buscarOCrearUsuario(Documento documento) throws MessagingException {
+    private Usuario buscarOCrearUsuario(Documento documento, MedioDeContacto email, String nombreUsuario) throws MessagingException {
         Usuario usuarioColaborador = null;
         try {
             usuarioColaborador = Registrados.getInstancia()
                     .obtenerUsuarioPorDocumento(documento);
         } catch (UserException userException) {
             usuarioColaborador = new Usuario();
+            usuarioColaborador.setNombreDeUsuario(nombreUsuario);
             usuarioColaborador.setDocumento(documento);
             usuarioColaborador.setContrasenia(this.generarCredenciales());
 
             PersonaHumana colaborador = new PersonaHumana();
+            colaborador.setMediosDeContacto(List.of(email));
             usuarioColaborador.setColaborador(colaborador);
 
             Registrados.getInstancia().agregarUsuarios(usuarioColaborador);
@@ -102,7 +111,11 @@ public class MigradorContribucion {
     private void enviarCredenciales(Usuario usuario) throws MessagingException {
         //enviarCredenciales via Mail
         MedioDeContacto medioDeContacto= usuario.getColaborador().getMediosDeContacto().get(0);
-        medioDeContacto.notificar("Credenciales",usuario.getContrasenia());//TODO agregarle mensaje de bienvenida bien completo
+        String mensajeDeBienvenida = CUERPO_MENSAJE_BIENVENIDA
+                    .replace("{username}", usuario.getNombreDeUsuario())
+                    .replace("{password}", usuario.getContrasenia());
+
+        medioDeContacto.notificar(ASUNTO_MENSAJE_BIENVENIDA, mensajeDeBienvenida);
     }
     private String generarCredenciales(){
         //TODO generar credenciales
