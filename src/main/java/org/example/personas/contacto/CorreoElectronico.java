@@ -12,6 +12,14 @@ public class CorreoElectronico implements MedioDeContacto {
     private static final String SMTP_HOST = "smtp.gmail.com";
     private static final String SMTP_PORT = "587";
 
+
+    @Getter
+    private String mail;
+
+    public void setCorreoElectronico(String mail) {
+        this.mail = mail;
+    }
+
     @Override
     public void notificar(String subject, String texto) throws MessagingException {
         Properties properties = new Properties();
@@ -21,8 +29,7 @@ public class CorreoElectronico implements MedioDeContacto {
         properties.put("mail.smtp.starttls.enable", "true");
 
         final String username = "accesoalimentario@gmail.com";
-        //TODO CONFIGURAR CONTRASEÑA
-        final String password = "";
+        final String password = "kkuz hvzm vqso xppc";
 
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
@@ -45,10 +52,4 @@ public class CorreoElectronico implements MedioDeContacto {
         }
     }
 
-    @Getter
-    public String mail;
-
-    public void setCorreoElectronico(String mail) {
-        this.mail = mail;
-    }
 }
