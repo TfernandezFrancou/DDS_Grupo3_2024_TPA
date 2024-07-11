@@ -1,7 +1,7 @@
 package org.example.autenticacion;
 
-import org.example.personas.Colaborador;
 import org.example.excepciones.PasswordException;
+import org.example.personas.Persona;
 import org.example.personas.documentos.Documento;
 import org.example.validaciones.VerificadorContrasenia;
 
@@ -11,7 +11,7 @@ public class Usuario {
 
     private Documento documento;
     private String nombreDeUsuario;
-    private Colaborador colaborador;
+    private Persona colaborador;
     private String contrasenia;
     private LocalDateTime fechaExpiracionContrasenia;
 
@@ -51,11 +51,11 @@ public class Usuario {
         this.documento = documento;
     }
 
-    public Colaborador getColaborador() {
+    public Persona getColaborador() {
         return colaborador;
     }
 
-    public void setColaborador(Colaborador colaborador) {
+    public void setColaborador(Persona colaborador) {
         this.colaborador = colaborador;
     }
 

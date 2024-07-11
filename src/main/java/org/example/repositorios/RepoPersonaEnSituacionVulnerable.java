@@ -1,6 +1,6 @@
 package org.example.repositorios;
 
-import org.example.personas.PersonaEnSituacionVulnerable;
+import org.example.personas.roles.PersonaEnSituacionVulnerable;
 import org.example.colaboraciones.RegistroDePersonaEnSituacionVulnerable;
 
 import java.util.ArrayList;
@@ -26,17 +26,18 @@ public class RepoPersonaEnSituacionVulnerable {
     }
 
     public PersonaEnSituacionVulnerable buscarPersonaPorNombre(String nombre) {
-        return this.registros.stream()
+        return (PersonaEnSituacionVulnerable) this.registros.stream()
                 .map(RegistroDePersonaEnSituacionVulnerable::getPersonaEnSituacionVulnerable)
                 .filter(persona -> persona.getNombre().equals(nombre))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow().getRol();
     }
 
     public List<PersonaEnSituacionVulnerable> buscarPersonasPorColaborador(String nombreORazonSocial) {
         return this.registros.stream()
                 .filter((r) -> r.getColaborador().getNombre().equals(nombreORazonSocial))
-                .map(RegistroDePersonaEnSituacionVulnerable::getPersonaEnSituacionVulnerable)
-                .toList();
+                .map((registro) ->
+                        (PersonaEnSituacionVulnerable) registro.getPersonaEnSituacionVulnerable().getRol()
+                ).toList();
     }
 }

@@ -14,6 +14,10 @@ public class CorreoElectronico implements MedioDeContacto {
     private static final String SMTP_HOST = Configuracion.obtenerProperties("mail.smtp.host");
     private static final String SMTP_PORT = Configuracion.obtenerProperties("mail.smtp.port");
 
+    private static final String USUARIO_FROM_GMAIL = Configuracion.obtenerProperties("mail.from.usrename");
+    private static final String CONTRASENIA_FROM_GMAIL = Configuracion.obtenerProperties("mail.from.password_app");
+
+
     @Getter
     @Setter
     public String mail;
@@ -25,20 +29,17 @@ public class CorreoElectronico implements MedioDeContacto {
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
 
-        final String username = "accesoalimentario@gmail.com";
-        //TODO CONFIGURAR CONTRASEÑA
-        final String password = "";
 
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
+                return new PasswordAuthentication(USUARIO_FROM_GMAIL, CONTRASENIA_FROM_GMAIL);
             }
         });
 
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
+            message.setFrom(new InternetAddress(USUARIO_FROM_GMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(this.mail));
             message.setSubject(subject);
             message.setText(texto);

@@ -4,13 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.Contribucion;
-import org.example.colaboraciones.TipoDePersona;
-import org.example.colaboraciones.contribuciones.DistribucionDeViandas;
-import org.example.colaboraciones.contribuciones.DonacionDeViandas;
-import org.example.colaboraciones.contribuciones.RegistrarPersonasEnSituacionVulnerable;
 import org.example.config.Configuracion;
 import org.example.excepciones.UserException;
 import org.example.migracion.estrategiasColaboracion.*;
+import org.example.personas.roles.Colaborador;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.personas.contacto.MedioDeContacto;
@@ -66,11 +63,11 @@ public class MigradorContribucion {
         String colaboradorNombre = csvColaborador.getNombre();
         Usuario usuarioColaborador = this.buscarOCrearUsuario(csvColaborador.getDocumento(), email, colaboradorNombre);
 
-        PersonaHumana colab = (PersonaHumana) usuarioColaborador.getColaborador();
+        PersonaHumana colabPersona = (PersonaHumana) usuarioColaborador.getColaborador();
 
-        colab.setNombre(colaboradorNombre);
-        colab.setApellido(csvColaborador.getApellido());
-        colab.setMediosDeContacto(List.of(email));
+        colabPersona.setNombre(colaboradorNombre);
+        colabPersona.setApellido(csvColaborador.getApellido());
+        colabPersona.setMediosDeContacto(List.of(email));
 
         TipoColaboracion tipoColaboracion = csvColaborador.getFormaDeColaboarcion();
         Integer cantidad = csvColaborador.getCantidad();
@@ -83,8 +80,8 @@ public class MigradorContribucion {
         }
 
         Contribucion contribucion = estrategiaColaboracion.cargarColaboracion(cantidad);
-
-        colab.agregarContribucion(contribucion);
+        Colaborador rolColaborador = (Colaborador) colabPersona.getRol();
+        rolColaborador.agregarContribucion(contribucion);
         //todo guardar Colaborador y contribuciones en la DB
     }
 
@@ -99,9 +96,10 @@ public class MigradorContribucion {
             usuarioColaborador.setDocumento(documento);
             usuarioColaborador.setContrasenia(this.generarCredenciales());
 
-            PersonaHumana colaborador = new PersonaHumana();
-            colaborador.setMediosDeContacto(List.of(email));
-            usuarioColaborador.setColaborador(colaborador);
+            PersonaHumana personaHumana = new PersonaHumana(nombreUsuario);
+            personaHumana.setMediosDeContacto(List.of(email));
+            personaHumana.setRol(new Colaborador());
+            usuarioColaborador.setColaborador(personaHumana);
 
             Registrados.getInstancia().agregarUsuarios(usuarioColaborador);
             this.enviarCredenciales(usuarioColaborador);
@@ -110,7 +108,7 @@ public class MigradorContribucion {
     }
     private void enviarCredenciales(Usuario usuario) throws MessagingException {
         //enviarCredenciales via Mail
-        MedioDeContacto medioDeContacto= usuario.getColaborador().getMediosDeContacto().get(0);
+        MedioDeContacto medioDeContacto=  usuario.getColaborador().getMediosDeContacto().get(0);
         String mensajeDeBienvenida = CUERPO_MENSAJE_BIENVENIDA
                     .replace("{username}", usuario.getNombreDeUsuario())
                     .replace("{password}", usuario.getContrasenia());

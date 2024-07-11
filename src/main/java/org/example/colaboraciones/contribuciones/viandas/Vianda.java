@@ -3,7 +3,7 @@ package org.example.colaboraciones.contribuciones.viandas;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
-import org.example.personas.Colaborador;
+import org.example.personas.roles.Colaborador;
 
 import java.time.LocalDateTime;
 

@@ -10,20 +10,20 @@ import java.util.List;
 @Getter
 @Setter
 
-public class PersonaHumana extends Colaborador {
-    private String nombre;
+public class PersonaHumana extends Persona {
+    //el nomobre ya esta en Persona
     private String apellido;
     private LocalDate fechaNacimiento;
 
     public PersonaHumana() {
     }
-    public PersonaHumana(List<MedioDeContacto> mediosDeContacto) {
-        super(mediosDeContacto);
+    public PersonaHumana(String nombre) {
+        super.setNombre(nombre);
     }
 
 
     @Override
     public String getNombre() {
-        return nombre + " " + apellido;
+        return super.getNombre() + " " + apellido;
     }
 }

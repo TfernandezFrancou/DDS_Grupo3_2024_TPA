@@ -13,25 +13,19 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PersonaJuridica extends Colaborador{
+public class PersonaJuridica extends Persona{
     private String razonSocial;
     private TipoJuridico tipo;
     private String rubro;
     private IAdapter recomendadorDeUbicaciones;
 
 
-    public PersonaJuridica() {
-    }
-    public PersonaJuridica(List<MedioDeContacto> mediosDeContacto) {
-        super(mediosDeContacto);
+    public PersonaJuridica(String razonSocial) {
+        super.setNombre(razonSocial);
     }
 
     public List<Ubicacion> obtenerUbicaciones(Zona zona) throws JsonProcessingException, ApiRequestFailedException {
         return recomendadorDeUbicaciones.consultarUbicaciones(zona);
     }
 
-    @Override
-    public String getNombre() {
-        return razonSocial;
-    }
 }

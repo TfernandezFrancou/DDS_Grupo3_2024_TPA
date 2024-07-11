@@ -1,6 +1,6 @@
 package org.example.repositorios;
 
-import org.example.personas.Tecnico;
+import org.example.personas.roles.Tecnico;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.example.personas;
+package org.example.personas.roles;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,23 +11,13 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Tecnico {
-    private String nombre;
+public class Tecnico extends Rol {
     private String apellido;
-    private Documento documento;
     private String cuil;
-    private List<MedioDeContacto> mediosDeContacto;
     private List<Zona> areasDeCobertura;
-    private boolean estaActivo;
 
     public Tecnico(){
-        this.mediosDeContacto = new ArrayList<>();
         this.areasDeCobertura = new ArrayList<>();
-        this.estaActivo = true;
     }
 
-    public void darDeBaja()
-    {
-        this.estaActivo = false;
-    }
 }

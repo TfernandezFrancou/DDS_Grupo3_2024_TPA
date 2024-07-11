@@ -6,6 +6,7 @@ import org.example.colaboraciones.contribuciones.DonacionDeDinero;
 import org.example.migracion.CSVColaborador;
 import org.example.migracion.MigradorContribucion;
 import org.example.migracion.TipoColaboracion;
+import org.example.personas.roles.Colaborador;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.personas.contacto.MedioDeContacto;
@@ -45,7 +46,8 @@ public class MigradorContribucionTest {
     @Mock
     private MedioDeContacto correoElectronicoMock;
 
-    private PersonaHumana colaboradorMock = new PersonaHumana();
+    private PersonaHumana personaColaboradorMock = new PersonaHumana();
+    private Colaborador colaboradorMock = new Colaborador();
 
     private final String pathCSVCorto = "src/test/resources/test_data.csv";
     private final String pathCSVGrande = "src/test/resources/test_long_data.csv";
@@ -53,9 +55,10 @@ public class MigradorContribucionTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        colaboradorMock.setMediosDeContacto(List.of(correoElectronicoMock));
+        personaColaboradorMock.setRol(colaboradorMock);
+        personaColaboradorMock.setMediosDeContacto(List.of(correoElectronicoMock));
         usuarioMock.setDocumento(documentoMock);
-        usuarioMock.setColaborador(colaboradorMock);
+        usuarioMock.setColaborador(personaColaboradorMock);
         registrados.agregarUsuarios(usuarioMock);
     }
 
@@ -204,11 +207,11 @@ public class MigradorContribucionTest {
         migradorContribucion.migrarColaboradores();
 
         // Verifica que se hayan migrado los datos correctamente
-        Assertions.assertEquals(colaboradorMock.getNombre(), "Juan Perez");
-        Assertions.assertEquals(colaboradorMock.getApellido(), "Perez");
-        Assertions.assertEquals(colaboradorMock.getMediosDeContacto().size(), 1);
+        Assertions.assertEquals(personaColaboradorMock.getNombre(), "Juan Perez");
+        Assertions.assertEquals(personaColaboradorMock.getApellido(), "Perez");
+        Assertions.assertEquals(personaColaboradorMock.getMediosDeContacto().size(), 1);
 
-        MedioDeContacto medioDeContacto = colaboradorMock.getMediosDeContacto().get(0);
+        MedioDeContacto medioDeContacto = personaColaboradorMock.getMediosDeContacto().get(0);
         Assertions.assertInstanceOf(CorreoElectronico.class, medioDeContacto);
         Assertions.assertEquals(((CorreoElectronico) medioDeContacto).getMail(),"juan.perez@example.com");
         List<Contribucion> contribuciones = colaboradorMock.getFormasContribucion();
@@ -287,16 +290,17 @@ public class MigradorContribucionTest {
             // Se busca al colaborador
             Usuario usuario = registrados.obtenerUsuarioPorDocumento(documentoMockUsuarioNoExistente);
 
-            PersonaHumana colaboradorATestear = (PersonaHumana) usuario.getColaborador();
+            PersonaHumana personaColaboradorATestear = (PersonaHumana) usuario.getColaborador();
+            Colaborador rolColaboradorATestear = (Colaborador) personaColaboradorATestear.getRol();
 
             // Verifica que se hayan migrado los datos correctamente
-            Assertions.assertEquals(colaboradorATestear.getNombre(), "Francisco Mendez");
-            Assertions.assertEquals(colaboradorATestear.getApellido(), "Mendez");
-            Assertions.assertEquals(colaboradorATestear.getMediosDeContacto().size(), 1);
+            Assertions.assertEquals(personaColaboradorATestear.getNombre(), "Francisco Mendez");
+            Assertions.assertEquals(personaColaboradorATestear.getApellido(), "Mendez");
+            Assertions.assertEquals(personaColaboradorATestear.getMediosDeContacto().size(), 1);
 
-            MedioDeContacto medioDeContacto = colaboradorATestear.getMediosDeContacto().get(0);
+            MedioDeContacto medioDeContacto = personaColaboradorATestear.getMediosDeContacto().get(0);
             Assertions.assertInstanceOf(CorreoElectronico.class, medioDeContacto);
-            List<Contribucion> contribuciones = colaboradorATestear.getFormasContribucion();
+            List<Contribucion> contribuciones = rolColaboradorATestear.getFormasContribucion();
             Assertions.assertEquals(contribuciones.size(), 1);
             Contribucion contribucion = contribuciones.get(0);
             Assertions.assertInstanceOf(DonacionDeDinero.class, contribucion);
