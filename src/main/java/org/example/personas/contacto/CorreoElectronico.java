@@ -54,11 +54,4 @@ public class CorreoElectronico implements MedioDeContacto {
             e.printStackTrace();
         }
     }
-
-    @Getter
-    public String mail;
-
-    public void setCorreoElectronico(String mail) {
-        this.mail = mail;
-    }
 }
