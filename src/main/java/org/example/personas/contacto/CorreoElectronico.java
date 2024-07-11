@@ -1,6 +1,8 @@
 package org.example.personas.contacto;
 
 import lombok.Getter;
+import lombok.Setter;
+import org.example.config.Configuracion;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -9,9 +11,12 @@ import java.util.Properties;
 
 
 public class CorreoElectronico implements MedioDeContacto {
-    private static final String SMTP_HOST = "smtp.gmail.com";
-    private static final String SMTP_PORT = "587";
+    private static final String SMTP_HOST = Configuracion.obtenerProperties("mail.smtp.host");
+    private static final String SMTP_PORT = Configuracion.obtenerProperties("mail.smtp.port");
 
+    @Getter
+    @Setter
+    public String mail;
     @Override
     public void notificar(String subject, String texto) throws MessagingException {
         Properties properties = new Properties();
@@ -45,10 +50,4 @@ public class CorreoElectronico implements MedioDeContacto {
         }
     }
 
-    @Getter
-    public String mail;
-
-    public void setCorreoElectronico(String mail) {
-        this.mail = mail;
-    }
 }

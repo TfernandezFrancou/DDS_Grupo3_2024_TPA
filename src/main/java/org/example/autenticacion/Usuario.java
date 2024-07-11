@@ -75,7 +75,4 @@ public class Usuario {
         this.fechaExpiracionContrasenia = fechaExpiracionContrasenia;
     }
 
-    public String getEmail() {
-        return null;
-    }
 }
