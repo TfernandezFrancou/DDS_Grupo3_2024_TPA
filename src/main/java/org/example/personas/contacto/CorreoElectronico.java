@@ -20,7 +20,8 @@ public class CorreoElectronico implements MedioDeContacto {
 
     @Getter
     @Setter
-    public String mail;
+    private String mail;
+
     @Override
     public void notificar(String subject, String texto) throws MessagingException {
         Properties properties = new Properties();
@@ -50,5 +51,4 @@ public class CorreoElectronico implements MedioDeContacto {
             e.printStackTrace();
         }
     }
-
 }

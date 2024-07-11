@@ -1,4 +1,5 @@
 package tests;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 
@@ -36,16 +37,5 @@ public class CorreoElectronicoTest {
 
 
 
-/*
---- manda el mail realmente
 
-public class NotificarTest {
 
-    @Test
-    void mandarMail() throws MessagingException {
-        CorreoElectronico mail = new CorreoElectronico();
-        mail.setCorreoElectronico("morasofiahidalgo@gmail.com");
-        mail.notificar("Bienvenido!","Bienvenido a la comunidad");
-    }
-}
-*/
