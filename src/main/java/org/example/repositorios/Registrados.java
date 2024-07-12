@@ -36,7 +36,7 @@ public class Registrados {
   }
 
   public Usuario obtenerUsuarioPorDocumento(Documento documento) throws  UserException{
-    Optional<Usuario> usuario = instancia.usuarios.stream().filter(x -> x.getDocumento().equals(documento)).findFirst();
+    Optional<Usuario> usuario = instancia.usuarios.stream().filter(x -> x.getDocumento().getNumeroDocumento().equals(documento.getNumeroDocumento()) && x.getDocumento().getTipoDocumento().equals(documento.getTipoDocumento())).findFirst();
 
     if(usuario.isEmpty()){
       throw new UserException(Configuracion.obtenerProperties("mensaje.repositorio.Usuarios.no-encontrado"));

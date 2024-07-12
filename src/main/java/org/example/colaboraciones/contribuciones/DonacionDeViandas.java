@@ -6,6 +6,7 @@ import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 @Getter
@@ -18,7 +19,9 @@ public class DonacionDeViandas extends Contribucion {
         this.viandas= new ArrayList<>();
     }
 
-    public DonacionDeViandas(Integer cantidad) {
+    public DonacionDeViandas(TipoDePersona tipo, LocalDate fecha, Integer cantidad) {
+        this.setTiposDePersona(tipo);
+        this.setFecha(fecha);
         this.cantidadDeViandas = cantidad;
     }
 

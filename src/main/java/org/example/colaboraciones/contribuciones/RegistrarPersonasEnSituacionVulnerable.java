@@ -7,6 +7,7 @@ import org.example.colaboraciones.RegistroDePersonaEnSituacionVulnerable;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.heladeras.TarjetaHeladera;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +19,11 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
     @Setter
     private Integer tarjetasEntregadas;
 
-    public RegistrarPersonasEnSituacionVulnerable(Integer cantidad) {
+    public RegistrarPersonasEnSituacionVulnerable(TipoDePersona tipo, LocalDate fecha, Integer cantidad) {
         this.personasRegistradas = new ArrayList<>();
         this.tarjetasAEntregar = new ArrayList<>();
+        this.setTiposDePersona(tipo);
+        this.setFecha(fecha);
         this.tarjetasEntregadas = cantidad;
     }
 

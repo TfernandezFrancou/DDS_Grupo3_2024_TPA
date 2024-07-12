@@ -12,32 +12,34 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.*;
 
 @Getter
 @Setter
 public class MigradorContribucion {
-    private Map<PersonaHumana, Contribucion> colaboradores;
+    private List<PersonaHumana> colaboradores;
+    private List<Contribucion> contribuciones;
 
     public MigradorContribucion(){
-        this.colaboradores = new HashMap<>();
+        this.colaboradores = new ArrayList<>();
+        this.contribuciones = new ArrayList<>();
     }
 
-    public void cargarCSV(FileInputStream archivoCSV) throws IOException {
+    public void cargarCSV(FileInputStream archivoCSV) throws IOException, ParseException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(archivoCSV.getFD()));
         String linea = "";
         for (int i = 0;(linea = bufferedReader.readLine()) != null; i++) {
             if (i == 0) continue; // ignoro el nombre de las columnas
-            String[] columnas = linea.split(";");
-            PersonaHumana persona = PersonaHumana.fromCsv(Arrays.copyOfRange(columnas, 0, 5));
-            Contribucion contribucion = Contribucion.fromCsv(Arrays.copyOfRange(columnas, 5, 8));
-            colaboradores.put(persona, contribucion);
+            String[] columnas = linea.split(",");
+            colaboradores.add(PersonaHumana.fromCsv(Arrays.copyOfRange(columnas, 0, 5)));
+            contribuciones.add(Contribucion.fromCsv(Arrays.copyOfRange(columnas, 5, 8)));
         }
     }
 
     public void migrarColaboradores() throws MessagingException {
-        for (PersonaHumana persona: colaboradores.keySet()) {
-            this.migrarContribucion(persona, colaboradores.get(persona));
+        for (int i = 0; i < colaboradores.size(); i++) {
+            this.migrarContribucion(colaboradores.get(i), contribuciones.get(i));
         }
     }
 

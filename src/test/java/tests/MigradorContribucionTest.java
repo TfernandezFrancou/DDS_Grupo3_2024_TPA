@@ -2,14 +2,16 @@ package tests;
 
 import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.Contribucion;
+import org.example.colaboraciones.TipoDePersona;
+import org.example.colaboraciones.contribuciones.DistribucionDeViandas;
 import org.example.colaboraciones.contribuciones.DonacionDeDinero;
-import org.example.migracion.CSVColaborador;
+import org.example.colaboraciones.contribuciones.DonacionDeViandas;
+import org.example.colaboraciones.contribuciones.RegistrarPersonasEnSituacionVulnerable;
+import org.example.excepciones.UserException;
 import org.example.migracion.MigradorContribucion;
-import org.example.migracion.TipoColaboracion;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
-import org.example.personas.contacto.MedioDeContacto;
 import org.example.personas.documentos.Documento;
 import org.example.personas.documentos.TipoDocumento;
 import org.example.repositorios.Registrados;
@@ -21,8 +23,9 @@ import org.mockito.*;
 import javax.mail.MessagingException;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -30,93 +33,98 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class MigradorContribucionTest {
-
     @InjectMocks
     private MigradorContribucion migradorContribucion;
-
-    private final Registrados registrados = Registrados.getInstancia();
-
-
-    private final Documento documentoMock = new Documento("12345678",TipoDocumento.DNI);
-
-    private final Documento documentoMockUsuarioNoExistente = new Documento("87654321",TipoDocumento.DNI);
-
-    private final Usuario usuarioMock = new Usuario("si","1234", LocalDateTime.of(2025,6,10,12,0, 0));
-
-    @Mock
-    private MedioDeContacto correoElectronicoMock;
-
-    private PersonaHumana personaColaboradorMock = new PersonaHumana();
-    private Colaborador colaboradorMock = new Colaborador();
-
     private final String pathCSVCorto = "src/test/resources/test_data.csv";
     private final String pathCSVGrande = "src/test/resources/test_long_data.csv";
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        personaColaboradorMock.setRol(colaboradorMock);
-        personaColaboradorMock.setMediosDeContacto(List.of(correoElectronicoMock));
-        usuarioMock.setDocumento(documentoMock);
-        usuarioMock.setColaborador(personaColaboradorMock);
-        registrados.agregarUsuarios(usuarioMock);
+    }
+
+    private void verificarContribucion(Contribucion contribucion, String fechaColaboracion, Class clase) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        Assertions.assertEquals(LocalDate.parse(fechaColaboracion,formatter), contribucion.getFecha());
+        Assertions.assertInstanceOf(clase, contribucion);
+    }
+
+    private void verificarColaborador(PersonaHumana colaborador, String nombre, String apellido, String numeroDeDocumento, String tipoDeDocumento, String mail) {
+        Assertions.assertEquals(nombre + " " + apellido, colaborador.getNombre());
+        Assertions.assertEquals(numeroDeDocumento, colaborador.getDocumento().getNumeroDocumento());
+        Assertions.assertEquals(TipoDocumento.valueOf(tipoDeDocumento), colaborador.getDocumento().getTipoDocumento());
+        Assertions.assertEquals(mail, colaborador.getEmail().getMail());
     }
 
     @Test
-    public void testCargarCSV() throws IOException {
+    public void testCargarCSV() throws IOException, ParseException {
         // Prepara el archivo CSV de prueba
         FileInputStream fileInputStream = new FileInputStream(pathCSVCorto);
-
         // Llama al método cargarCSV
         migradorContribucion.cargarCSV(fileInputStream);
+        // Verifica que los datos se cargaron correctamente
+        List<PersonaHumana> colaboradores = migradorContribucion.getColaboradores();
+        List<Contribucion> contribuciones = migradorContribucion.getContribuciones();
+        Assertions.assertEquals(4, colaboradores.size());
+        Assertions.assertEquals(4, contribuciones.size());
+        // Juan Perez
+        verificarColaborador(colaboradores.get(0), "Juan", "Perez", "12345678", "DNI", "juan.perez@example.com");
+        verificarContribucion(contribuciones.get(0), "01/01/2022", DonacionDeDinero.class);
+        Assertions.assertEquals(((DonacionDeDinero) contribuciones.get(0)).getMonto(), 100);
+        // Ana Gomez
+        verificarColaborador(colaboradores.get(1), "Ana", "Gomez", "87654321", "LC", "ana.gomez@example.com");
+        verificarContribucion(contribuciones.get(1), "15/02/2023", DonacionDeViandas.class);
+        Assertions.assertEquals(((DonacionDeViandas) contribuciones.get(1)).getCantidadDeViandas(), 50);
+        // Maria Lopez
+        verificarColaborador(colaboradores.get(2), "Maria", "Lopez", "11223344", "LE", "maria.lopez@example.com");
+        verificarContribucion(contribuciones.get(2), "23/03/2021", DistribucionDeViandas.class);
+        Assertions.assertEquals(((DistribucionDeViandas) contribuciones.get(2)).getCantidad(), 75);
+        // Carlos Martinez
+        verificarColaborador(colaboradores.get(3), "Carlos", "Martinez", "55667788", "DNI", "carlos.martinez@example.com");
+        verificarContribucion(contribuciones.get(3), "12/04/2020", RegistrarPersonasEnSituacionVulnerable.class);
+        Assertions.assertEquals(((RegistrarPersonasEnSituacionVulnerable) contribuciones.get(3)).getTarjetasEntregadas(), 30);
+    }
+
+    @Test
+    public void testCargarCSVGrande() throws IOException, ParseException {
+        // Prepara el archivo CSV de prueba
+        FileInputStream fileInputStream = new FileInputStream(pathCSVGrande);
+        // Llama al método cargarCSV
+        migradorContribucion.cargarCSV(fileInputStream);
+        // Verifica que los datos se cargaron correctamente
+        Assertions.assertEquals(1000, migradorContribucion.getContribuciones().size());
+        Assertions.assertEquals(1000, migradorContribucion.getColaboradores().size());
+    }
+
+    @Test
+    public void testCargarCSVGrandeParalelo() throws InterruptedException, ParseException {
+        // Define el número de archivos CSV a cargar en paralelo
+        int numCSVs = 5;
+        ExecutorService executorService = Executors.newFixedThreadPool(numCSVs);
+
+        for (int i = 0; i < numCSVs; i++) {
+            executorService.submit(() -> {
+                try {
+                    // Prepara el archivo CSV de prueba
+                    FileInputStream fileInputStream = new FileInputStream(pathCSVGrande);
+
+                    // Llama al método cargarCSV
+                    synchronized (migradorContribucion){ // evito condicion de carrera
+                        migradorContribucion.cargarCSV(fileInputStream);
+                    }
+
+                } catch (IOException | ParseException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        executorService.shutdown();
+        executorService.awaitTermination(1, TimeUnit.HOURS);//le doy el tiempo suficiente para que ejecuten todos los hilos
 
         // Verifica que los datos se cargaron correctamente
-        Assertions.assertEquals(4, migradorContribucion.getCsvColaboradores().size());
-        List<CSVColaborador> colaboradores = migradorContribucion.getCsvColaboradores();
-        verificarCsvColaborador(
-                "Juan",
-                "Perez",
-                "12345678",
-                "DNI",
-                "juan.perez@example.com",
-                "01/01/2022",
-                "DINERO",
-                100,
-                colaboradores.get(0)
-        );
-        verificarCsvColaborador(
-                "Ana",
-                "Gomez",
-                "87654321",
-                "LC",
-                "ana.gomez@example.com",
-                "15/02/2023",
-                "DONACION_VIANDAS",
-                50,
-                colaboradores.get(1)
-        );
-        verificarCsvColaborador(
-                "Maria",
-                "Lopez",
-                "11223344",
-                "LE",
-                "maria.lopez@example.com",
-                "23/03/2021",
-                "REDISTRIBUCION_VIANDAS",
-                75,
-                colaboradores.get(2)
-        );
-        verificarCsvColaborador(
-                "Carlos",
-                "Martinez",
-                "55667788",
-                "DNI",
-                "carlos.martinez@example.com",
-                "12/04/2020",
-                "ENTREGA_TARJETAS",
-                30,
-                colaboradores.get(3)
-        );
+        Assertions.assertEquals(numCSVs * 1000, migradorContribucion.getContribuciones().size()); // Asumiendo 1000 registros por archivo CSV
+        Assertions.assertEquals(numCSVs * 1000, migradorContribucion.getColaboradores().size()); // Asumiendo 1000 registros por archivo CSV
     }
 
     @Test
@@ -135,7 +143,7 @@ public class MigradorContribucionTest {
                     synchronized (migradorContribucion){ // evito condicion de carrera
                         migradorContribucion.cargarCSV(fileInputStream);
                     }
-                } catch (IOException e) {
+                } catch (IOException | ParseException e) {
                     e.printStackTrace();
                 }
             });
@@ -145,168 +153,120 @@ public class MigradorContribucionTest {
         executorService.awaitTermination(4, TimeUnit.HOURS);//le doy el tiempo suficiente para que ejecuten todos los hilos
 
         // Verifica que los datos se cargaron correctamente
-        Assertions.assertEquals(numCSVs * 4, migradorContribucion.getCsvColaboradores().size()); // Asumiendo 4 registros por archivo CSV
+        Assertions.assertEquals(numCSVs * 4, migradorContribucion.getColaboradores().size()); // Asumiendo 4 registros por archivo CSV
+        Assertions.assertEquals(numCSVs * 4, migradorContribucion.getContribuciones().size()); // Asumiendo 4 registros por archivo CSV
     }
 
     @Test
-    public void testCargarCSVGrande() throws IOException {
-        // Prepara el archivo CSV de prueba
-        FileInputStream fileInputStream = new FileInputStream(pathCSVGrande);
+    public void testMigrarUsuarioExistente() throws MessagingException {
+        CorreoElectronico correo = Mockito.mock(CorreoElectronico.class);
+        Mockito.doNothing().when(correo).notificar(Mockito.any(), Mockito.any());
+        Colaborador colaborador = new Colaborador();
+        colaborador.agregarContribucion(new DonacionDeViandas());
+        PersonaHumana persona1 = new PersonaHumana("Juan", "Perez", correo, new Documento(TipoDocumento.DNI, "33333333"), colaborador);
+        Usuario usuario1 = new Usuario("Juan Perez", persona1.getDocumento(), persona1);
+        try (MockedStatic<Registrados> mockedSingleton = Mockito.mockStatic(Registrados.class)) {
+            Registrados registrados = Mockito.mock(Registrados.class);
+            Mockito.when(Registrados.getInstancia()).thenReturn(registrados);
+            Mockito.when(registrados.obtenerUsuarioPorDocumento(persona1.getDocumento())).thenReturn(usuario1);
 
-        // Llama al método cargarCSV
-        migradorContribucion.cargarCSV(fileInputStream);
-
-        // Verifica que los datos se cargaron correctamente
-        Assertions.assertEquals(1000, migradorContribucion.getCsvColaboradores().size());
-    }
-
-    @Test
-    public void testCargarCSVGrandeParalelo() throws InterruptedException {
-        // Define el número de archivos CSV a cargar en paralelo
-        int numCSVs = 5;
-        ExecutorService executorService = Executors.newFixedThreadPool(numCSVs);
-
-        for (int i = 0; i < numCSVs; i++) {
-            executorService.submit(() -> {
-                try {
-                    // Prepara el archivo CSV de prueba
-                    FileInputStream fileInputStream = new FileInputStream(pathCSVGrande);
-
-                    // Llama al método cargarCSV
-                    synchronized (migradorContribucion){ // evito condicion de carrera
-                        migradorContribucion.cargarCSV(fileInputStream);
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-
-        executorService.shutdown();
-        executorService.awaitTermination(1, TimeUnit.HOURS);//le doy el tiempo suficiente para que ejecuten todos los hilos
-
-        // Verifica que los datos se cargaron correctamente
-        Assertions.assertEquals(numCSVs * 1000, migradorContribucion.getCsvColaboradores().size()); // Asumiendo 1000 registros por archivo CSV
-    }
-
-    @Test
-    public void testMigrarColaboradores() throws MessagingException {
-
-        // Carga los datos desde el CSV
-        migradorContribucion.getCsvColaboradores().add(createCSVColaborador(
-                documentoMock,//documento de usuario existente en el sistema
-                "Juan", "Perez",
-                "juan.perez@example.com",
-                LocalDate.of(2022,1,1),
-                TipoColaboracion.DINERO,
-                100
-        ));
-
-        // Llama al método migrarColaboradores
-        migradorContribucion.migrarColaboradores();
-
-        // Verifica que se hayan migrado los datos correctamente
-        Assertions.assertEquals(personaColaboradorMock.getNombre(), "Juan Perez");
-        Assertions.assertEquals(personaColaboradorMock.getApellido(), "Perez");
-        Assertions.assertEquals(personaColaboradorMock.getMediosDeContacto().size(), 1);
-
-        MedioDeContacto medioDeContacto = personaColaboradorMock.getMediosDeContacto().get(0);
-        Assertions.assertInstanceOf(CorreoElectronico.class, medioDeContacto);
-        Assertions.assertEquals(((CorreoElectronico) medioDeContacto).getMail(),"juan.perez@example.com");
-        List<Contribucion> contribuciones = colaboradorMock.getFormasContribucion();
-        Assertions.assertEquals(contribuciones.size(),1);
-        Contribucion contribucion = contribuciones.get(0);
-        Assertions.assertInstanceOf(DonacionDeDinero.class,contribucion);
-
-        Assertions.assertEquals(((DonacionDeDinero) contribucion).getMonto(), 100);
-    }
-
-
-
-    private void verificarCsvColaborador(String nombre,
-                                         String apellido,
-                                         String numeroDeDocumento,
-                                         String tipoDeDocumento,
-                                         String mail,
-                                         String fechaColaboracion,
-                                         String formaColaboracion,
-                                         Integer cantidad,
-                                         CSVColaborador colaboradorObtenido
-    ){
-        Assertions.assertEquals(nombre, colaboradorObtenido.getNombre());
-        Assertions.assertEquals(apellido, colaboradorObtenido.getApellido());
-        Assertions.assertEquals(numeroDeDocumento, colaboradorObtenido.getDocumento().getNumeroDocumento());
-        Assertions.assertEquals(TipoDocumento.valueOf(tipoDeDocumento), colaboradorObtenido.getDocumento().getTipoDocumento());
-        Assertions.assertEquals(mail, colaboradorObtenido.getMail());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        Assertions.assertEquals(LocalDate.parse(fechaColaboracion,formatter), colaboradorObtenido.getFechaDeColaboracion());
-
-        Assertions.assertEquals(TipoColaboracion.valueOf(formaColaboracion), colaboradorObtenido.getFormaDeColaboarcion());
-        Assertions.assertEquals(cantidad, colaboradorObtenido.getCantidad());
-    }
-
-    private CSVColaborador createCSVColaborador(
-                Documento documento,
-                String nombre,
-                String apellido,
-                String mail,
-                LocalDate fechaDeColaboracion,
-                TipoColaboracion formaDeColaboarcion,
-                Integer cantidad
-    ){
-        CSVColaborador csvColaborador = new CSVColaborador();
-        csvColaborador.setDocumento(documento);
-        csvColaborador.setNombre(nombre);
-        csvColaborador.setApellido(apellido);
-        csvColaborador.setMail(mail);
-        csvColaborador.setFechaDeColaboracion(fechaDeColaboracion);
-        csvColaborador.setFormaDeColaboarcion(formaDeColaboarcion);
-        csvColaborador.setCantidad(cantidad);
-        return csvColaborador;
-    }
-
-    @Test
-    public void testMigrarCSVUsuarioNoExistente() throws Exception {
-
-        // Carga los datos desde el CSV
-        migradorContribucion.getCsvColaboradores().add(
-                createCSVColaborador(
-                    documentoMockUsuarioNoExistente,
-                    "Francisco", "Mendez",
-                    "fran.mendez@example.com",
-                    LocalDate.of(2022,1,1),
-                    TipoColaboracion.DINERO,
-                    100
-                )
-        );
-
-        //para que cuando se haga new CorreoElectonico(); en realidad devuelva un mock
-        try(MockedConstruction<CorreoElectronico> mocked = Mockito.mockConstruction(CorreoElectronico.class)) {
-
-            // Llama al método migrarColaboradores
+            migradorContribucion.getColaboradores().add(persona1);
+            migradorContribucion.getContribuciones().add(new DonacionDeDinero(TipoDePersona.HUMANA, LocalDate.of(2022, 1, 1), 100));
             migradorContribucion.migrarColaboradores();
 
-            // Se busca al colaborador
-            Usuario usuario = registrados.obtenerUsuarioPorDocumento(documentoMockUsuarioNoExistente);
-
-            PersonaHumana personaColaboradorATestear = (PersonaHumana) usuario.getColaborador();
-            Colaborador rolColaboradorATestear = (Colaborador) personaColaboradorATestear.getRol();
-
-            // Verifica que se hayan migrado los datos correctamente
-            Assertions.assertEquals(personaColaboradorATestear.getNombre(), "Francisco Mendez");
-            Assertions.assertEquals(personaColaboradorATestear.getApellido(), "Mendez");
-            Assertions.assertEquals(personaColaboradorATestear.getMediosDeContacto().size(), 1);
-
-            MedioDeContacto medioDeContacto = personaColaboradorATestear.getMediosDeContacto().get(0);
-            Assertions.assertInstanceOf(CorreoElectronico.class, medioDeContacto);
-            List<Contribucion> contribuciones = rolColaboradorATestear.getFormasContribucion();
-            Assertions.assertEquals(contribuciones.size(), 1);
-            Contribucion contribucion = contribuciones.get(0);
-            Assertions.assertInstanceOf(DonacionDeDinero.class, contribucion);
-
-            Assertions.assertEquals(((DonacionDeDinero) contribucion).getMonto(), 100);
+            // se hace una busqueda
+            Mockito.verify(registrados, Mockito.times(1)).obtenerUsuarioPorDocumento(Mockito.any());
+            // no se agrega ningun usuario
+            Mockito.verify(registrados, Mockito.times(0)).agregarUsuarios(Mockito.any());
+            // se agrega la forma de contribucion
+            Assertions.assertEquals(((Colaborador) persona1.getRol()).getFormasContribucion().size(), 2);
+            // no se notifica al usuario pues no se creo
+            Mockito.verify(correo, Mockito.times(0)).notificar(Mockito.any(), Mockito.any());
         }
     }
 
+    @Test
+    public void testMigrarUsuarioNoExistente() throws MessagingException {
+        CorreoElectronico correo = Mockito.mock(CorreoElectronico.class);
+        Mockito.doNothing().when(correo).notificar(Mockito.any(), Mockito.any());
+        PersonaHumana persona1 = new PersonaHumana("Juan", "Perez", correo, new Documento(TipoDocumento.DNI, "33333333"), new Colaborador());
+        try (MockedStatic<Registrados> mockedSingleton = Mockito.mockStatic(Registrados.class)) {
+            Registrados registrados = Mockito.mock(Registrados.class);
+            Mockito.when(Registrados.getInstancia()).thenReturn(registrados);
+            Mockito.when(registrados.obtenerUsuarioPorDocumento(persona1.getDocumento())).thenThrow(UserException.class);
+            Mockito.doNothing().when(registrados).agregarUsuarios(Mockito.any());
+
+            migradorContribucion.getColaboradores().add(persona1);
+            migradorContribucion.getContribuciones().add(new DonacionDeDinero(TipoDePersona.HUMANA, LocalDate.of(2022, 1, 1), 100));
+            migradorContribucion.migrarColaboradores();
+
+            // se hace una busqueda
+            Mockito.verify(registrados, Mockito.times(1)).obtenerUsuarioPorDocumento(Mockito.any());
+            // se agrega un usuario
+            Mockito.verify(registrados, Mockito.times(1)).agregarUsuarios(Mockito.any());
+            // termina con una sola forma de colaboracion
+            Assertions.assertEquals(((Colaborador) persona1.getRol()).getFormasContribucion().size(), 1);
+            verificarContribucion(((Colaborador) persona1.getRol()).getFormasContribucion().get(0), "01/01/2022", DonacionDeDinero.class);
+            // se notifica al usuario
+            Mockito.verify(correo, Mockito.times(1)).notificar(Mockito.any(), Mockito.any());
+        }
+    }
+
+    @Test
+    public void testParsearDocumentoValido() throws ParseException {
+        String[] columnas = { "DNI", "4334234" };
+        Assertions.assertDoesNotThrow(() -> { Documento.fromCsv(columnas); });
+        Documento documento = Documento.fromCsv(columnas);
+        Assertions.assertEquals(documento.getTipoDocumento(), TipoDocumento.DNI);
+        Assertions.assertEquals(documento.getNumeroDocumento(), "4334234");
+    }
+
+    @Test
+    public void testParsearDocumentoInvalido() {
+        String[] columnas1 = { "AAAAA", "4334234" };
+        Assertions.assertThrows(ParseException.class, () -> { Documento.fromCsv(columnas1); });
+        String[] columnas2 = { "4334234" };
+        Assertions.assertThrows(ParseException.class, () -> { Documento.fromCsv(columnas2); });
+    }
+
+    @Test
+    public void testParsearContribucionValida() throws ParseException {
+        String[] columnas = { "02/02/2022", "DONACION_VIANDAS", "30" };
+        Assertions.assertDoesNotThrow(() -> { Contribucion.fromCsv(columnas); });
+        Contribucion contribucion = Contribucion.fromCsv(columnas);
+        Assertions.assertInstanceOf(DonacionDeViandas.class, contribucion);
+        Assertions.assertEquals(contribucion.getFecha().getDayOfMonth(), 2);
+        Assertions.assertEquals(contribucion.getFecha().getMonth().getValue(), 2);
+        Assertions.assertEquals(contribucion.getFecha().getYear(), 2022);
+        Assertions.assertEquals(((DonacionDeViandas) contribucion).getCantidadDeViandas(), 30);
+    }
+
+    @Test
+    public void testParsearContribucionInvalida() {
+        String[] columnas1 = { "02/2022", "DONACION_VIANDAS", "30" };
+        Assertions.assertThrows(ParseException.class, () -> { Contribucion.fromCsv(columnas1); });
+        String[] columnas2 = { "02/02/2022", "HOLA", "30" };
+        Assertions.assertThrows(ParseException.class, () -> { Contribucion.fromCsv(columnas2); });
+        String[] columnas3 = { "02/2022", "DONACION_VIANDAS", "bla" };
+        Assertions.assertThrows(ParseException.class, () -> { Contribucion.fromCsv(columnas3); });
+    }
+
+    @Test
+    public void testParsearPersonaValida() throws ParseException {
+        String[] columnas = { "DNI", "4334234", "Juan", "Perez", "jperez@gmail.com" };
+        Assertions.assertDoesNotThrow(() -> { PersonaHumana.fromCsv(columnas); });
+        PersonaHumana persona = PersonaHumana.fromCsv(columnas);
+        Assertions.assertEquals(persona.getDocumento().getTipoDocumento(), TipoDocumento.DNI);
+        Assertions.assertEquals(persona.getDocumento().getNumeroDocumento(), "4334234");
+        Assertions.assertEquals(persona.getNombre(), "Juan Perez");
+        Assertions.assertEquals(persona.getEmail().getMail(), "jperez@gmail.com");
+    }
+
+    @Test
+    public void testParsearPersonaInvalida() {
+        String[] columnas1 = { "DNI", "4334234", "Perez", "jperez@gmail.com" };
+        Assertions.assertThrows(ParseException.class, () -> { PersonaHumana.fromCsv(columnas1); });
+        String[] columnas2 = { "ASDAS", "4334234", "Juan", "Perez", "jperez@gmail.com" };
+        Assertions.assertThrows(ParseException.class, () -> { PersonaHumana.fromCsv(columnas2); });
+    }
 }

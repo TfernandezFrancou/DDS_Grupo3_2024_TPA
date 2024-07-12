@@ -15,9 +15,10 @@ public class DistribucionDeViandas extends Contribucion {
     private Heladera destino;
     private Integer cantidad;
     private String motivo;
-    private LocalDate fechaDistribucion;
 
-    public DistribucionDeViandas(Integer cantidad) {
+    public DistribucionDeViandas(TipoDePersona tipo, LocalDate fecha, Integer cantidad) {
+        this.setTiposDePersona(tipo);
+        this.setFecha(fecha);
         this.cantidad = cantidad;
     }
 

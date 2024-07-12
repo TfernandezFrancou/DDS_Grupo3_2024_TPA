@@ -10,11 +10,12 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class DonacionDeDinero extends Contribucion {
-    private LocalDate fecha;
     private float monto;
     private Integer frecuencia;
 
-    public DonacionDeDinero(Integer cantidad) {
+    public DonacionDeDinero(TipoDePersona tipo, LocalDate fecha, Integer cantidad) {
+        this.setTiposDePersona(tipo);
+        this.setFecha(fecha);
         this.monto = cantidad;
     }
 
