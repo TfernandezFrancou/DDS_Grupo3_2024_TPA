@@ -17,6 +17,10 @@ public class DistribucionDeViandas extends Contribucion {
     private String motivo;
     private LocalDate fechaDistribucion;
 
+    public DistribucionDeViandas(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
     @Override
     public void ejecutarContribucion(){
         //TODO actualiza en la DB las viandas

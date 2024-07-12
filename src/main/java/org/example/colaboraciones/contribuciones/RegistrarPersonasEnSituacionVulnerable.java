@@ -18,6 +18,12 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
     @Setter
     private Integer tarjetasEntregadas;
 
+    public RegistrarPersonasEnSituacionVulnerable(Integer cantidad) {
+        this.personasRegistradas = new ArrayList<>();
+        this.tarjetasAEntregar = new ArrayList<>();
+        this.tarjetasEntregadas = cantidad;
+    }
+
     public RegistrarPersonasEnSituacionVulnerable(List<TarjetaHeladera> tarjetasAEntregar){
         this.personasRegistradas = new ArrayList<>();
         this.tarjetasAEntregar = tarjetasAEntregar;

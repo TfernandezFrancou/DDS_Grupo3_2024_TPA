@@ -22,6 +22,10 @@ public class CorreoElectronico implements MedioDeContacto {
     @Setter
     private String mail;
 
+    public CorreoElectronico(String mail) {
+        this.mail = mail;
+    }
+
     @Override
     public void notificar(String subject, String texto) throws MessagingException {
         Properties properties = new Properties();

@@ -18,6 +18,10 @@ public class DonacionDeViandas extends Contribucion {
         this.viandas= new ArrayList<>();
     }
 
+    public DonacionDeViandas(Integer cantidad) {
+        this.cantidadDeViandas = cantidad;
+    }
+
     public DonacionDeViandas(List<Vianda> viandas){
         this.viandas= viandas;
     }

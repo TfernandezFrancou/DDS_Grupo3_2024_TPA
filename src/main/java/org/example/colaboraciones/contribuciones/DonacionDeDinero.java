@@ -14,6 +14,10 @@ public class DonacionDeDinero extends Contribucion {
     private float monto;
     private Integer frecuencia;
 
+    public DonacionDeDinero(Integer cantidad) {
+        this.monto = cantidad;
+    }
+
     @Override
     public void ejecutarContribucion(){
         //TODO guarda en la DB el dinero
