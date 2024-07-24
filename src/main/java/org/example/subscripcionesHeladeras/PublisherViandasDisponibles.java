@@ -21,7 +21,8 @@ public class PublisherViandasDisponibles extends PublisherHeladera {
     public void notificarATodos(Heladera heladera)
     {
         for(SubscripcionViandasDisponibles subscripcion : subscripciones){
-            subscripcion.notificar(heladera);
+            if(heladera.getViandasEnHeladera() == subscripcion.getCantidadDeViandas())
+                subscripcion.notificar(heladera);
         }
     }
 

@@ -3,6 +3,9 @@ package org.example.colaboraciones.contribuciones.heladeras;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.Ubicacion;
+import org.example.subscripcionesHeladeras.PublisherDesperfecto;
+import org.example.subscripcionesHeladeras.PublisherViandasDisponibles;
+import org.example.subscripcionesHeladeras.PublisherViandasFaltantes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,6 +23,10 @@ public class Heladera {
     private EstadoHeladera estadoHeladeraActual;
     private List<EstadoHeladera> historialEstadoHeldera;
     private TemperaturaHeladera temperaturasDeFuncionamiento;
+    private int viandasEnHeladera;
+    private PublisherViandasDisponibles publisherViandasDisponibles;
+    private PublisherViandasFaltantes publisherViandasFaltantes;
+    private PublisherDesperfecto publisherDesperfecto;
 
     public Heladera(){
         this.historialEstadoHeldera = new ArrayList<>();
@@ -44,5 +51,9 @@ public class Heladera {
             this.estadoHeladeraActual = new EstadoHeladera(nuevoEstado);
             this.historialEstadoHeldera.add(this.estadoHeladeraActual);
         }
+    }
+
+    public int faltanteParaLlenar(){
+        return this.capacidadEnViandas - this.viandasEnHeladera;
     }
 }

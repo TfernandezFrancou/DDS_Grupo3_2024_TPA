@@ -2,8 +2,7 @@ package org.example.personas.roles;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.colaboraciones.contribuciones.heladeras.TarjetaHeladera;
-import org.example.personas.documentos.Documento;
+import org.example.Tarjetas.TarjetaHeladera;
 
 import java.time.LocalDate;
 

@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.RegistroDePersonaEnSituacionVulnerable;
 import org.example.colaboraciones.TipoDePersona;
-import org.example.colaboraciones.contribuciones.heladeras.TarjetaHeladera;
+import org.example.Tarjetas.TarjetaHeladera;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

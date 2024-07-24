@@ -1,8 +1,11 @@
-package org.example.colaboraciones.contribuciones.heladeras;
+package org.example.Tarjetas;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.colaboraciones.contribuciones.heladeras.Heladera;
+import org.example.colaboraciones.contribuciones.heladeras.Uso;
 import org.example.excepciones.LimiteDeUsosDiariosSuperados;
+import org.example.personas.Persona;
 import org.example.personas.roles.PersonaEnSituacionVulnerable;
 
 import java.time.LocalDate;
@@ -10,13 +13,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TarjetaHeladera {
+public class TarjetaHeladera extends Tarjeta{
     private static final int usosMinimosPorDia = 4;
     private static final int multiplicadorPorHijos = 2;
-    @Getter
-    private String id;
-    @Getter
-    private List<Uso> usos;
     @Getter
     private Integer limiteDeUsuarios;
     @Getter
@@ -26,7 +25,7 @@ public class TarjetaHeladera {
     private LocalDate diaActual;
 
     public TarjetaHeladera(){
-        this.usos = new ArrayList<>();
+        this.setUsos(new ArrayList<>());
         this.limiteDeUsuarios = 0;
         this.cantidadDeUsosEnElDia = 0;
         this.diaActual = LocalDate.now();
@@ -34,16 +33,19 @@ public class TarjetaHeladera {
     public void calcularLimiteTarjeta(Integer cantMenores){
         this.limiteDeUsuarios =  usosMinimosPorDia + multiplicadorPorHijos * cantMenores;
     }
+    @Override
+    public void usar(Persona duenio, Heladera heladera) throws LimiteDeUsosDiariosSuperados { // AGREGUE HELADERA AL METODO
+        if(duenio.getRol() instanceof PersonaEnSituacionVulnerable)
+        {
+            if(puedeUsarTarjeta((PersonaEnSituacionVulnerable) duenio.getRol())){
+                LocalDateTime fechaActual = LocalDateTime.now();
+                Uso nuevoUso = new Uso(fechaActual, heladera);
 
-    public void usar(PersonaEnSituacionVulnerable duenio, Heladera heladera) throws LimiteDeUsosDiariosSuperados { // AGREGUE HELADERA AL METODO
-        if(puedeUsarTarjeta(duenio)){
-            LocalDateTime fechaActual = LocalDateTime.now();
-            Uso nuevoUso = new Uso(fechaActual, heladera);
-
-            this.usos.add(nuevoUso);
-            cantidadDeUsosEnElDia++;
-        } else {
-            throw new LimiteDeUsosDiariosSuperados();
+                this.getUsos().add(nuevoUso);
+                cantidadDeUsosEnElDia++;
+            } else {
+                throw new LimiteDeUsosDiariosSuperados();
+            }
         }
     }
 

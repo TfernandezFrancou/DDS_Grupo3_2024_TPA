@@ -6,11 +6,14 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 
 @Getter
 @Setter
-public class SubscripcionDesperfecto extends SubscripcionHeladera{
+public class SubscripcionDesperfecto extends SubscripcionHeladera {
 
     @Override
-    public void notificar(Heladera heladera)
-    {
+    public void notificar(Heladera heladera) {
         //TODO
+        try {
+        } catch (Exception exception) {
+
+        }
     }
 }

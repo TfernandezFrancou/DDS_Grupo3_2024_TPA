@@ -21,7 +21,8 @@ public class PublisherViandasFaltantes extends PublisherHeladera{
     public void notificarATodos(Heladera heladera)
     {
         for(SubscripcionViandasFaltantes subscripcion : subscripciones){
-            subscripcion.notificar(heladera);
+            if(heladera.faltanteParaLlenar() == subscripcion.getCantidadDeViandas())
+                subscripcion.notificar(heladera);
         }
     }
 }

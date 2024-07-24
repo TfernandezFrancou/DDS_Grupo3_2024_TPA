@@ -52,4 +52,8 @@ public abstract class Persona {
             return usuario;
         }
     }
+
+    public void cambiarRol(Rol nuevoRol){
+        this.rol = nuevoRol;
+    }
 }
