@@ -15,6 +15,7 @@ import org.example.subscripcionesHeladeras.PublisherViandasFaltantes;
 import org.example.tarjetas.SolicitudDeApertura;
 import org.example.tarjetas.TarjetaColaborador;
 
+import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -66,12 +67,17 @@ public class Heladera {
         }
     }
 
-    public void notificarCambioViandas(int viandasIntroducidas, int viandasSacadas) {
+    public void notificarCambioViandas(int viandasIntroducidas, int viandasSacadas) throws MessagingException {
         MovimientoViandas m = new MovimientoViandas(viandasIntroducidas, viandasSacadas, LocalDateTime.now());
         this.historialMovimientos.add(m);
         this.viandasEnHeladera += viandasIntroducidas - viandasSacadas;
         RepoHeladeras.getInstancia().actualizar(this);
-        // TODO: notificar a los suscriptores
+        publisherViandasFaltantes.notificarATodos(this);
+        publisherViandasDisponibles.notificarATodos(this);
+    }
+
+    public void notificarDesperfecto() throws MessagingException {
+        publisherDesperfecto.notificarATodos(this);
     }
 
     public int faltanteParaLlenar(){
@@ -85,9 +91,7 @@ public class Heladera {
     }
 
     public void registrarApertura(TarjetaColaborador tarjetaColaborador) throws SolicitudVencida {
-
         SolicitudDeApertura solicitud = RepositorioSolicitudesApertura.getInstancia().buscarSolicitudDeApertura(this, tarjetaColaborador);
-
         LocalDateTime horarioApertura = LocalDateTime.now();
         boolean vencida = solicitud.getFechaCreacion().plusMinutes(tarjetaColaborador.getLimiteDeTiempoEnMinutos()).isBefore(horarioApertura);
         if (vencida) throw new SolicitudVencida(Configuracion.obtenerProperties("mensaje.apertura-heladera.solicitud-vencida"));
