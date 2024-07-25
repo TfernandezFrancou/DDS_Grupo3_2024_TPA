@@ -17,5 +17,5 @@ public abstract class Tarjeta {
     private String id;
     private List<Uso> usos;
 
-    public abstract void usar(Rol duenio, Heladera heladera) throws LimiteDeUsosDiariosSuperados;
+    public abstract void usar(Rol duenio, Heladera heladera) throws Exception;
 }
