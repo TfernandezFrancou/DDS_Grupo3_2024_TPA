@@ -6,6 +6,10 @@ import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
+import org.example.config.Configuracion;
+import org.example.excepciones.SolicitudInexistente;
+import org.example.personas.roles.Colaborador;
+import org.example.validadores.VerificadorAperturaHeladera;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,15 +36,17 @@ public class DonacionDeViandas extends Contribucion {
     }
 
     @Override
-    public void ejecutarContribucion() {
+    public void ejecutarContribucion() throws Exception{
         super.ejecutarContribucion();
-        //TODO guarda en la DB las viandas
-        try {
-            colaborador.getTarjetaColaborador().usar(colaborador, heladera);
-            // este 'registrarApertura' deberia ir dentro del metodo 'usar' de la tarjeta ??
+
+        colaborador.getTarjetaColaborador().usar(colaborador, heladera);
+        if(VerificadorAperturaHeladera.getInstancia().puedeAbrirHeladera(heladera, colaborador)){
+            //TODO este 'registrarApertura' deberia ir dentro del metodo 'usar' de la tarjeta ??
             heladera.registrarApertura(colaborador.getTarjetaColaborador());
-            heladera.actualizarCantidadViandas(cantidadDeViandas, 0);
-        } catch (Exception e) {}
+            heladera.notificarCambioViandas(cantidadDeViandas, 0);
+        }else {
+           throw new SolicitudInexistente(Configuracion.obtenerProperties("mensaje.apertura-heladera.solicitud-heladera-inexistente"));
+        }
     }
 
     @Override

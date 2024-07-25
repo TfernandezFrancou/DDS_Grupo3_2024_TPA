@@ -10,7 +10,7 @@ public class SubscripcionDesperfecto extends SubscripcionHeladera {
 
     @Override
     public void notificar(Heladera heladera) {
-        //TODO
+        //TODO notificar
         try {
         } catch (Exception exception) {
 

@@ -20,9 +20,8 @@ public class DonacionDeDinero extends Contribucion {
     }
 
     @Override
-    public void ejecutarContribucion(){
+    public void ejecutarContribucion() throws Exception{
         super.ejecutarContribucion();
-        //TODO guarda en la DB el dinero
     }
 
     @Override

@@ -1,17 +1,17 @@
 package org.example.colaboraciones.contribuciones.heladeras;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.Ubicacion;
-import org.example.excepciones.SolicitudInexistente;
+import org.example.config.Configuracion;
 import org.example.excepciones.SolicitudVencida;
-import org.example.repositorios.RepoAperturaHeladera;
-import org.example.repositorios.RepoHeladera;
-import org.example.repositorios.RepoSolicitudApertura;
+import org.example.repositorios.RepositorioAperturasHeladera;
+import org.example.repositorios.RepoHeladeras;
+import org.example.repositorios.RepositorioSolicitudesApertura;
 import org.example.subscripcionesHeladeras.PublisherDesperfecto;
 import org.example.subscripcionesHeladeras.PublisherViandasDisponibles;
 import org.example.subscripcionesHeladeras.PublisherViandasFaltantes;
-import org.example.tarjetas.AperturaHeladera;
 import org.example.tarjetas.SolicitudDeApertura;
 import org.example.tarjetas.TarjetaColaborador;
 
@@ -19,21 +19,25 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class Heladera {
     private Ubicacion ubicacion;
     private String direccion;
     private String nombre;
+
     private Integer capacidadEnViandas;
     private Integer viandasEnHeladera;
+
     private LocalDate fechaInicioFuncionamiento;
+
     private EstadoHeladera estadoHeladeraActual;
     private List<EstadoHeladera> historialEstadoHeldera;
     private List<MovimientoViandas> historialMovimientos;
     private TemperaturaHeladera temperaturasDeFuncionamiento;
+
     private PublisherViandasDisponibles publisherViandasDisponibles;
     private PublisherViandasFaltantes publisherViandasFaltantes;
     private PublisherDesperfecto publisherDesperfecto;
@@ -62,11 +66,11 @@ public class Heladera {
         }
     }
 
-    public void actualizarCantidadViandas(int viandasIntroducidas, int viandasSacadas) {
+    public void notificarCambioViandas(int viandasIntroducidas, int viandasSacadas) {
         MovimientoViandas m = new MovimientoViandas(viandasIntroducidas, viandasSacadas, LocalDateTime.now());
         this.historialMovimientos.add(m);
         this.viandasEnHeladera += viandasIntroducidas - viandasSacadas;
-        RepoHeladera.getInstancia().actualizar(this);
+        RepoHeladeras.getInstancia().actualizar(this);
         // TODO: notificar a los suscriptores
     }
 
@@ -77,16 +81,16 @@ public class Heladera {
     public void solicitarApertura(TarjetaColaborador tarjeta) {
         LocalDateTime fecha = LocalDateTime.now();
         SolicitudDeApertura solicitud = new SolicitudDeApertura(this, fecha, tarjeta);
-        RepoSolicitudApertura.getInstancia().agregar(solicitud);
+        RepositorioSolicitudesApertura.getInstancia().agregarSolicitudDeApertura(solicitud);
     }
 
-    public void registrarApertura(TarjetaColaborador tarjeta) throws SolicitudInexistente, SolicitudVencida {
-        // TODO: esta validacion va en una clase aparte segun el diagrama y las secuencias
-        Optional<SolicitudDeApertura> s = RepoSolicitudApertura.getInstancia().buscarSolicitud(this, tarjeta);
-        SolicitudDeApertura solicitud = s.orElseThrow(() -> new SolicitudInexistente("No se encontro solicitud para esa tarjeta"));
+    public void registrarApertura(TarjetaColaborador tarjetaColaborador) throws SolicitudVencida {
+
+        SolicitudDeApertura solicitud = RepositorioSolicitudesApertura.getInstancia().buscarSolicitudDeApertura(this, tarjetaColaborador);
+
         LocalDateTime horarioApertura = LocalDateTime.now();
-        boolean vencida = solicitud.getFechaCreacion().plusMinutes(tarjeta.getLimiteDeTiempoEnMinutos()).isBefore(horarioApertura);
-        if (vencida) throw new SolicitudVencida("Ya paso su limite de tiempo");
-        RepoAperturaHeladera.getInstancia().agregar(new AperturaHeladera(this, tarjeta, horarioApertura));
+        boolean vencida = solicitud.getFechaCreacion().plusMinutes(tarjetaColaborador.getLimiteDeTiempoEnMinutos()).isBefore(horarioApertura);
+        if (vencida) throw new SolicitudVencida(Configuracion.obtenerProperties("mensaje.apertura-heladera.solicitud-vencida"));
+        RepositorioAperturasHeladera.getInstancia().agregarApertura(new AperturaHeladera(this, tarjetaColaborador, horarioApertura));
     }
 }

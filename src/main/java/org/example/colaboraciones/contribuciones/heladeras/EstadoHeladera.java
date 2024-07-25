@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 public class EstadoHeladera {
-    @Getter()
+    @Getter
     private final Boolean estaActiva;
     private final LocalDateTime fechaHoraInicio;
-    @Setter()
+    @Setter
     private LocalDateTime fechaHoraFin;
     
     public EstadoHeladera(boolean activa) {

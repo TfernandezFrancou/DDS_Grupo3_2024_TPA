@@ -2,6 +2,10 @@ package org.example.personas.roles;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.colaboraciones.contribuciones.DistribucionDeViandas;
+import org.example.colaboraciones.contribuciones.DonacionDeViandas;
+import org.example.colaboraciones.contribuciones.heladeras.Heladera;
+import org.example.tarjetas.SolicitudDeApertura;
 import org.example.tarjetas.TarjetaColaborador;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
 import org.example.excepciones.PuntosInsuficienteParaCanjearOferta;
@@ -9,6 +13,8 @@ import org.example.colaboraciones.Contribucion;
 import org.example.repositorios.RepoContribucion;
 
 
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +34,7 @@ public class Colaborador extends Rol {
 
     public void agregarContribucion(Contribucion contribucion)
     {
-        RepoContribucion.getInstancia().agregar(contribucion);
+        RepoContribucion.getInstancia().agregarContribucion(contribucion);
         this.formasContribucion.add(contribucion);
     }
 
@@ -61,7 +67,24 @@ public class Colaborador extends Rol {
         return this.puntuaje >= oferta.getPuntosNecesarios();
     }
 
-    public void asignarTarjeta(TarjetaColaborador tarjeta) {
-        this.tarjetaColaborador = tarjeta;
+    public SolicitudDeApertura emitirAvisoHeladera(Heladera heladera){
+        // TODO emitirAvisoHeladera
+        return null;
+    }
+    public void reportarFallaTecnica(){
+        // TODO reportarFallaTecnica
+    }
+    public int cantidadDeViandasDistribuidasEnLaSemana(LocalDateTime inicioSemana, LocalDateTime finSemana){
+
+       return this.formasContribucion.stream()
+                .filter(contribucion -> contribucion instanceof DonacionDeViandas &&
+                        (contribucion.getFecha().isAfter(ChronoLocalDate.from(inicioSemana)) &&
+                        contribucion.getFecha().isBefore(ChronoLocalDate.from(finSemana))
+                        ) || (contribucion.getFecha().equals(inicioSemana.toLocalDate()) ||
+                                    contribucion.getFecha().equals(finSemana.toLocalDate())
+                            )
+                        )
+                .mapToInt((contribucion -> ((DonacionDeViandas) contribucion).getCantidadDeViandas()))
+                .sum();
     }
 }

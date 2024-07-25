@@ -94,7 +94,7 @@ public class Usuario {
     }
 
     private String generarContrasenia(){
-        //TODO generar credenciales
+        // generar credenciales
         return UUID.randomUUID().toString();
     }
 }

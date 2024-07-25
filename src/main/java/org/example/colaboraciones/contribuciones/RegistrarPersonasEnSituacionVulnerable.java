@@ -40,7 +40,7 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
     }
 
     @Override
-    public void ejecutarContribucion() {
+    public void ejecutarContribucion() throws Exception{
         super.ejecutarContribucion();
         RepoPersona.getInstancia().agregarTodas(personasRegistradas);
         RepoTarjetaHeladera.getInstancia().agregarTodas(tarjetasAEntregar);

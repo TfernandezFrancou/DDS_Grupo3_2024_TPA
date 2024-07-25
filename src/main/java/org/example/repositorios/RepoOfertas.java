@@ -1,28 +1,27 @@
 package org.example.repositorios;
 
-import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepoOferta {
+public class RepoOfertas {
     private List<Oferta> ofertas;
 
-    private static RepoOferta instancia = null;
+    private static RepoOfertas instancia = null;
 
-    private RepoOferta() {
+    private RepoOfertas() {
         this.ofertas = new ArrayList<>();
     }
 
-    public static RepoOferta getInstancia() {
+    public static RepoOfertas getInstancia() {
         if (instancia == null) {
-            RepoOferta.instancia = new RepoOferta();
+            RepoOfertas.instancia = new RepoOfertas();
         }
         return instancia;
     }
 
-    public void agregar(Oferta oferta) {
+    public void agregarOferta(Oferta oferta) {
         this.ofertas.add(oferta);
     }
 
@@ -30,7 +29,7 @@ public class RepoOferta {
         this.ofertas.addAll(ofertas);
     }
 
-    public void eliminar(Oferta oferta) {
+    public void eliminarOferta(Oferta oferta) {
         this.ofertas.remove(oferta);
     }
 }

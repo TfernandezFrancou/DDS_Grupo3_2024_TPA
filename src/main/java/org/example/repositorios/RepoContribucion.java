@@ -21,11 +21,11 @@ public class RepoContribucion {
         return instancia;
     }
 
-    public void agregar(Contribucion contribucion) {
+    public void agregarContribucion(Contribucion contribucion) {
         this.contribuciones.add(contribucion);
     }
 
-    public void eliminar(Contribucion contribucion) {
+    public void eliminarContribucion(Contribucion contribucion) {
         this.contribuciones.remove(contribucion);
     }
 }

@@ -23,11 +23,10 @@ public class DistribucionDeViandas extends Contribucion {
     }
 
     @Override
-    public void ejecutarContribucion(){
+    public void ejecutarContribucion() throws Exception {
         super.ejecutarContribucion();
-        //TODO actualiza en la DB las viandas
-        origen.actualizarCantidadViandas(0, cantidad);
-        destino.actualizarCantidadViandas(cantidad, 0);
+        origen.notificarCambioViandas(0, cantidad);
+        destino.notificarCambioViandas(cantidad, 0);
     }
 
     @Override

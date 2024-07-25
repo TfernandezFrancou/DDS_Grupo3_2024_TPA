@@ -5,27 +5,27 @@ import org.example.personas.contacto.Mensaje;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepoMensaje {
+public class RepoMensajes {
     private List<Mensaje> mensajes;
 
-    private static RepoMensaje instancia = null;
+    private static RepoMensajes instancia = null;
 
-    private RepoMensaje() {
+    private RepoMensajes() {
         this.mensajes = new ArrayList<>();
     }
 
-    public static RepoMensaje getInstancia() {
+    public static RepoMensajes getInstancia() {
         if (instancia == null) {
-            RepoMensaje.instancia = new RepoMensaje();
+            RepoMensajes.instancia = new RepoMensajes();
         }
         return instancia;
     }
 
-    public void agregar(Mensaje mensaje) {
+    public void agregarMensaje(Mensaje mensaje) {
         this.mensajes.add(mensaje);
     }
 
-    public void eliminar(Mensaje mensaje) {
+    public void quitarMensaje(Mensaje mensaje) {
         this.mensajes.remove(mensaje);
     }
 }

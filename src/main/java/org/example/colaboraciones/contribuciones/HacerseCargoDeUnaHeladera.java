@@ -4,8 +4,7 @@ import lombok.Getter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
-import org.example.repositorios.RepoContribucion;
-import org.example.repositorios.RepoHeladera;
+import org.example.repositorios.RepoHeladeras;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +19,9 @@ public class HacerseCargoDeUnaHeladera extends Contribucion {
     }
 
     @Override
-    public void ejecutarContribucion(){
+    public void ejecutarContribucion() throws Exception{
         super.ejecutarContribucion();
-        RepoHeladera.getInstancia().agregarTodas(heladerasColocadas);
+        RepoHeladeras.getInstancia().agregarTodas(heladerasColocadas);
     }
 
     @Override

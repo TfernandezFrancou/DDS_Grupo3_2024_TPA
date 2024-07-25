@@ -4,8 +4,7 @@ import lombok.Getter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
-import org.example.repositorios.RepoContribucion;
-import org.example.repositorios.RepoOferta;
+import org.example.repositorios.RepoOfertas;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +18,9 @@ public class OfrecerProductos extends Contribucion {
     }
 
     @Override
-    public void ejecutarContribucion(){
+    public void ejecutarContribucion() throws Exception{
         super.ejecutarContribucion();
-        RepoOferta.getInstancia().agregarTodas(ofertas);
+        RepoOfertas.getInstancia().agregarTodas(ofertas);
     }
 
     @Override
