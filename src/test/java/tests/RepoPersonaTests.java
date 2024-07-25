@@ -1,10 +1,14 @@
 package tests;
 
 import org.example.colaboraciones.TipoDePersona;
+import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
+import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
 import org.example.personas.roles.Colaborador;
+import org.example.personas.roles.Tecnico;
+import org.example.recomendacion.Zona;
 import org.example.reportes.ItemReporteColaborador;
 import org.example.reportes.ItemReporteHeladera;
 import org.example.repositorios.RepoPersona;
@@ -28,6 +32,7 @@ public class RepoPersonaTests {
     @BeforeEach
     public void setUp(){
         this.repoPersona  = RepoPersona.getInstancia();
+        repoPersona.clean();
 
         this.colaborador1 = new PersonaHumana();
         this.colaborador1.setRol(new Colaborador());
@@ -70,4 +75,72 @@ public class RepoPersonaTests {
         }
 
     }
+
+    @Test
+    public void testTecnicoMasCercanoAHeladera(){
+        repoPersona.clean();//limpio el repo
+
+        //creo los tecnicos
+        Persona tecnico1 = new PersonaHumana();
+        Tecnico rolTecnico1 = new Tecnico();
+        Zona zona1 = new Zona();
+        zona1.setUbicacion(new Ubicacion(-34.609722F, -58.382592F));// Cerca de Buenos Aires
+        zona1.setRadio(10); // dentro de la zona
+        rolTecnico1.agregarAreaDeCovertura(zona1);
+        tecnico1.setRol(rolTecnico1);
+
+        Persona tecnico2 = new PersonaHumana();
+        Tecnico rolTecnico2 = new Tecnico();
+        Zona zona2 = new Zona();
+        zona2.setUbicacion(new Ubicacion(-34.705722F, -58.501592F)); // Más lejos de Buenos Aires
+        zona2.setRadio(20);//dentro de la zona pero a mayor distancia que el primer tecnico
+        rolTecnico2.agregarAreaDeCovertura(zona2);
+        tecnico2.setRol(rolTecnico2);
+
+        //heladera central
+        Heladera heladeraEnBuenosAires = new Heladera(); // Ejemplo en Buenos Aires
+        heladeraEnBuenosAires.setUbicacion(new Ubicacion(-34.603722F, -58.381592F));
+
+        // los agrego al repo
+        repoPersona.agregarTodas(List.of(tecnico1, tecnico2));
+
+        //llamo al metodo para probarlo
+        Persona tecnicoMasCercano = repoPersona.tecnicoMasCercanoAHeladera(heladeraEnBuenosAires);
+
+       Assertions.assertEquals(tecnico1, tecnicoMasCercano);
+    }
+    @Test
+    public void testSiNingunTecnicoCubreLaZonaDevuelveNull(){
+        repoPersona.clean();//limpio el repo
+
+        //creo los tecnicos
+        Persona tecnico1 = new PersonaHumana();
+        Tecnico rolTecnico1 = new Tecnico();
+        Zona zona1 = new Zona();
+        zona1.setUbicacion(new Ubicacion(-34.603722F, -60.381592F));// Lejos de Buenos Aires
+        zona1.setRadio(10);
+        rolTecnico1.agregarAreaDeCovertura(zona1);
+        tecnico1.setRol(rolTecnico1);
+
+        Persona tecnico2 = new PersonaHumana();
+        Tecnico rolTecnico2 = new Tecnico();
+        Zona zona2 = new Zona();
+        zona2.setUbicacion(new Ubicacion(-34.705722F, -58.501592F)); // Más lejos de Buenos Aires
+        zona2.setRadio(10);
+        rolTecnico2.agregarAreaDeCovertura(zona2);
+        tecnico2.setRol(rolTecnico2);
+
+        //heladera central
+        Heladera heladeraEnBuenosAires = new Heladera(); // Ejemplo en Buenos Aires
+        heladeraEnBuenosAires.setUbicacion(new Ubicacion(-34.603722F, -58.381592F));
+
+        // los agrego al repo
+        repoPersona.agregarTodas(List.of(tecnico1, tecnico2));
+
+        //llamo al metodo para probarlo
+        Persona tecnicoMasCercano = repoPersona.tecnicoMasCercanoAHeladera(heladeraEnBuenosAires);
+
+        Assertions.assertNull(tecnicoMasCercano);
+    }
+
 }

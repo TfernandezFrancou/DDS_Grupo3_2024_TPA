@@ -20,4 +20,7 @@ public class Tecnico extends Rol {
         this.areasDeCobertura = new ArrayList<>();
     }
 
+    public void agregarAreaDeCovertura(Zona areaDeCovertura){
+        this.areasDeCobertura.add(areaDeCovertura);
+    }
 }
