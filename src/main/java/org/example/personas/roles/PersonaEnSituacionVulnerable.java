@@ -2,7 +2,7 @@ package org.example.personas.roles;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.Tarjetas.TarjetaHeladera;
+import org.example.tarjetas.TarjetaHeladera;
 
 import java.time.LocalDate;
 

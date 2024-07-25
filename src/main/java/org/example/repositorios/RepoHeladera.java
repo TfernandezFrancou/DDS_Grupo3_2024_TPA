@@ -31,4 +31,9 @@ public class RepoHeladera {
     public List<Heladera> buscarHeladerasActivas() {
         return heladeras.stream().filter(Heladera::estaActiva).toList();
     }
+
+    public List<Heladera> buscarHeladerasCercanasA(Heladera heladera) {
+        // TODO:
+        return null;
+    }
 }

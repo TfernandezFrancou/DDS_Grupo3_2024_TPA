@@ -14,7 +14,7 @@ import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.personas.documentos.Documento;
 import org.example.personas.documentos.TipoDocumento;
-import org.example.repositorios.Registrados;
+import org.example.repositorios.RepoUsuario;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,6 @@ import org.mockito.*;
 import javax.mail.MessagingException;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -165,19 +164,19 @@ public class MigradorContribucionTest {
         colaborador.agregarContribucion(new DonacionDeViandas());
         PersonaHumana persona1 = new PersonaHumana("Juan", "Perez", correo, new Documento(TipoDocumento.DNI, "33333333"), colaborador);
         Usuario usuario1 = new Usuario("Juan Perez", persona1.getDocumento(), persona1);
-        try (MockedStatic<Registrados> mockedSingleton = Mockito.mockStatic(Registrados.class)) {
-            Registrados registrados = Mockito.mock(Registrados.class);
-            Mockito.when(Registrados.getInstancia()).thenReturn(registrados);
-            Mockito.when(registrados.obtenerUsuarioPorDocumento(persona1.getDocumento())).thenReturn(usuario1);
+        try (MockedStatic<RepoUsuario> mockedSingleton = Mockito.mockStatic(RepoUsuario.class)) {
+            RepoUsuario repoUsuario = Mockito.mock(RepoUsuario.class);
+            Mockito.when(RepoUsuario.getInstancia()).thenReturn(repoUsuario);
+            Mockito.when(repoUsuario.obtenerUsuarioPorDocumento(persona1.getDocumento())).thenReturn(usuario1);
 
             migradorContribucion.getColaboradores().add(persona1);
             migradorContribucion.getContribuciones().add(new DonacionDeDinero(TipoDePersona.HUMANA, LocalDate.of(2022, 1, 1), 100));
             migradorContribucion.migrarColaboradores();
 
             // se hace una busqueda
-            Mockito.verify(registrados, Mockito.times(1)).obtenerUsuarioPorDocumento(Mockito.any());
+            Mockito.verify(repoUsuario, Mockito.times(1)).obtenerUsuarioPorDocumento(Mockito.any());
             // no se agrega ningun usuario
-            Mockito.verify(registrados, Mockito.times(0)).agregarUsuarios(Mockito.any());
+            Mockito.verify(repoUsuario, Mockito.times(0)).agregarUsuarios(Mockito.any());
             // se agrega la forma de contribucion
             Assertions.assertEquals(((Colaborador) persona1.getRol()).getFormasContribucion().size(), 2);
             // no se notifica al usuario pues no se creo
@@ -190,20 +189,20 @@ public class MigradorContribucionTest {
         CorreoElectronico correo = Mockito.mock(CorreoElectronico.class);
         Mockito.doNothing().when(correo).notificar(Mockito.any(), Mockito.any());
         PersonaHumana persona1 = new PersonaHumana("Juan", "Perez", correo, new Documento(TipoDocumento.DNI, "33333333"), new Colaborador());
-        try (MockedStatic<Registrados> mockedSingleton = Mockito.mockStatic(Registrados.class)) {
-            Registrados registrados = Mockito.mock(Registrados.class);
-            Mockito.when(Registrados.getInstancia()).thenReturn(registrados);
-            Mockito.when(registrados.obtenerUsuarioPorDocumento(persona1.getDocumento())).thenThrow(UserException.class);
-            Mockito.doNothing().when(registrados).agregarUsuarios(Mockito.any());
+        try (MockedStatic<RepoUsuario> mockedSingleton = Mockito.mockStatic(RepoUsuario.class)) {
+            RepoUsuario repoUsuario = Mockito.mock(RepoUsuario.class);
+            Mockito.when(RepoUsuario.getInstancia()).thenReturn(repoUsuario);
+            Mockito.when(repoUsuario.obtenerUsuarioPorDocumento(persona1.getDocumento())).thenThrow(UserException.class);
+            Mockito.doNothing().when(repoUsuario).agregarUsuarios(Mockito.any());
 
             migradorContribucion.getColaboradores().add(persona1);
             migradorContribucion.getContribuciones().add(new DonacionDeDinero(TipoDePersona.HUMANA, LocalDate.of(2022, 1, 1), 100));
             migradorContribucion.migrarColaboradores();
 
             // se hace una busqueda
-            Mockito.verify(registrados, Mockito.times(1)).obtenerUsuarioPorDocumento(Mockito.any());
+            Mockito.verify(repoUsuario, Mockito.times(1)).obtenerUsuarioPorDocumento(Mockito.any());
             // se agrega un usuario
-            Mockito.verify(registrados, Mockito.times(1)).agregarUsuarios(Mockito.any());
+            Mockito.verify(repoUsuario, Mockito.times(1)).agregarUsuarios(Mockito.any());
             // termina con una sola forma de colaboracion
             Assertions.assertEquals(((Colaborador) persona1.getRol()).getFormasContribucion().size(), 1);
             verificarContribucion(((Colaborador) persona1.getRol()).getFormasContribucion().get(0), "01/01/2022", DonacionDeDinero.class);

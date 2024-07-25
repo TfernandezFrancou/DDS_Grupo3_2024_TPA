@@ -2,11 +2,11 @@ package org.example.personas.roles;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.Tarjetas.TarjetaColaborador;
+import org.example.tarjetas.TarjetaColaborador;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
 import org.example.excepciones.PuntosInsuficienteParaCanjearOferta;
-import org.example.personas.contacto.MedioDeContacto;
 import org.example.colaboraciones.Contribucion;
+import org.example.repositorios.RepoContribucion;
 
 
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ public class Colaborador extends Rol {
 
     public void agregarContribucion(Contribucion contribucion)
     {
+        RepoContribucion.getInstancia().agregar(contribucion);
         this.formasContribucion.add(contribucion);
     }
 

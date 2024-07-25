@@ -1,14 +1,35 @@
 package org.example.repositorios;
 
-import org.example.Tarjetas.SolicitudDeApertura;
-import org.example.Tarjetas.Tarjeta;
+import org.example.tarjetas.SolicitudDeApertura;
+import org.example.tarjetas.Tarjeta;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepositorioSolicitudesApertura {
+public class RepoSolicitudApertura {
     private List<SolicitudDeApertura> solicitudesDeApertura;
+
+    private static RepoSolicitudApertura instancia = null;
+
+    private RepoSolicitudApertura() {
+        this.solicitudesDeApertura = new ArrayList<>();
+    }
+
+    public static RepoSolicitudApertura getInstancia() {
+        if (instancia == null) {
+            RepoSolicitudApertura.instancia = new RepoSolicitudApertura();
+        }
+        return instancia;
+    }
+
+    public void agregar(SolicitudDeApertura solicitud) {
+        this.solicitudesDeApertura.add(solicitud);
+    }
+
+    public void eliminar(SolicitudDeApertura solicitud) {
+        this.solicitudesDeApertura.remove(solicitud);
+    }
 
     public List<SolicitudDeApertura> buscarSolicitudDeAperturaDeTarjeta(Tarjeta tarjeta){
         //TODO CHEQUEAR! (no entendi bien el metodo en el diagrama. hice esto que es lo que se me ocurrio que puede ser)

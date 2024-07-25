@@ -7,9 +7,8 @@ import org.example.excepciones.UserException;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.personas.contacto.MedioDeContacto;
 import org.example.personas.documentos.Documento;
-import org.example.personas.roles.Colaborador;
 import org.example.personas.roles.Rol;
-import org.example.repositorios.Registrados;
+import org.example.repositorios.RepoUsuario;
 
 import javax.mail.MessagingException;
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class Persona {
-    protected String nombre;
     protected String direccion;
     protected Rol rol;
     protected Documento documento;
@@ -33,6 +31,8 @@ public abstract class Persona {
         this.mediosDeContacto.add(medioDeContacto);
     }
 
+    abstract public String getNombre();
+
     public CorreoElectronico getEmail() {
         for (MedioDeContacto medioDeContacto: this.mediosDeContacto) {
             if (medioDeContacto instanceof CorreoElectronico) {
@@ -44,10 +44,10 @@ public abstract class Persona {
 
     public Usuario buscarOCrearUsuario() throws MessagingException {
         try {
-            return Registrados.getInstancia().obtenerUsuarioPorDocumento(documento);
+            return RepoUsuario.getInstancia().obtenerUsuarioPorDocumento(documento);
         } catch (UserException userException) {
-            Usuario usuario = new Usuario(nombre, documento, this);
-            Registrados.getInstancia().agregarUsuarios(usuario);
+            Usuario usuario = new Usuario(this.getNombre(), documento, this);
+            RepoUsuario.getInstancia().agregarUsuarios(usuario);
             usuario.enviarCredenciales(this.getEmail());
             return usuario;
         }

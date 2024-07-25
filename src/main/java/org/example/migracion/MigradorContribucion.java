@@ -46,6 +46,5 @@ public class MigradorContribucion {
     private void migrarContribucion(PersonaHumana colaborador, Contribucion contribucion) throws MessagingException {
         Usuario usuario = colaborador.buscarOCrearUsuario();
         ((Colaborador) colaborador.getRol()).agregarContribucion(contribucion);
-        // TODO: guardar Colaborador y contribuciones en DB
     }
 }

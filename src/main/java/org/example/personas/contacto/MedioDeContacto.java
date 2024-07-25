@@ -6,5 +6,5 @@ import javax.mail.MessagingException;
 
 public interface MedioDeContacto {
 
-    public void notificar(String subject, String message) throws MessagingException;
+    void notificar(Mensaje mensaje) throws MessagingException;
 }

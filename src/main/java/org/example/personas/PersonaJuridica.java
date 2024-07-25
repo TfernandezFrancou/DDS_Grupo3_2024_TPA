@@ -21,11 +21,15 @@ public class PersonaJuridica extends Persona{
 
 
     public PersonaJuridica(String razonSocial) {
-        super.setNombre(razonSocial);
+        this.razonSocial = razonSocial;
     }
 
     public List<Ubicacion> obtenerUbicaciones(Zona zona) throws JsonProcessingException, ApiRequestFailedException {
         return recomendadorDeUbicaciones.consultarUbicaciones(zona);
     }
 
+    @Override
+    public String getNombre() {
+        return this.razonSocial;
+    }
 }

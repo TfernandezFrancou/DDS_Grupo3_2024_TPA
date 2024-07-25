@@ -1,6 +1,6 @@
 package org.example.repositorios;
 
-import org.example.Tarjetas.TarjetaHeladera;
+import org.example.tarjetas.TarjetaHeladera;
 
 import java.util.ArrayList;
 import java.util.List;

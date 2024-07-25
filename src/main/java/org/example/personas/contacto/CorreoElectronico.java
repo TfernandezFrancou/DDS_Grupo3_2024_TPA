@@ -27,7 +27,7 @@ public class CorreoElectronico implements MedioDeContacto {
     }
 
     @Override
-    public void notificar(String subject, String texto) throws MessagingException {
+    public void notificar(Mensaje mensaje) throws MessagingException {
         Properties properties = new Properties();
         properties.put("mail.smtp.host", SMTP_HOST);
         properties.put("mail.smtp.port", SMTP_PORT);
@@ -46,8 +46,8 @@ public class CorreoElectronico implements MedioDeContacto {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(USUARIO_FROM_GMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(this.mail));
-            message.setSubject(subject);
-            message.setText(texto);
+            message.setSubject(mensaje.getTitulo());
+            message.setText(mensaje.getContenido());
 
             Transport.send(message);
 

@@ -1,7 +1,7 @@
 package tests;
 
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
-import org.example.Tarjetas.TarjetaHeladera;
+import org.example.tarjetas.TarjetaHeladera;
 import org.example.excepciones.LimiteDeUsosDiariosSuperados;
 import org.example.personas.roles.PersonaEnSituacionVulnerable;
 import org.junit.jupiter.api.Assertions;

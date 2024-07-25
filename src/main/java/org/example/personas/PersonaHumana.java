@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 
 public class PersonaHumana extends Persona {
-    //el nomobre ya esta en Persona
+    private String nombre;
     private String apellido;
     private LocalDate fechaNacimiento;
 
@@ -46,6 +46,6 @@ public class PersonaHumana extends Persona {
 
     @Override
     public String getNombre() {
-        return super.getNombre() + " " + apellido;
+        return nombre + " " + apellido;
     }
 }

@@ -1,4 +1,4 @@
-package org.example.Tarjetas;
+package org.example.tarjetas;
 
 import lombok.Getter;
 import lombok.Setter;

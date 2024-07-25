@@ -3,9 +3,9 @@ package org.example.colaboraciones.contribuciones;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
-import org.example.colaboraciones.RegistroDePersonaEnSituacionVulnerable;
 import org.example.colaboraciones.TipoDePersona;
-import org.example.Tarjetas.TarjetaHeladera;
+import org.example.tarjetas.TarjetaHeladera;
+import org.example.personas.Persona;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
 
-    private List<RegistroDePersonaEnSituacionVulnerable> personasRegistradas ;
+    private List<Persona> personasRegistradas;
     private List<TarjetaHeladera> tarjetasAEntregar;
     @Setter
     private Integer tarjetasEntregadas;
@@ -51,8 +51,8 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
         //TODO enviar tarjetas via mail
     }
 
-    public void agregarRegistro(RegistroDePersonaEnSituacionVulnerable registro){
-     this.personasRegistradas.add(registro);
+    public void agregarPersona(Persona persona){
+        this.personasRegistradas.add(persona);
         tarjetasEntregadas++;
     }
 

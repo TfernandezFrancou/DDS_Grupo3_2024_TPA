@@ -10,21 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Registrados {
-  private static Registrados instancia = null;
+public class RepoUsuario {
+  private static RepoUsuario instancia = null;
   private List<Usuario> usuarios;
 
-  private Registrados() {
+  private RepoUsuario() {
     this.usuarios = new ArrayList<>();
   }
 
-  public static Registrados getInstancia() {
+  public static RepoUsuario getInstancia() {
     if (instancia == null) {
-      Registrados.instancia = new Registrados();
+      RepoUsuario.instancia = new RepoUsuario();
     }
     return instancia;
   }
-
 
   public void agregarUsuarios(Usuario usuarioNuevo) {
     instancia.usuarios.add(usuarioNuevo);
