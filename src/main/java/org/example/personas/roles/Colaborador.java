@@ -68,11 +68,11 @@ public class Colaborador extends Rol {
     }
 
     public SolicitudDeApertura emitirAvisoHeladera(Heladera heladera){
-        // TODO emitirAvisoHeladera
-        return null;
+        // TODO emitirAvisoHeladera: falta enviarlo a la heladera (broker?)
+        return new SolicitudDeApertura(heladera,LocalDateTime.now(), this.getTarjetaColaborador());
     }
     public void reportarFallaTecnica(){
-        // TODO reportarFallaTecnica
+        // TODO reportarFallaTecnica porque iria? entiendo que el tecnico haria un post y el controller crea la falla tecnica, sino que se hace aca?
     }
     public int cantidadDeViandasDistribuidasEnLaSemana(LocalDateTime inicioSemana, LocalDateTime finSemana){
 

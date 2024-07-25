@@ -4,12 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
+import org.example.config.Configuracion;
+import org.example.personas.contacto.CorreoElectronico;
+import org.example.personas.contacto.Mensaje;
 import org.example.repositorios.RepoContribucion;
 import org.example.repositorios.RepoPersona;
 import org.example.repositorios.RepoTarjetaHeladera;
 import org.example.tarjetas.TarjetaHeladera;
 import org.example.personas.Persona;
 
+import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +55,21 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
         return this.getTiposDePersona().equals(TipoDePersona.HUMANA);
     }
 
-    public void enviarTarjetasViaMail(){
-        //TODO enviar tarjetas via mail
+    public void enviarTarjetasViaMail(CorreoElectronico mailColaborador, Persona colaborador) throws MessagingException {
+        //TODO enviarTarjetasViaMail por ahi tendria que ir en otro lado
+        String titulo = Configuracion.obtenerProperties("mensaje.colaboraciones.tarjetas.titulo");
+        String contenido = Configuracion.obtenerProperties("mensaje.contribuciones.tarjetas.contenido")
+                .replace("{detallesDetarjetas}", this.tarjetasAEntregarToString());
+        Mensaje mensaje = new Mensaje(titulo, contenido, colaborador);
+        mailColaborador.notificar(mensaje);
+    }
+    private String tarjetasAEntregarToString(){
+        StringBuilder stringBuilderTarjetas = new StringBuilder();
+
+        for(TarjetaHeladera tarjetaHeladera: tarjetasAEntregar){
+            stringBuilderTarjetas.append("- Id tarjeta: " + tarjetaHeladera.getId()+ "\n");
+        }
+        return stringBuilderTarjetas.toString();
     }
 
     public void agregarPersona(Persona persona){

@@ -13,6 +13,6 @@ public abstract class Rol {
         this.estaActivo = false;
     }
     public void tienePermisoParaHacerAccion(){
-        //TODO implementar esto
+        //TODO para que era esto?
     }
 }

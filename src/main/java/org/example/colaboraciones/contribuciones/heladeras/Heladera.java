@@ -67,6 +67,10 @@ public class Heladera {
         }
     }
 
+    public void agregarEstadoHeladeraAlHistorial(EstadoHeladera nuevoEstadoHeladera){
+        this.historialEstadoHeldera.add(nuevoEstadoHeladera);
+    }
+
     public void notificarCambioViandas(int viandasIntroducidas, int viandasSacadas) throws MessagingException {
         MovimientoViandas m = new MovimientoViandas(viandasIntroducidas, viandasSacadas, LocalDateTime.now());
         this.historialMovimientos.add(m);

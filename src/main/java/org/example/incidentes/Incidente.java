@@ -3,6 +3,7 @@ package org.example.incidentes;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.colaboraciones.contribuciones.heladeras.EstadoHeladera;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.config.Configuracion;
 import org.example.personas.Persona;
@@ -22,6 +23,13 @@ public abstract class Incidente {
     private LocalDateTime fechaDeEmision;
 
     public Incidente(Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) {
+        //TODO esto comentado en realidad no va aca, pero tiene que ir en algun lado
+        // desactivo la heladera
+        /*EstadoHeladera estadoHeladera = new EstadoHeladera(false);
+        heladera.getEstadoHeladeraActual().setFechaHoraFin(LocalDateTime.now());//finalizo estado anterior
+        heladera.setEstadoHeladeraActual(estadoHeladera);
+        heladera.agregarEstadoHeladeraAlHistorial(estadoHeladera);
+        */
         this.heladera = heladera;
         this.tipoDeIncidente = tipoDeIncidente;
         this.fechaDeEmision = fechaDeEmision;
