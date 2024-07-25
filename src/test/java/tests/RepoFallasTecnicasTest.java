@@ -59,7 +59,6 @@ public class RepoFallasTecnicasTest {
             } else if (item.getHeladera().equals(heladera2)) {
                 Assertions.assertEquals(1, item.getCantidad(), "Heladera 2 debe tener 1 falla");
             } else {
-                System.out.println(item.getHeladera() + ", "+ item.getCantidad());
                 Assertions.fail("Heladera no esperada en el reporte");
             }
         }

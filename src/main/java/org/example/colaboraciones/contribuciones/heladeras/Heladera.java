@@ -94,11 +94,4 @@ public class Heladera {
         RepositorioSolicitudesApertura.getInstancia().agregarSolicitudDeApertura(solicitud);
     }
 
-    public void registrarApertura(TarjetaColaborador tarjetaColaborador) throws SolicitudVencida {
-        SolicitudDeApertura solicitud = RepositorioSolicitudesApertura.getInstancia().buscarSolicitudDeApertura(this, tarjetaColaborador);
-        LocalDateTime horarioApertura = LocalDateTime.now();
-        boolean vencida = solicitud.getFechaCreacion().plusMinutes(tarjetaColaborador.getLimiteDeTiempoEnMinutos()).isBefore(horarioApertura);
-        if (vencida) throw new SolicitudVencida(Configuracion.obtenerProperties("mensaje.apertura-heladera.solicitud-vencida"));
-        RepositorioAperturasHeladera.getInstancia().agregarApertura(new AperturaHeladera(this, tarjetaColaborador, horarioApertura));
-    }
 }

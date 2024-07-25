@@ -39,10 +39,8 @@ public class DonacionDeViandas extends Contribucion {
     public void ejecutarContribucion() throws Exception{
         super.ejecutarContribucion();
 
-        colaborador.getTarjetaColaborador().usar(colaborador, heladera);
         if(VerificadorAperturaHeladera.getInstancia().puedeAbrirHeladera(heladera, colaborador)){
-            //TODO este 'registrarApertura' deberia ir dentro del metodo 'usar' de la tarjeta ??
-            heladera.registrarApertura(colaborador.getTarjetaColaborador());
+            colaborador.getTarjetaColaborador().usar(colaborador, heladera);
             heladera.notificarCambioViandas(cantidadDeViandas, 0);
         }else {
            throw new SolicitudInexistente(Configuracion.obtenerProperties("mensaje.apertura-heladera.solicitud-heladera-inexistente"));
