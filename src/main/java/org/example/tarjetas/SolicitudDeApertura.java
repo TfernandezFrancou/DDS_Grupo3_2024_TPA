@@ -11,8 +11,15 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class SolicitudDeApertura {
+//    private Colaborador colaborador;
+//    private Contribucion contribucion;
     private Heladera heladera;
-    private Colaborador colaborador;
     private LocalDateTime fechaCreacion;
-    private Contribucion contribucion;
+    private TarjetaColaborador tarjetaColaborador;
+
+    public SolicitudDeApertura(Heladera heladera, LocalDateTime fechaCreacion, TarjetaColaborador tarjetaColaborador) {
+        this.heladera = heladera;
+        this.fechaCreacion = fechaCreacion;
+        this.tarjetaColaborador = tarjetaColaborador;
+    }
 }

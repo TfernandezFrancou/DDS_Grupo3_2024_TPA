@@ -6,6 +6,8 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.Uso;
 import org.example.excepciones.LimiteDeUsosDiariosSuperados;
 import org.example.personas.Persona;
+import org.example.personas.roles.Colaborador;
+import org.example.personas.roles.Rol;
 
 import java.util.List;
 
@@ -15,5 +17,5 @@ public abstract class Tarjeta {
     private String id;
     private List<Uso> usos;
 
-    public abstract void usar(Persona duenio, Heladera heladera) throws LimiteDeUsosDiariosSuperados;
+    public abstract void usar(Rol duenio, Heladera heladera) throws LimiteDeUsosDiariosSuperados;
 }

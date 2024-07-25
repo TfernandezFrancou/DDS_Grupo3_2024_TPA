@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.contribuciones.*;
 import org.example.migracion.TipoColaboracion;
+import org.example.personas.roles.Colaborador;
+import org.example.repositorios.RepoContribucion;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -12,11 +14,16 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Setter
 public abstract class Contribucion {
-    private TipoDePersona tiposDePersona;
-    private float coeficientePuntaje;
+    protected Colaborador colaborador;
+    protected TipoDePersona tiposDePersona;
     private LocalDate fecha;
 
-    public abstract void ejecutarContribucion();
+    public abstract float getCoeficientePuntaje();
+
+    public void ejecutarContribucion() {
+        colaborador.setPuntuaje(colaborador.getPuntuaje() + this.obtenerPuntaje());
+        RepoContribucion.getInstancia().agregar(this);
+    }
 
     public abstract boolean puedeRealizarContribucion();
 

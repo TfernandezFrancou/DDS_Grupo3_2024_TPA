@@ -9,8 +9,8 @@ import org.example.personas.contacto.MedioDeContacto;
 @Getter
 @Setter
 public abstract class SubscripcionHeladera {
-    private Persona subscriptor;
-    private MedioDeContacto medioDeContactoElegido;
+    protected Persona subscriptor;
+    protected MedioDeContacto medioDeContactoElegido;
 
     public abstract void notificar(Heladera heladera);
 }

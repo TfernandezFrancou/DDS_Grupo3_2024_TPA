@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
+import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Getter
 public class DonacionDeViandas extends Contribucion {
+    private Heladera heladera;
     private List<Vianda> viandas;
     @Setter
     private Integer cantidadDeViandas = 0;
@@ -30,8 +32,15 @@ public class DonacionDeViandas extends Contribucion {
     }
 
     @Override
-    public void ejecutarContribucion(){
+    public void ejecutarContribucion() {
+        super.ejecutarContribucion();
         //TODO guarda en la DB las viandas
+        try {
+            colaborador.getTarjetaColaborador().usar(colaborador, heladera);
+            // este 'registrarApertura' deberia ir dentro del metodo 'usar' de la tarjeta ??
+            heladera.registrarApertura(colaborador.getTarjetaColaborador());
+            heladera.actualizarCantidadViandas(cantidadDeViandas, 0);
+        } catch (Exception e) {}
     }
 
     @Override
@@ -42,6 +51,11 @@ public class DonacionDeViandas extends Contribucion {
     public void agregarVianda(Vianda vianda){
         this.viandas.add(vianda);
         cantidadDeViandas++;
+    }
+
+    @Override
+    public float getCoeficientePuntaje() {
+        return 1.5f;
     }
 
     @Override

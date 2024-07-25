@@ -20,7 +20,11 @@ public class RepoTarjetaHeladera {
         return instancia;
     }
 
-    public void agregarTarjeta(TarjetaHeladera tarjeta) {
+    public void agregarTodas(List<TarjetaHeladera> tarjeta) {
+        this.tarjetas.addAll(tarjeta);
+    }
+
+    public void agregar(TarjetaHeladera tarjeta) {
         this.tarjetas.add(tarjeta);
     }
 

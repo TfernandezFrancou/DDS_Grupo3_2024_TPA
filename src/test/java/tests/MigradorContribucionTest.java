@@ -159,7 +159,7 @@ public class MigradorContribucionTest {
     @Test
     public void testMigrarUsuarioExistente() throws MessagingException {
         CorreoElectronico correo = Mockito.mock(CorreoElectronico.class);
-        Mockito.doNothing().when(correo).notificar(Mockito.any(), Mockito.any());
+        Mockito.doNothing().when(correo).notificar(Mockito.any());
         Colaborador colaborador = new Colaborador();
         colaborador.agregarContribucion(new DonacionDeViandas());
         PersonaHumana persona1 = new PersonaHumana("Juan", "Perez", correo, new Documento(TipoDocumento.DNI, "33333333"), colaborador);
@@ -180,14 +180,14 @@ public class MigradorContribucionTest {
             // se agrega la forma de contribucion
             Assertions.assertEquals(((Colaborador) persona1.getRol()).getFormasContribucion().size(), 2);
             // no se notifica al usuario pues no se creo
-            Mockito.verify(correo, Mockito.times(0)).notificar(Mockito.any(), Mockito.any());
+            Mockito.verify(correo, Mockito.times(0)).notificar(Mockito.any());
         }
     }
 
     @Test
     public void testMigrarUsuarioNoExistente() throws MessagingException {
         CorreoElectronico correo = Mockito.mock(CorreoElectronico.class);
-        Mockito.doNothing().when(correo).notificar(Mockito.any(), Mockito.any());
+        Mockito.doNothing().when(correo).notificar(Mockito.any());
         PersonaHumana persona1 = new PersonaHumana("Juan", "Perez", correo, new Documento(TipoDocumento.DNI, "33333333"), new Colaborador());
         try (MockedStatic<RepoUsuario> mockedSingleton = Mockito.mockStatic(RepoUsuario.class)) {
             RepoUsuario repoUsuario = Mockito.mock(RepoUsuario.class);
@@ -207,7 +207,7 @@ public class MigradorContribucionTest {
             Assertions.assertEquals(((Colaborador) persona1.getRol()).getFormasContribucion().size(), 1);
             verificarContribucion(((Colaborador) persona1.getRol()).getFormasContribucion().get(0), "01/01/2022", DonacionDeDinero.class);
             // se notifica al usuario
-            Mockito.verify(correo, Mockito.times(1)).notificar(Mockito.any(), Mockito.any());
+            Mockito.verify(correo, Mockito.times(1)).notificar(Mockito.any());
         }
     }
 

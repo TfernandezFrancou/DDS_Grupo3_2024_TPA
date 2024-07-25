@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
+import org.example.repositorios.RepoContribucion;
+import org.example.repositorios.RepoPersona;
+import org.example.repositorios.RepoTarjetaHeladera;
 import org.example.tarjetas.TarjetaHeladera;
 import org.example.personas.Persona;
 
@@ -13,7 +16,6 @@ import java.util.List;
 
 @Getter
 public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
-
     private List<Persona> personasRegistradas;
     private List<TarjetaHeladera> tarjetasAEntregar;
     @Setter
@@ -39,7 +41,9 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
 
     @Override
     public void ejecutarContribucion() {
-        //TODO guarda en la DB
+        super.ejecutarContribucion();
+        RepoPersona.getInstancia().agregarTodas(personasRegistradas);
+        RepoTarjetaHeladera.getInstancia().agregarTodas(tarjetasAEntregar);
     }
 
     @Override
@@ -54,6 +58,11 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
     public void agregarPersona(Persona persona){
         this.personasRegistradas.add(persona);
         tarjetasEntregadas++;
+    }
+
+    @Override
+    public float getCoeficientePuntaje() {
+        return 2;
     }
 
     @Override

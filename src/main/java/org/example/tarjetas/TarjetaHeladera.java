@@ -6,7 +6,9 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.Uso;
 import org.example.excepciones.LimiteDeUsosDiariosSuperados;
 import org.example.personas.Persona;
+import org.example.personas.roles.Colaborador;
 import org.example.personas.roles.PersonaEnSituacionVulnerable;
+import org.example.personas.roles.Rol;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,10 +35,10 @@ public class TarjetaHeladera extends Tarjeta{
         this.limiteDeUsuarios =  usosMinimosPorDia + multiplicadorPorHijos * cantMenores;
     }
     @Override
-    public void usar(Persona duenio, Heladera heladera) throws LimiteDeUsosDiariosSuperados { // AGREGUE HELADERA AL METODO
-        if(duenio.getRol() instanceof PersonaEnSituacionVulnerable)
+    public void usar(Rol duenio, Heladera heladera) throws LimiteDeUsosDiariosSuperados { // AGREGUE HELADERA AL METODO
+        if(duenio instanceof PersonaEnSituacionVulnerable)
         {
-            if(puedeUsarTarjeta((PersonaEnSituacionVulnerable) duenio.getRol())){
+            if(puedeUsarTarjeta((PersonaEnSituacionVulnerable) duenio)){
                 LocalDateTime fechaActual = LocalDateTime.now();
                 Uso nuevoUso = new Uso(fechaActual, heladera);
 

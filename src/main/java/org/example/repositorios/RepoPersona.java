@@ -20,6 +20,10 @@ public class RepoPersona {
         return instancia;
     }
 
+    public void agregarTodas(List<Persona> personas) {
+        this.personas.addAll(personas);
+    }
+
     public void agregar(Persona persona) {
         this.personas.add(persona);
     }

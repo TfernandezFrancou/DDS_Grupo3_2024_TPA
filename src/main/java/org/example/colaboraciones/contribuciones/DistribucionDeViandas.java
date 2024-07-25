@@ -24,12 +24,20 @@ public class DistribucionDeViandas extends Contribucion {
 
     @Override
     public void ejecutarContribucion(){
+        super.ejecutarContribucion();
         //TODO actualiza en la DB las viandas
+        origen.actualizarCantidadViandas(0, cantidad);
+        destino.actualizarCantidadViandas(cantidad, 0);
     }
 
     @Override
     public boolean puedeRealizarContribucion() {
         return this.getTiposDePersona().equals(TipoDePersona.HUMANA);
+    }
+
+    @Override
+    public float getCoeficientePuntaje() {
+        return 1;
     }
 
     @Override

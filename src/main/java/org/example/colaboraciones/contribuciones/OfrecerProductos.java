@@ -4,6 +4,8 @@ import lombok.Getter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
+import org.example.repositorios.RepoContribucion;
+import org.example.repositorios.RepoOferta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,8 @@ public class OfrecerProductos extends Contribucion {
 
     @Override
     public void ejecutarContribucion(){
-        //TODO guardar en la DB las ofertas
+        super.ejecutarContribucion();
+        RepoOferta.getInstancia().agregarTodas(ofertas);
     }
 
     @Override
@@ -31,7 +34,12 @@ public class OfrecerProductos extends Contribucion {
     }
 
     @Override
+    public float getCoeficientePuntaje() {
+        return 0;
+    }
+
+    @Override
     public float obtenerPuntaje(){
-        return 0  * this.getCoeficientePuntaje();
+        return 0 * this.getCoeficientePuntaje();
     }
 }

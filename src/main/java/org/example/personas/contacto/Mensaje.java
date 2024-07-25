@@ -3,6 +3,7 @@ package org.example.personas.contacto;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.autenticacion.Usuario;
+import org.example.personas.Persona;
 
 import java.time.LocalDateTime;
 
@@ -12,9 +13,9 @@ public class Mensaje {
     private String titulo;
     private String contenido;
     private LocalDateTime fechaDeEnvio;
-    private Usuario destinatario;
+    private Persona destinatario;
 
-    public Mensaje(String titulo, String contenido, Usuario destinatario) {
+    public Mensaje(String titulo, String contenido, Persona destinatario) {
         this.titulo = titulo;
         this.contenido = contenido;
         this.destinatario = destinatario;

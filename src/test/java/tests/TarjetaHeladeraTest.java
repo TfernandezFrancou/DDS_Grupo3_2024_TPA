@@ -1,6 +1,8 @@
 package tests;
 
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
+import org.example.personas.Persona;
+import org.example.personas.roles.Rol;
 import org.example.tarjetas.TarjetaHeladera;
 import org.example.excepciones.LimiteDeUsosDiariosSuperados;
 import org.example.personas.roles.PersonaEnSituacionVulnerable;
@@ -19,7 +21,7 @@ public class TarjetaHeladeraTest {
     private final TarjetaHeladera tarjetaHeladera = new TarjetaHeladera();
 
     @Mock
-    private  PersonaEnSituacionVulnerable duenioMock;
+    private PersonaEnSituacionVulnerable duenioMock;
 
     @Mock
     private  Heladera heladeraMock;
@@ -27,8 +29,8 @@ public class TarjetaHeladeraTest {
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);
+        // when(duenioMock.getRol()).thenReturn(rolMock);
     }
-
 
     @Test
     public void testUsarTarjeta() throws LimiteDeUsosDiariosSuperados {

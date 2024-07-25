@@ -60,4 +60,8 @@ public class Colaborador extends Rol {
     private boolean puedeCanjearOferta(Oferta oferta){
         return this.puntuaje >= oferta.getPuntosNecesarios();
     }
+
+    public void asignarTarjeta(TarjetaColaborador tarjeta) {
+        this.tarjetaColaborador = tarjeta;
+    }
 }

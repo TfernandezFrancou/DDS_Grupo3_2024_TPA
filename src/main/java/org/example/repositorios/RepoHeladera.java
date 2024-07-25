@@ -20,11 +20,18 @@ public class RepoHeladera {
         return instancia;
     }
 
-    public void agregarHeladera(Heladera heladera) {
+    public void agregarTodas(List<Heladera> heladeras) {
+        this.heladeras.addAll(heladeras);
+    }
+
+    public void agregar(Heladera heladera) {
         this.heladeras.add(heladera);
     }
 
-    public void eliminarHeladera(Heladera heladera) {
+    public void actualizar(Heladera heladera) {
+    }
+
+    public void eliminar(Heladera heladera) {
         this.heladeras.remove(heladera);
     }
 

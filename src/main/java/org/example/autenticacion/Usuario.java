@@ -4,6 +4,7 @@ import org.example.config.Configuracion;
 import org.example.excepciones.PasswordException;
 import org.example.personas.Persona;
 import org.example.personas.contacto.MedioDeContacto;
+import org.example.personas.contacto.Mensaje;
 import org.example.personas.documentos.Documento;
 import org.example.personas.roles.Colaborador;
 import org.example.validaciones.VerificadorContrasenia;
@@ -89,7 +90,7 @@ public class Usuario {
         String mensajeDeBienvenida = cuerpo
                 .replace("{username}", nombreDeUsuario)
                 .replace("{password}", contrasenia);
-        medioDeContacto.notificar(asunto, mensajeDeBienvenida);
+        medioDeContacto.notificar(new Mensaje(asunto, mensajeDeBienvenida, colaborador));
     }
 
     private String generarContrasenia(){
