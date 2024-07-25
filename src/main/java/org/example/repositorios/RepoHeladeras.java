@@ -61,23 +61,6 @@ public class RepoHeladeras {
         return heladeras.stream().filter(Heladera::estaActiva).toList();
     }
 
-    private double calcularDistancia(Ubicacion ubicacion1, Ubicacion ubicacion2) {
-        final int RADIO_TIERRA_KM = 6371; // Radio de la tierra en kilómetros
-        double lat1 = ubicacion1.getLatitud();
-        double lon1 = ubicacion1.getLongitud();
-        double lat2 = ubicacion2.getLatitud();
-        double lon2 = ubicacion2.getLongitud();
-
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        return RADIO_TIERRA_KM * c;
-    }
     public List<Heladera> buscarHeladerasCercanasA(Heladera heladeraDada, double distanciaMaximaKm) {
 
         List<Heladera> heladerasCercanas = new ArrayList<>();
@@ -85,7 +68,7 @@ public class RepoHeladeras {
 
         for (Heladera heladera : heladeras) {
             if (!heladera.equals(heladeraDada)) {
-                double distancia = calcularDistancia(ubicacionDada, heladera.getUbicacion());
+                double distancia = ubicacionDada.calcularDistanciaA(heladera.getUbicacion());
                 if (distancia <= distanciaMaximaKm) {
                     heladerasCercanas.add(heladera);
                 }
