@@ -16,7 +16,5 @@ public abstract class ValidacionContrasenia {
 
   }
 
-  protected boolean condition(String password) {
-    return false;
-  }
+  protected abstract boolean condition(String password);
 }
