@@ -8,14 +8,20 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.config.Configuracion;
 import org.example.excepciones.SolicitudInexistente;
+import org.example.personas.Persona;
 import org.example.personas.roles.Colaborador;
+import org.example.repositorios.RepoPersona;
+import org.example.repositorios.RepositorioAperturasHeladera;
+import org.example.tarjetas.AperturaHeladera;
 import org.example.validadores.VerificadorAperturaHeladera;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 @Getter
 public class DonacionDeViandas extends Contribucion {
+    @Setter
     private Heladera heladera;
     private List<Vianda> viandas;
     @Setter
@@ -31,16 +37,21 @@ public class DonacionDeViandas extends Contribucion {
         this.cantidadDeViandas = cantidad;
     }
 
-    public DonacionDeViandas(List<Vianda> viandas){
-        this.viandas= viandas;
-    }
-
     @Override
     public void ejecutarContribucion() throws Exception{
         super.ejecutarContribucion();
 
         if(VerificadorAperturaHeladera.getInstancia().puedeAbrirHeladera(heladera, colaborador)){
             colaborador.getTarjetaColaborador().usar(colaborador, heladera);
+
+            RepositorioAperturasHeladera.getInstancia().agregarApertura(
+                    new AperturaHeladera(
+                            heladera,
+                            colaborador.getTarjetaColaborador(),
+                            LocalDateTime.now()
+                    )
+            );
+
             heladera.notificarCambioViandas(cantidadDeViandas, 0);
         }else {
            throw new SolicitudInexistente(Configuracion.obtenerProperties("mensaje.apertura-heladera.solicitud-heladera-inexistente"));

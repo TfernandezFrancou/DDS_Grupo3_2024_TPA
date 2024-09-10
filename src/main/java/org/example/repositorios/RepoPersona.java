@@ -5,6 +5,7 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.MovimientoViandas;
 import org.example.personas.Persona;
 import org.example.personas.roles.Colaborador;
+import org.example.personas.roles.Rol;
 import org.example.personas.roles.Tecnico;
 import org.example.recomendacion.Zona;
 import org.example.reportes.ItemReporteColaborador;
@@ -84,6 +85,13 @@ public class RepoPersona {
         return this.personas.stream()
                 .filter(persona -> persona.getRol().getClass().equals(rol))
                 .toList();
+    }
+
+    public Persona buscarPersonaAsociadaAlRol(Rol rol) {
+        return this.personas.stream()
+                .filter(persona -> persona.getRol().equals(rol))
+                .findFirst()
+                .orElseThrow();
     }
 
     public List<ItemReporteColaborador> obtenerCantidadDeViandasDistribuidasPorColaborador(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual) {

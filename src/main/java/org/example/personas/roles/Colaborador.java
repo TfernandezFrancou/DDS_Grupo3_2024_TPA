@@ -2,9 +2,14 @@ package org.example.personas.roles;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.colaboraciones.contribuciones.DistribucionDeViandas;
+import org.example.broker.Broker;
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
+import org.example.config.Configuracion;
+import org.example.excepciones.NoRegistroDireccionException;
+import org.example.personas.Persona;
+import org.example.repositorios.RepoPersona;
+import org.example.repositorios.RepoTarjetas;
 import org.example.tarjetas.SolicitudDeApertura;
 import org.example.tarjetas.TarjetaColaborador;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
@@ -67,9 +72,31 @@ public class Colaborador extends Rol {
         return this.puntuaje >= oferta.getPuntosNecesarios();
     }
 
-    public SolicitudDeApertura emitirAvisoHeladera(Heladera heladera){
-        // TODO emitirAvisoHeladera: falta enviarlo a la heladera (broker?)
-        return new SolicitudDeApertura(heladera,LocalDateTime.now(), this.getTarjetaColaborador());
+
+    public boolean noTieneTarjetaAsignada(){
+        return tarjetaColaborador == null;
+    }
+    private void asignarTarjeta(){
+        Persona persona = this.getPersona();
+        TarjetaColaborador tarjetaNueva = new TarjetaColaborador();
+        RepoTarjetas.getInstancia().agregar(tarjetaNueva);
+
+        if(persona.getDireccion() == null){//si no se sabe su direccion no se le puede enviar la tarjeta por correo
+            throw new NoRegistroDireccionException(Configuracion.obtenerProperties("mensaje.solicitud-apertura-heladera.direccion-no-registrada"));
+        }
+
+        this.setTarjetaColaborador(tarjetaNueva);
+    }
+
+    //Se llama a este método si solicita una apertura a una heladera
+    public void emitirAvisoHeladera(Heladera heladera){
+        if(this.noTieneTarjetaAsignada()){
+            this.asignarTarjeta();
+        }
+
+        SolicitudDeApertura solicitudDeApertura = new SolicitudDeApertura(heladera,LocalDateTime.now(), this.getTarjetaColaborador());
+        Broker broker = new Broker();
+        broker.gestionarSolicitudApertura(solicitudDeApertura);
     }
     public void reportarFallaTecnica(){
         // TODO reportarFallaTecnica porque iria? entiendo que el tecnico haria un post y el controller crea la falla tecnica, sino que se hace aca?
@@ -86,5 +113,9 @@ public class Colaborador extends Rol {
                         )
                 .mapToInt((contribucion -> ((DonacionDeViandas) contribucion).getCantidadDeViandas()))
                 .sum();
+    }
+
+    public Persona getPersona(){
+        return RepoPersona.getInstancia().buscarPersonaAsociadaAlRol(this);
     }
 }

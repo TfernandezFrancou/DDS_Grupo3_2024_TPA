@@ -1,9 +1,14 @@
 package tests;
 
 import org.example.colaboraciones.Contribucion;
+import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
+import org.example.excepciones.NoRegistroDireccionException;
 import org.example.excepciones.PuntosInsuficienteParaCanjearOferta;
+import org.example.personas.Persona;
+import org.example.personas.PersonaHumana;
 import org.example.personas.roles.Colaborador;
+import org.example.repositorios.RepoPersona;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +31,9 @@ public class ColaboradorTest {
 
     @Mock
     private Oferta ofertaMock;
+
+    @Mock
+    private Heladera heladeraMock;
 
     @BeforeEach
     public void setUp(){
@@ -66,6 +74,19 @@ public class ColaboradorTest {
         } );
 
         Assertions.assertEquals(100F, rolColaboradorMock.getPuntuaje());
+    }
+
+    @Test
+    public void testNoPuedeSolicitarAperturaAHeladeraSiNoTieneDireccionRegistrada(){
+        rolColaboradorMock.setTarjetaColaborador(null);
+
+        //registro una persona humana con el rol colaborador para verificar si tiene dirección
+        PersonaHumana personaHumana = new PersonaHumana();
+        personaHumana.setDireccion(null);
+        personaHumana.setRol(rolColaboradorMock);
+        RepoPersona.getInstancia().agregar(personaHumana);
+
+        Assertions.assertThrows(NoRegistroDireccionException.class, ()->rolColaboradorMock.emitirAvisoHeladera(heladeraMock));
     }
 
 }

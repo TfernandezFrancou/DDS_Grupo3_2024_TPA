@@ -12,7 +12,5 @@ public abstract class Rol {
     public void darDeBaja(){
         this.estaActivo = false;
     }
-    public void tienePermisoParaHacerAccion(){
-        //TODO para que era esto?
-    }
+
 }

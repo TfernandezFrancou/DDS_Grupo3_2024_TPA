@@ -5,8 +5,16 @@ import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
+import org.example.config.Configuracion;
+import org.example.excepciones.LimiteDeTiempoSuperado;
+import org.example.excepciones.SolicitudInexistente;
+import org.example.repositorios.RepositorioAperturasHeladera;
+import org.example.tarjetas.AperturaHeladera;
+import org.example.validadores.VerificadorAperturaHeladera;
 
+import javax.mail.MessagingException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,8 +33,30 @@ public class DistribucionDeViandas extends Contribucion {
     @Override
     public void ejecutarContribucion() throws Exception {
         super.ejecutarContribucion();
-        origen.notificarCambioViandas(0, cantidad);
-        destino.notificarCambioViandas(cantidad, 0);
+
+        this.ejecutarAperturaHeladera(origen, 0, cantidad);
+        this.ejecutarAperturaHeladera(destino, cantidad, 0);
+
+    }
+
+    private void ejecutarAperturaHeladera(Heladera heladera, int viandasIntroducidas, int viandasSacadas) throws SolicitudInexistente, LimiteDeTiempoSuperado, MessagingException {
+        if(VerificadorAperturaHeladera.getInstancia().puedeAbrirHeladera(heladera, colaborador)){
+            colaborador.getTarjetaColaborador().usar(colaborador, heladera);
+
+
+            RepositorioAperturasHeladera.getInstancia().agregarApertura(
+                    new AperturaHeladera(
+                            heladera,
+                            colaborador.getTarjetaColaborador(),
+                            LocalDateTime.now()
+                    )
+            );
+
+            heladera.notificarCambioViandas(viandasIntroducidas,viandasSacadas);
+
+        }else {
+            throw new SolicitudInexistente(Configuracion.obtenerProperties("mensaje.apertura-heladera.solicitud-heladera-inexistente"));
+        }
     }
 
     @Override

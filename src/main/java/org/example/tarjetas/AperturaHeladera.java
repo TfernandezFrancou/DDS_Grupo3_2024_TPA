@@ -1,4 +1,4 @@
-package org.example.colaboraciones.contribuciones.heladeras;
+package org.example.tarjetas;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

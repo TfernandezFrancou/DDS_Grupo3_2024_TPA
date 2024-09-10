@@ -5,8 +5,6 @@ import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.Uso;
 import org.example.excepciones.LimiteDeTiempoSuperado;
-import org.example.personas.Persona;
-import org.example.personas.roles.Colaborador;
 import org.example.personas.roles.Rol;
 import org.example.repositorios.RepositorioSolicitudesApertura;
 
@@ -16,11 +14,11 @@ import java.util.ArrayList;
 @Getter
 @Setter
 public class TarjetaColaborador extends Tarjeta  {
-    private int limiteDeTiempoEnMinutos;
+    private int limiteDeTiempoDeUsoEnHoras;
 
     public TarjetaColaborador(){
         this.setUsos(new ArrayList<>());
-        this.limiteDeTiempoEnMinutos = 3;
+        this.limiteDeTiempoDeUsoEnHoras = 3;
     }
 
     @Override
@@ -30,7 +28,7 @@ public class TarjetaColaborador extends Tarjeta  {
 
         SolicitudDeApertura solicitudDeApertura = repositorioSolicitudesApertura.buscarSolicitudDeApertura(heladera,this);
         LocalDateTime fechaActual = LocalDateTime.now();
-        if(solicitudDeApertura.getFechaCreacion().plusHours(limiteDeTiempoEnMinutos).isBefore(fechaActual)){
+        if(solicitudDeApertura.getFechaCreacion().plusHours(limiteDeTiempoDeUsoEnHoras).isBefore(fechaActual)){
             throw new LimiteDeTiempoSuperado();
         }
         Uso nuevoUso = new Uso(fechaActual, heladera);

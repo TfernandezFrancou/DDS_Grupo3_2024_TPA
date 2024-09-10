@@ -1,11 +1,13 @@
 package org.example.repositorios;
 
-import org.example.colaboraciones.contribuciones.heladeras.AperturaHeladera;
+import lombok.Getter;
+import org.example.tarjetas.AperturaHeladera;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RepositorioAperturasHeladera {
+    @Getter
     private List<AperturaHeladera> aperturas;
 
     private static RepositorioAperturasHeladera instancia = null;

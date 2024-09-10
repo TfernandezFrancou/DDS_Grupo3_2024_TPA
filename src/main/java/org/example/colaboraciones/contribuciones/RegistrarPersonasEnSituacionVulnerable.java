@@ -7,9 +7,8 @@ import org.example.colaboraciones.TipoDePersona;
 import org.example.config.Configuracion;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.personas.contacto.Mensaje;
-import org.example.repositorios.RepoContribucion;
 import org.example.repositorios.RepoPersona;
-import org.example.repositorios.RepoTarjetaHeladera;
+import org.example.repositorios.RepoTarjetas;
 import org.example.tarjetas.TarjetaHeladera;
 import org.example.personas.Persona;
 
@@ -47,7 +46,7 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
     public void ejecutarContribucion() throws Exception{
         super.ejecutarContribucion();
         RepoPersona.getInstancia().agregarTodas(personasRegistradas);
-        RepoTarjetaHeladera.getInstancia().agregarTodas(tarjetasAEntregar);
+        RepoTarjetas.getInstancia().agregarTodas(tarjetasAEntregar);
     }
 
     @Override
