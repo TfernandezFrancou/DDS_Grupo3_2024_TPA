@@ -37,6 +37,9 @@ public class DonacionDeViandasTest {
     private Colaborador colaboradorMock;
 
     @Mock
+    private PersonaHumana personaMock;
+
+    @Mock
     private Heladera heladeraMock;
 
     @Mock
@@ -45,6 +48,8 @@ public class DonacionDeViandasTest {
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);//crea los mocks
+        RepositorioSolicitudesApertura.getInstancia().clean();
+        RepositorioAperturasHeladera.getInstancia().clean();
     }
 
     private DonacionDeViandas crearDonacionDeViandas(){
@@ -58,7 +63,10 @@ public class DonacionDeViandasTest {
         donacionDeViandasMock.setHeladera(heladeraMock);
 
         when(heladeraMock.estaActiva()).thenReturn(true);
+        when(heladeraMock.puedeAbrirHeladera(personaMock)).thenReturn(true);
+
         when(colaboradorMock.getTarjetaColaborador()).thenReturn(tarjetaColaboradorMock);
+        when(colaboradorMock.getPersona()).thenReturn(personaMock);
 
         return donacionDeViandasMock;
     }

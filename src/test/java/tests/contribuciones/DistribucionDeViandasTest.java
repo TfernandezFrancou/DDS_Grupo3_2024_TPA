@@ -6,6 +6,8 @@ import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.excepciones.SolicitudInexistente;
+import org.example.personas.Persona;
+import org.example.personas.PersonaHumana;
 import org.example.personas.roles.Colaborador;
 import org.example.repositorios.RepositorioAperturasHeladera;
 import org.example.repositorios.RepositorioSolicitudesApertura;
@@ -43,9 +45,14 @@ public class DistribucionDeViandasTest {
     @Mock
     private TarjetaColaborador tarjetaColaboradorMock;
 
+    @Mock
+    private PersonaHumana personaHumanaMock;
+
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);//crea los mocks
+        RepositorioSolicitudesApertura.getInstancia().clean();
+        RepositorioAperturasHeladera.getInstancia().clean();
     }
 
     private DistribucionDeViandas crearDristribucionDeViandas(){
@@ -59,8 +66,13 @@ public class DistribucionDeViandasTest {
         distribucionDeViandasMock.setDestino(heladeraMockDestino);
 
         when(heladeraMockOrigen.estaActiva()).thenReturn(true);
+        when(heladeraMockOrigen.puedeAbrirHeladera(personaHumanaMock)).thenReturn(true);
+
         when(heladeraMockDestino.estaActiva()).thenReturn(true);
+        when(heladeraMockDestino.puedeAbrirHeladera(personaHumanaMock)).thenReturn(true);
+
         when(colaboradorMock.getTarjetaColaborador()).thenReturn(tarjetaColaboradorMock);
+        when(colaboradorMock.getPersona()).thenReturn(personaHumanaMock);
 
         return distribucionDeViandasMock;
     }

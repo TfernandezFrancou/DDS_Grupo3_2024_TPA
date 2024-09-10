@@ -1,36 +1,63 @@
 package tests;
 
+import org.example.colaboraciones.Ubicacion;
+import org.example.colaboraciones.contribuciones.heladeras.EstadoHeladera;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.incidentes.FallaTecnica;
 import org.example.personas.Persona;
+import org.example.personas.PersonaHumana;
+import org.example.personas.contacto.CorreoElectronico;
+import org.example.personas.roles.Tecnico;
+import org.example.recomendacion.Zona;
 import org.example.reportes.ItemReporteHeladera;
 import org.example.repositorios.RepoIncidente;
+import org.example.repositorios.RepoPersona;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.mockito.Mockito.when;
+
 public class RepoFallasTecnicasTest {
 
 
     private RepoIncidente repoFallasTecnicas;
+
+    private RepoPersona repoPersona;
     @Mock
     private Persona colaborador;
 
+    @Mock
     private Heladera heladera1;
 
+    @Mock
     private Heladera heladera2;
+
+    @Mock
+    private PersonaHumana personaMock;
+
+    @Mock
+    private CorreoElectronico correoElectronicoMock;
+
+    @Mock
+    private Zona zonaMock;
+
+    @Mock
+    private Ubicacion ubicacionMock;
 
     @BeforeEach
     public void setUp(){
+        MockitoAnnotations.openMocks(this);
         this.repoFallasTecnicas  = RepoIncidente.getInstancia();
+        this.repoPersona = RepoPersona.getInstancia();
 
-        this.heladera1 = new Heladera();
-        this.heladera2 = new Heladera();
+        repoPersona.clean();
         repoFallasTecnicas.clean();
     }
 
@@ -39,6 +66,24 @@ public class RepoFallasTecnicasTest {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime inicioSemana = now.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY)).toLocalDate().atStartOfDay();
         LocalDateTime finSemana = now.with(java.time.temporal.TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY)).toLocalDate().atTime(23, 59, 59);
+
+        //mockeo llamadas a las heladeras
+        when(heladera1.getNombre()).thenReturn("Heladera1");
+        when(heladera1.getDireccion()).thenReturn("Medrano 123");
+        when(heladera1.getUbicacion()).thenReturn(ubicacionMock);
+
+        when(heladera2.getNombre()).thenReturn("Heladera2");
+        when(heladera2.getDireccion()).thenReturn("Medrano 123");
+        when(heladera2.getUbicacion()).thenReturn(ubicacionMock);
+
+        //configuro Mocks para que el repo persona me encuentre el tecnico mockeado
+        repoPersona.agregar(personaMock);
+        when(personaMock.getMediosDeContacto()).thenReturn(List.of(correoElectronicoMock));
+        Tecnico rolTecnico = new Tecnico();
+        rolTecnico.agregarAreaDeCovertura(zonaMock);
+        when(zonaMock.getUbicacion()).thenReturn(ubicacionMock);
+        when(ubicacionMock.calcularDistanciaA(ubicacionMock)).thenReturn(0D);
+        when(personaMock.getRol()).thenReturn(rolTecnico);
 
         // Agregar fallas dentro de la semana actual
         repoFallasTecnicas.agregarFalla(new FallaTecnica(colaborador,"esta todo caliente","url", heladera1,"no enfria",inicioSemana.plusDays(1))); // Martes

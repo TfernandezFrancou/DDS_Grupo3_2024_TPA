@@ -54,4 +54,8 @@ public class RepositorioSolicitudesApertura {
                        )
                );
     }
+
+    public void clean(){
+        this.solicitudesDeApertura.clear();
+    }
 }

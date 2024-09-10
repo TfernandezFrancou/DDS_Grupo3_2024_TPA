@@ -19,6 +19,7 @@ public class VerificadorAperturaHeladera {
 
     public boolean puedeAbrirHeladera(Heladera heladera, Colaborador colaborador){
         return heladera.estaActiva() &&
+                heladera.puedeAbrirHeladera(colaborador.getPersona()) &&
                 RepositorioSolicitudesApertura.getInstancia()
                         .existeSolicitudDeAperturaDeTarjetaParaHeladera(
                                 colaborador.getTarjetaColaborador(),

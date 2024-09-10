@@ -26,7 +26,7 @@ public class GeneradorDeReportesTest {
 
     private GeneradorDeReportes generadorDeReportes;
 
-    private RepoIncidente repoFallasTecnicas;
+    private RepoIncidente repoIncidente;
 
     private RepoHeladeras repoHeladeras;
 
@@ -39,7 +39,7 @@ public class GeneradorDeReportesTest {
 
     @Test
     public void testGenerarReportesDeLaSemana() {
-        LocalDateTime now = LocalDateTime.of(2024, 7,22,13,0,0);
+        LocalDateTime now = LocalDateTime.now();
         LocalDateTime inicioSemana = now.with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY)).toLocalDate().atStartOfDay();
         LocalDateTime finSemana = now.with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY)).toLocalDate().atTime(23, 59, 59);
 
@@ -48,16 +48,16 @@ public class GeneradorDeReportesTest {
         try(MockedStatic<RepoIncidente> mockedStaticRepoFallasTecnicas = Mockito.mockStatic(RepoIncidente.class)){
             try(MockedStatic<RepoHeladeras> mockedStaticRepoHeladeras = Mockito.mockStatic(RepoHeladeras.class)){
                 try(MockedStatic<RepoPersona> mockedStaticRepoPersonas = Mockito.mockStatic(RepoPersona.class)){
-                    repoFallasTecnicas = Mockito.mock(RepoIncidente.class);
+                    repoIncidente = Mockito.mock(RepoIncidente.class);
                     repoHeladeras = Mockito.mock(RepoHeladeras.class);
                     repoPersona = Mockito.mock(RepoPersona.class);
 
-                    when(RepoIncidente.getInstancia()).thenReturn(repoFallasTecnicas);
+                    when(RepoIncidente.getInstancia()).thenReturn(repoIncidente);
                     when(RepoHeladeras.getInstancia()).thenReturn(repoHeladeras);
                     when(RepoPersona.getInstancia()).thenReturn(repoPersona);
                     // indico que devolver cuando se llame a cada metodo
 
-                    when(repoFallasTecnicas.obtenerCantidadDeFallasPorHeladeraDeLaSemana(inicioSemana, finSemana)).thenReturn(List.of(
+                    when(repoIncidente.obtenerCantidadDeFallasPorHeladeraDeLaSemana(inicioSemana, finSemana)).thenReturn(List.of(
                             new ItemReporteHeladera( 2, new Heladera()),
                             new ItemReporteHeladera(1,new Heladera())
                     ));
@@ -82,7 +82,7 @@ public class GeneradorDeReportesTest {
                     generadorDeReportes.generarReportesDeLaSemana();
 
                     // Verificar que los métodos del repositorio fueron llamados
-                    Mockito.verify(repoFallasTecnicas, Mockito.times(1)).obtenerCantidadDeFallasPorHeladeraDeLaSemana(inicioSemana, finSemana);
+                    Mockito.verify(repoIncidente, Mockito.times(1)).obtenerCantidadDeFallasPorHeladeraDeLaSemana(inicioSemana, finSemana);
                     Mockito.verify(repoHeladeras, Mockito.times(1)).obtenerCantidadDeViandasColocadasPorHeladeraDeLaSemana(inicioSemana, finSemana);
                     Mockito.verify(repoHeladeras, Mockito.times(1)).obtenerCantidadDeViandasRetiradasPorHeladeraDeLaSemana(inicioSemana, finSemana);
                     Mockito.verify(repoPersona, Mockito.times(1)).obtenerCantidadDeViandasDistribuidasPorColaborador(inicioSemana, finSemana);

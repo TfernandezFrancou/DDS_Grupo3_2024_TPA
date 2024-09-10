@@ -30,4 +30,8 @@ public class RepositorioAperturasHeladera {
     public void quitarApertura(AperturaHeladera apertura) {
         this.aperturas.remove(apertura);
     }
+
+    public void clean(){
+        this.aperturas.clear();
+    }
 }

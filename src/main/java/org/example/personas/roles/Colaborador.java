@@ -99,7 +99,7 @@ public class Colaborador extends Rol {
 
         SolicitudDeApertura solicitudDeApertura = new SolicitudDeApertura(heladera,LocalDateTime.now(), this.getTarjetaColaborador());
         Broker broker = new Broker();
-        broker.gestionarSolicitudApertura(solicitudDeApertura);
+        broker.gestionarSolicitudApertura(solicitudDeApertura, this.getPersona());
     }
     //se llama cuando un colaborador reporta una falla
     public void reportarFallaTecnica(String descripcion, String foto, Heladera heladera,String tipoDeIncidente) throws MessagingException {

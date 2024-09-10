@@ -6,6 +6,8 @@ import lombok.Setter;
 import org.example.colaboraciones.Ubicacion;
 import org.example.config.Configuracion;
 import org.example.excepciones.SolicitudVencida;
+import org.example.personas.Persona;
+import org.example.personas.PersonaHumana;
 import org.example.repositorios.RepositorioAperturasHeladera;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepositorioSolicitudesApertura;
@@ -43,8 +45,11 @@ public class Heladera {
     private PublisherViandasFaltantes publisherViandasFaltantes;
     private PublisherDesperfecto publisherDesperfecto;
 
+    private List<Persona> colaboradoresAutorizados;
+
     public Heladera(){
         this.historialEstadoHeldera = new ArrayList<>();
+        this.colaboradoresAutorizados = new ArrayList<>();
     }
 
     public boolean estaActiva() {
@@ -106,5 +111,18 @@ public class Heladera {
 
         this.setEstadoHeladeraActual(estadoHeladera);
         this.agregarEstadoHeladeraAlHistorial(estadoHeladera);
+    }
+
+    public void autorizarColaborador(Persona personaColaborador) {
+        this.colaboradoresAutorizados.add(personaColaborador);
+    }
+
+    public void desautorizarColaborador(Persona personaColaborador) {
+        this.colaboradoresAutorizados.remove(personaColaborador);
+    }
+
+    public boolean puedeAbrirHeladera(Persona personaColaborador){
+        return this.colaboradoresAutorizados.stream()
+                .anyMatch(persona -> persona.equals(personaColaborador));
     }
 }

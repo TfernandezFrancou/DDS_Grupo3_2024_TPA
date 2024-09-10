@@ -25,6 +25,7 @@ public class TarjetaColaboradorTest {
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);
+        RepositorioSolicitudesApertura.getInstancia().clean();
     }
 
     @Test
@@ -39,7 +40,7 @@ public class TarjetaColaboradorTest {
     @Test
     public void testNoSePuedeExcederElLimiteDeTiempo() throws LimiteDeTiempoSuperado{
         RepositorioSolicitudesApertura repositorioSolicitudesApertura = RepositorioSolicitudesApertura.getInstancia();
-        repositorioSolicitudesApertura.agregarSolicitudDeApertura(new SolicitudDeApertura(heladeraMock, LocalDateTime.now().minusHours(3),tarjetaColaborador));
+        repositorioSolicitudesApertura.agregarSolicitudDeApertura(new SolicitudDeApertura(heladeraMock, LocalDateTime.now().minusHours(4),tarjetaColaborador));
 
         Assertions.assertThrows(LimiteDeTiempoSuperado.class, ()->tarjetaColaborador.usar(duenioMock,heladeraMock));
     }

@@ -53,7 +53,8 @@ public class DistribucionDeViandas extends Contribucion {
             );
 
             heladera.notificarCambioViandas(viandasIntroducidas,viandasSacadas);
-
+            //si quiere volver a abrir la heladera, debe solicitar autorizacion
+            heladera.desautorizarColaborador(colaborador.getPersona());
         }else {
             throw new SolicitudInexistente(Configuracion.obtenerProperties("mensaje.apertura-heladera.solicitud-heladera-inexistente"));
         }
