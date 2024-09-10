@@ -22,18 +22,18 @@ public abstract class Incidente {
     private String tipoDeIncidente;
     private LocalDateTime fechaDeEmision;
 
-    public Incidente(Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) throws MessagingException {
-        // desactivo la heladera
-        heladera.desactivarHeladera();
-
+    public Incidente(Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) {
         this.heladera = heladera;
         this.tipoDeIncidente = tipoDeIncidente;
         this.fechaDeEmision = fechaDeEmision;
-
-        this.avisarATecnico();//aviso al técnico mas cercano por la alerta o incidente reportado
     }
 
-    public void avisarATecnico() throws MessagingException {
+    public void reportarIncidente() throws MessagingException {
+        heladera.desactivarHeladera();
+        this.avisarATecnico();
+    }
+
+    private void avisarATecnico() throws MessagingException {
         Persona tecnicoCercano = RepoPersona.getInstancia().tecnicoMasCercanoAHeladera(heladera);
 
         String asunto = Configuracion.obtenerProperties("mensaje.incidentes.heladera.titulo");

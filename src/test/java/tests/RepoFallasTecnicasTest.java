@@ -76,15 +76,6 @@ public class RepoFallasTecnicasTest {
         when(heladera2.getDireccion()).thenReturn("Medrano 123");
         when(heladera2.getUbicacion()).thenReturn(ubicacionMock);
 
-        //configuro Mocks para que el repo persona me encuentre el tecnico mockeado
-        repoPersona.agregar(personaMock);
-        when(personaMock.getMediosDeContacto()).thenReturn(List.of(correoElectronicoMock));
-        Tecnico rolTecnico = new Tecnico();
-        rolTecnico.agregarAreaDeCovertura(zonaMock);
-        when(zonaMock.getUbicacion()).thenReturn(ubicacionMock);
-        when(ubicacionMock.calcularDistanciaA(ubicacionMock)).thenReturn(0D);
-        when(personaMock.getRol()).thenReturn(rolTecnico);
-
         // Agregar fallas dentro de la semana actual
         repoFallasTecnicas.agregarFalla(new FallaTecnica(colaborador,"esta todo caliente","url", heladera1,"no enfria",inicioSemana.plusDays(1))); // Martes
         repoFallasTecnicas.agregarFalla(new FallaTecnica(colaborador,"esta todo caliente","url", heladera1,"no enfria",inicioSemana.plusDays(2))); // Miércoles

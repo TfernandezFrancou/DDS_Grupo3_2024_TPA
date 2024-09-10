@@ -44,6 +44,10 @@ public class RepoIncidente {
         return this.incidentes.stream().filter(incidente -> incidente instanceof FallaTecnica).toList();
     }
 
+    public List<Incidente> obtenerTodasLasAlertas(){
+        return this.incidentes.stream().filter(incidente -> incidente instanceof Alerta).toList();
+    }
+
     public List<ItemReporteHeladera> obtenerCantidadDeFallasPorHeladeraDeLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual){
 
         Map<Heladera, Long> conteoFallasPorHeladera = this.obtenerTodasLasFallasTecnicas().stream()

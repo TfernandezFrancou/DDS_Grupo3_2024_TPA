@@ -1,6 +1,7 @@
 package org.example.colaboraciones.contribuciones.heladeras;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.example.broker.Broker;
 import org.example.incidentes.Alerta;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 public abstract class Sensor {
     @Getter
+    @Setter
     private Heladera heladera;
 
     public void agregar(Heladera heladera) {
