@@ -3,15 +3,11 @@ package tests;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.MovimientoViandas;
-import org.example.incidentes.FallaTecnica;
-import org.example.personas.Persona;
 import org.example.reportes.ItemReporteHeladera;
-import org.example.repositorios.RepoFallasTecnicas;
 import org.example.repositorios.RepoHeladeras;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.time.LocalDateTime;
 import java.util.List;

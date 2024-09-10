@@ -22,17 +22,15 @@ public abstract class Incidente {
     private String tipoDeIncidente;
     private LocalDateTime fechaDeEmision;
 
-    public Incidente(Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) {
-        //TODO esto comentado en realidad no va aca, pero tiene que ir en algun lado
+    public Incidente(Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) throws MessagingException {
         // desactivo la heladera
-        /*EstadoHeladera estadoHeladera = new EstadoHeladera(false);
-        heladera.getEstadoHeladeraActual().setFechaHoraFin(LocalDateTime.now());//finalizo estado anterior
-        heladera.setEstadoHeladeraActual(estadoHeladera);
-        heladera.agregarEstadoHeladeraAlHistorial(estadoHeladera);
-        */
+        heladera.desactivarHeladera();
+
         this.heladera = heladera;
         this.tipoDeIncidente = tipoDeIncidente;
         this.fechaDeEmision = fechaDeEmision;
+
+        this.avisarATecnico();//aviso al técnico mas cercano por la alerta o incidente reportado
     }
 
     public void avisarATecnico() throws MessagingException {
@@ -44,6 +42,6 @@ public abstract class Incidente {
                 .replace("{direccionHeladera}", heladera.getDireccion())
                 .replace("{tipoIncidente}", this.tipoDeIncidente);
         Mensaje mensaje = new Mensaje(asunto, contenido, tecnicoCercano);
-        tecnicoCercano.getMediosDeContacto().get(0).notificar(mensaje);
+        tecnicoCercano.getMediosDeContacto().get(0).notificar(mensaje);//aviso por el primer medio de contacto que registró
     }
 }

@@ -7,7 +7,9 @@ import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.config.Configuracion;
 import org.example.excepciones.NoRegistroDireccionException;
+import org.example.incidentes.FallaTecnica;
 import org.example.personas.Persona;
+import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoPersona;
 import org.example.repositorios.RepoTarjetas;
 import org.example.tarjetas.SolicitudDeApertura;
@@ -18,6 +20,7 @@ import org.example.colaboraciones.Contribucion;
 import org.example.repositorios.RepoContribucion;
 
 
+import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
@@ -98,8 +101,11 @@ public class Colaborador extends Rol {
         Broker broker = new Broker();
         broker.gestionarSolicitudApertura(solicitudDeApertura);
     }
-    public void reportarFallaTecnica(){
-        // TODO reportarFallaTecnica porque iria? entiendo que el tecnico haria un post y el controller crea la falla tecnica, sino que se hace aca?
+    //se llama cuando un colaborador reporta una falla
+    public void reportarFallaTecnica(String descripcion, String foto, Heladera heladera,String tipoDeIncidente) throws MessagingException {
+        FallaTecnica fallaTecnica = new FallaTecnica(this.getPersona(),descripcion,foto,heladera,tipoDeIncidente,LocalDateTime.now());
+
+        RepoIncidente.getInstancia().agregarFalla(fallaTecnica);
     }
     public int cantidadDeViandasDistribuidasEnLaSemana(LocalDateTime inicioSemana, LocalDateTime finSemana){
 

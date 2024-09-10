@@ -58,7 +58,7 @@ public class Heladera {
                 .reduce(0, Integer::sum);
     }
 
-    public void actualizarEstadoHeladera(Sensor sensor) {
+    public void actualizarEstadoHeladera(Sensor sensor) throws MessagingException {
         boolean nuevoEstado = sensor.getEstadoHeladera();
         if (this.estadoHeladeraActual.getEstaActiva() != nuevoEstado) {
             this.estadoHeladeraActual.setFechaHoraFin(LocalDateTime.now());
@@ -88,10 +88,23 @@ public class Heladera {
         return this.capacidadEnViandas - this.viandasEnHeladera;
     }
 
-    public void solicitarApertura(TarjetaColaborador tarjeta) {
-        LocalDateTime fecha = LocalDateTime.now();
-        SolicitudDeApertura solicitud = new SolicitudDeApertura(this, fecha, tarjeta);
-        RepositorioSolicitudesApertura.getInstancia().agregarSolicitudDeApertura(solicitud);
+    public void reactivarHeladera() {
+        //finalizo estado anterior
+        estadoHeladeraActual.setFechaHoraFin(LocalDateTime.now());
+
+        EstadoHeladera estadoHeladera = new EstadoHeladera(true);
+
+        this.setEstadoHeladeraActual(estadoHeladera);
+        this.agregarEstadoHeladeraAlHistorial(estadoHeladera);
     }
 
+    public void desactivarHeladera() {
+        //finalizo estado anterior
+        estadoHeladeraActual.setFechaHoraFin(LocalDateTime.now());
+
+        EstadoHeladera estadoHeladera = new EstadoHeladera(false);
+
+        this.setEstadoHeladeraActual(estadoHeladera);
+        this.agregarEstadoHeladeraAlHistorial(estadoHeladera);
+    }
 }

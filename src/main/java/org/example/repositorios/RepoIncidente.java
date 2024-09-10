@@ -1,49 +1,57 @@
 package org.example.repositorios;
 
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
+import org.example.incidentes.Alerta;
 import org.example.incidentes.FallaTecnica;
+import org.example.incidentes.Incidente;
 import org.example.reportes.ItemReporteHeladera;
 
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class RepoFallasTecnicas {
-    private List<FallaTecnica> fallasTecnicas;
+public class RepoIncidente {
+    private List<Incidente> incidentes;
 
-    private static RepoFallasTecnicas instancia = null;
+    private static RepoIncidente instancia = null;
 
-    private RepoFallasTecnicas() {
-        this.fallasTecnicas = new ArrayList<>();
+    private RepoIncidente() {
+        this.incidentes = new ArrayList<>();
     }
 
-    public static RepoFallasTecnicas getInstancia() {
+    public static RepoIncidente getInstancia() {
         if (instancia == null) {
-            RepoFallasTecnicas.instancia = new RepoFallasTecnicas();
+            RepoIncidente.instancia = new RepoIncidente();
         }
         return instancia;
     }
 
     public void agregarFalla(FallaTecnica fallaTecnica) {
-        this.fallasTecnicas.add(fallaTecnica);
+        this.incidentes.add(fallaTecnica);
     }
 
-    public void eliminarFalla(FallaTecnica fallaTecnica) {
-        this.fallasTecnicas.remove(fallaTecnica);
+    public void agregarAlerta(Alerta alerta) {
+        this.incidentes.add(alerta);
+    }
+
+    public void eliminarIncidente(Incidente incidente) {
+        this.incidentes.remove(incidente);
+    }
+
+    public List<Incidente> obtenerTodasLasFallasTecnicas(){
+        return this.incidentes.stream().filter(incidente -> incidente instanceof FallaTecnica).toList();
     }
 
     public List<ItemReporteHeladera> obtenerCantidadDeFallasPorHeladeraDeLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual){
 
-        Map<Heladera, Long> conteoFallasPorHeladera = fallasTecnicas.stream()
+        Map<Heladera, Long> conteoFallasPorHeladera = this.obtenerTodasLasFallasTecnicas().stream()
                 .filter(falla ->
                         (falla.getFechaDeEmision().isAfter(inicioSemanaActual) && falla.getFechaDeEmision().isBefore(finSemanaActual)
                         ) || (falla.getFechaDeEmision().equals(inicioSemanaActual) || falla.getFechaDeEmision().equals(finSemanaActual))
                 )
-                .collect(Collectors.groupingBy(FallaTecnica::getHeladera, Collectors.counting()));
+                .collect(Collectors.groupingBy(Incidente::getHeladera, Collectors.counting()));
 
         List<ItemReporteHeladera> reporte = new ArrayList<>();
         for (Map.Entry<Heladera, Long> entry : conteoFallasPorHeladera.entrySet()) {
@@ -53,6 +61,6 @@ public class RepoFallasTecnicas {
     }
 
     public void clean() {
-        this.fallasTecnicas.clear();
+        this.incidentes.clear();
     }
 }

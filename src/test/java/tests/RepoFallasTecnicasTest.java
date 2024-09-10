@@ -3,21 +3,21 @@ package tests;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.incidentes.FallaTecnica;
 import org.example.personas.Persona;
-import org.example.personas.roles.PersonaEnSituacionVulnerable;
 import org.example.reportes.ItemReporteHeladera;
-import org.example.repositorios.RepoFallasTecnicas;
+import org.example.repositorios.RepoIncidente;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class RepoFallasTecnicasTest {
 
 
-    private RepoFallasTecnicas repoFallasTecnicas;
+    private RepoIncidente repoFallasTecnicas;
     @Mock
     private Persona colaborador;
 
@@ -27,7 +27,7 @@ public class RepoFallasTecnicasTest {
 
     @BeforeEach
     public void setUp(){
-        this.repoFallasTecnicas  = RepoFallasTecnicas.getInstancia();
+        this.repoFallasTecnicas  = RepoIncidente.getInstancia();
 
         this.heladera1 = new Heladera();
         this.heladera2 = new Heladera();
@@ -35,7 +35,7 @@ public class RepoFallasTecnicasTest {
     }
 
     @Test
-    public void testObtenerCantidadDeFallasPorHeladeraDeLaSemana(){
+    public void testObtenerCantidadDeFallasPorHeladeraDeLaSemana() throws MessagingException {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime inicioSemana = now.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY)).toLocalDate().atStartOfDay();
         LocalDateTime finSemana = now.with(java.time.temporal.TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY)).toLocalDate().atTime(23, 59, 59);

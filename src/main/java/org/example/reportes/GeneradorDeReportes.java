@@ -1,13 +1,12 @@
 package org.example.reportes;
 
 import lombok.Getter;
-import org.example.repositorios.RepoFallasTecnicas;
+import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoPersona;
 
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,7 +24,7 @@ public class GeneradorDeReportes {
     private LocalDateTime finSemanaActual;
 
     public void  generarReporteDeCantidadDeFallasPorHeladera() {
-        reporteCantidadDeFallasPorHeladera = RepoFallasTecnicas.getInstancia().obtenerCantidadDeFallasPorHeladeraDeLaSemana(inicioSemanaActual, finSemanaActual);
+        reporteCantidadDeFallasPorHeladera = RepoIncidente.getInstancia().obtenerCantidadDeFallasPorHeladeraDeLaSemana(inicioSemanaActual, finSemanaActual);
     }
     public void generarReporteCantidadDeViandasColocadasPorHeladera() {
         reporteCantidadDeViandasColocadasPorHeladera = RepoHeladeras.getInstancia().obtenerCantidadDeViandasColocadasPorHeladeraDeLaSemana(inicioSemanaActual, finSemanaActual);

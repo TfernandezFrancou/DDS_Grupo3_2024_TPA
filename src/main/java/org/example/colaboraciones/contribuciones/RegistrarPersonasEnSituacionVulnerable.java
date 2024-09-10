@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.config.Configuracion;
-import org.example.personas.contacto.CorreoElectronico;
 import org.example.personas.contacto.Mensaje;
 import org.example.repositorios.RepoPersona;
 import org.example.repositorios.RepoTarjetas;
@@ -32,9 +31,10 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
         this.tarjetasEntregadas = cantidad;
     }
 
-    public RegistrarPersonasEnSituacionVulnerable(List<TarjetaHeladera> tarjetasAEntregar){
+    public RegistrarPersonasEnSituacionVulnerable(List<TarjetaHeladera> tarjetasAEntregar) throws MessagingException {
         this.personasRegistradas = new ArrayList<>();
         this.tarjetasAEntregar = tarjetasAEntregar;
+        this.enviarTarjetasViaMail();
     }
 
     public RegistrarPersonasEnSituacionVulnerable(){
@@ -47,6 +47,7 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
         super.ejecutarContribucion();
         RepoPersona.getInstancia().agregarTodas(personasRegistradas);
         RepoTarjetas.getInstancia().agregarTodas(tarjetasAEntregar);
+        this.setTarjetasEntregadas(personasRegistradas.size());
     }
 
     @Override
@@ -54,19 +55,25 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
         return this.getTiposDePersona().equals(TipoDePersona.HUMANA);
     }
 
-    public void enviarTarjetasViaMail(CorreoElectronico mailColaborador, Persona colaborador) throws MessagingException {
-        //TODO enviarTarjetasViaMail por ahi tendria que ir en otro lado
+    //cuando se tengan las tarjetas, se las envia al colaborador
+    public void setTarjetasAEntregar(List<TarjetaHeladera> tarjetasAEntregar) throws MessagingException {
+        this.tarjetasAEntregar = tarjetasAEntregar;
+        this.enviarTarjetasViaMail();
+    }
+
+    public void enviarTarjetasViaMail() throws MessagingException {
         String titulo = Configuracion.obtenerProperties("mensaje.colaboraciones.tarjetas.titulo");
         String contenido = Configuracion.obtenerProperties("mensaje.contribuciones.tarjetas.contenido")
                 .replace("{detallesDetarjetas}", this.tarjetasAEntregarToString());
-        Mensaje mensaje = new Mensaje(titulo, contenido, colaborador);
-        mailColaborador.notificar(mensaje);
+        Persona personaColaborador = colaborador.getPersona();
+        Mensaje mensaje = new Mensaje(titulo, contenido, personaColaborador);
+        personaColaborador.getEmail().notificar(mensaje);
     }
     private String tarjetasAEntregarToString(){
         StringBuilder stringBuilderTarjetas = new StringBuilder();
 
         for(TarjetaHeladera tarjetaHeladera: tarjetasAEntregar){
-            stringBuilderTarjetas.append("- Id tarjeta: " + tarjetaHeladera.getId()+ "\n");
+            stringBuilderTarjetas.append("- Id tarjeta: ").append(tarjetaHeladera.getId()).append("\n");
         }
         return stringBuilderTarjetas.toString();
     }

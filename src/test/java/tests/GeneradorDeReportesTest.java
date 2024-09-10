@@ -2,19 +2,15 @@ package tests;
 
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.personas.PersonaHumana;
-import org.example.personas.roles.Colaborador;
 import org.example.reportes.GeneradorDeReportes;
 import org.example.reportes.ItemReporteColaborador;
 import org.example.reportes.ItemReporteHeladera;
-import org.example.repositorios.RepoFallasTecnicas;
+import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoPersona;
-import org.example.repositorios.RepoUsuario;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -30,7 +26,7 @@ public class GeneradorDeReportesTest {
 
     private GeneradorDeReportes generadorDeReportes;
 
-    private RepoFallasTecnicas repoFallasTecnicas;
+    private RepoIncidente repoFallasTecnicas;
 
     private RepoHeladeras repoHeladeras;
 
@@ -49,14 +45,14 @@ public class GeneradorDeReportesTest {
 
         //creo mocks para los repos
 
-        try(MockedStatic<RepoFallasTecnicas> mockedStaticRepoFallasTecnicas = Mockito.mockStatic(RepoFallasTecnicas.class)){
+        try(MockedStatic<RepoIncidente> mockedStaticRepoFallasTecnicas = Mockito.mockStatic(RepoIncidente.class)){
             try(MockedStatic<RepoHeladeras> mockedStaticRepoHeladeras = Mockito.mockStatic(RepoHeladeras.class)){
                 try(MockedStatic<RepoPersona> mockedStaticRepoPersonas = Mockito.mockStatic(RepoPersona.class)){
-                    repoFallasTecnicas = Mockito.mock(RepoFallasTecnicas.class);
+                    repoFallasTecnicas = Mockito.mock(RepoIncidente.class);
                     repoHeladeras = Mockito.mock(RepoHeladeras.class);
                     repoPersona = Mockito.mock(RepoPersona.class);
 
-                    when(RepoFallasTecnicas.getInstancia()).thenReturn(repoFallasTecnicas);
+                    when(RepoIncidente.getInstancia()).thenReturn(repoFallasTecnicas);
                     when(RepoHeladeras.getInstancia()).thenReturn(repoHeladeras);
                     when(RepoPersona.getInstancia()).thenReturn(repoPersona);
                     // indico que devolver cuando se llame a cada metodo
