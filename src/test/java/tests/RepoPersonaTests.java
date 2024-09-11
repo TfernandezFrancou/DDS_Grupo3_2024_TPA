@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 public class RepoPersonaTests {
@@ -105,9 +106,9 @@ public class RepoPersonaTests {
         repoPersona.agregarTodas(List.of(tecnico1, tecnico2));
 
         //llamo al metodo para probarlo
-        Persona tecnicoMasCercano = repoPersona.tecnicoMasCercanoAHeladera(heladeraEnBuenosAires);
+        Optional<Persona> tecnicoMasCercanoOp = repoPersona.tecnicoMasCercanoAHeladera(heladeraEnBuenosAires);
 
-       Assertions.assertEquals(tecnico1, tecnicoMasCercano);
+       Assertions.assertEquals(tecnico1, tecnicoMasCercanoOp.get());
     }
     @Test
     public void testSiNingunTecnicoCubreLaZonaDevuelveNull(){
@@ -138,9 +139,9 @@ public class RepoPersonaTests {
         repoPersona.agregarTodas(List.of(tecnico1, tecnico2));
 
         //llamo al metodo para probarlo
-        Persona tecnicoMasCercano = repoPersona.tecnicoMasCercanoAHeladera(heladeraEnBuenosAires);
+        Optional<Persona> tecnicoMasCercanoOp = repoPersona.tecnicoMasCercanoAHeladera(heladeraEnBuenosAires);
 
-        Assertions.assertNull(tecnicoMasCercano);
+        Assertions.assertTrue(tecnicoMasCercanoOp.isEmpty());
     }
 
 }

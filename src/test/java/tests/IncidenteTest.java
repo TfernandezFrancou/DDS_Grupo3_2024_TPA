@@ -1,8 +1,8 @@
 package tests;
 
 import org.example.colaboraciones.Ubicacion;
-import org.example.colaboraciones.contribuciones.heladeras.Heladera;
-import org.example.colaboraciones.contribuciones.heladeras.SensorDeTemperatura;
+import org.example.colaboraciones.contribuciones.heladeras.*;
+import org.example.incidentes.Alerta;
 import org.example.incidentes.Incidente;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
@@ -46,7 +46,7 @@ public class IncidenteTest {
 
     //es lo mismo si fuera una falla tecnica ya que llaman al mismo método
     @Test
-    public void testSeReportaUnaAlerta() throws MessagingException {
+    public void testSePuedeReportarUnaAlerta() throws MessagingException {
         SensorDeTemperatura sensorDeTemperatura = new SensorDeTemperatura();
         sensorDeTemperatura.setHeladera(heladeraMock);
 
@@ -115,7 +115,7 @@ public class IncidenteTest {
         //reporto la falla técnica
         rolColaborador.reportarFallaTecnica(
                 "no enfria",
-                "C:/users/marcopolo/heladera_pinchada.png",
+                "C:/users/marcopolo/Desktop/heladera_pinchada.png",
                 heladeraMock
         );
 
@@ -130,5 +130,155 @@ public class IncidenteTest {
         List<Incidente> fallasTecnicas = RepoIncidente.getInstancia().obtenerTodasLasFallasTecnicas();
 
         Assertions.assertEquals(1, fallasTecnicas.size());
+    }
+
+    @Test
+    public void testSiElSensorDetectaTemperaturaIncorrectaEmiteUnaAlerta() throws MessagingException {
+        //creo el tecnico mas cercano
+        PersonaHumana personaHumana = new PersonaHumana();
+        Tecnico rolTecnico = new Tecnico();
+        Zona zona = new Zona();
+        zona.setRadio(12);
+        Ubicacion ubicacion = new Ubicacion();
+        ubicacion.setLongitud(11);
+        ubicacion.setLatitud(11);
+        zona.setUbicacion(ubicacion);
+        rolTecnico.agregarAreaDeCovertura(zona);
+        personaHumana.setRol(rolTecnico);
+        personaHumana.addMedioDeContacto(correoElectronicoMock);
+
+        RepoPersona.getInstancia().agregar(personaHumana);
+
+        //creo el sensor
+        SensorDeTemperatura sensorDeTemperatura = new SensorDeTemperatura();
+
+        Heladera heladera = new Heladera();
+        heladera.setUbicacion(ubicacion); //misma ubicacion que el técnico
+        EstadoHeladera estadoHeladeraPrevio= new EstadoHeladera(true);
+        heladera.setEstadoHeladeraActual(estadoHeladeraPrevio);
+        TemperaturaHeladera temperaturaHeladera = new TemperaturaHeladera();
+        temperaturaHeladera.setTemperaturaMaxima(-1);
+        temperaturaHeladera.setTemperaturaMinima(-12);
+        heladera.setTemperaturasDeFuncionamiento(temperaturaHeladera);
+        heladera.setNombre("Heladera Medrano UTN");
+        heladera.setDireccion("Medrano 1234");
+
+
+        sensorDeTemperatura.setHeladera(heladera);
+        sensorDeTemperatura.setTemperatura(1); //temperatura fuera de rango
+
+        //ejecuto
+        sensorDeTemperatura.notificar();
+
+        RepoIncidente repoIncidente = RepoIncidente.getInstancia();
+
+        Assertions.assertEquals(0, repoIncidente.obtenerTodasLasFallasTecnicas().size());
+
+        //debe emitir una alerta
+        Assertions.assertEquals(1, repoIncidente.obtenerTodasLasAlertas().size());
+
+        //debe ser una alerta del tipo temperatura
+        Assertions.assertEquals("Temperatura", ((Alerta)repoIncidente.obtenerTodasLasAlertas().get(0)).getTipoDeAlerta());
+
+
+        //se debe desactivar la heladera
+        Assertions.assertEquals(false, heladera.getEstadoHeladeraActual().getEstaActiva());
+
+        //debe avisar al técnico mas cernano
+        Mockito.verify(correoElectronicoMock, times(1)).notificar(any(Mensaje.class));
+
+    }
+
+    @Test
+    public void testSiElSensorDetectaMovimientoEmiteUnaAlerta() throws MessagingException {
+        //creo el tecnico mas cercano
+        PersonaHumana personaHumana = new PersonaHumana();
+        Tecnico rolTecnico = new Tecnico();
+        Zona zona = new Zona();
+        zona.setRadio(12);
+        Ubicacion ubicacion = new Ubicacion();
+        ubicacion.setLongitud(11);
+        ubicacion.setLatitud(11);
+        zona.setUbicacion(ubicacion);
+        rolTecnico.agregarAreaDeCovertura(zona);
+        personaHumana.setRol(rolTecnico);
+        personaHumana.addMedioDeContacto(correoElectronicoMock);
+
+        RepoPersona.getInstancia().agregar(personaHumana);
+
+        //creo el sensor
+        SensorDeMovimiento sensorDeMovimiento = new SensorDeMovimiento();
+
+        Heladera heladera = new Heladera();
+        heladera.setUbicacion(ubicacion); //misma ubicacion que el técnico
+        EstadoHeladera estadoHeladeraPrevio= new EstadoHeladera(true);
+        heladera.setEstadoHeladeraActual(estadoHeladeraPrevio);
+        heladera.setNombre("Heladera Medrano UTN");
+        heladera.setDireccion("Medrano 1234");
+
+
+        sensorDeMovimiento.setHeladera(heladera);
+        sensorDeMovimiento.setEstaActivado(true); //detecta movimiento
+
+        //ejecuto
+        sensorDeMovimiento.notificar();
+
+        RepoIncidente repoIncidente = RepoIncidente.getInstancia();
+
+        Assertions.assertEquals(0, repoIncidente.obtenerTodasLasFallasTecnicas().size());
+
+        //debe emitir una alerta
+        Assertions.assertEquals(1, repoIncidente.obtenerTodasLasAlertas().size());
+
+        //debe ser una alerta del tipo fraude
+        Assertions.assertEquals("Fraude", ((Alerta)repoIncidente.obtenerTodasLasAlertas().get(0)).getTipoDeAlerta());
+
+        //se debe desactivar la heladera
+        Assertions.assertEquals(false, heladera.getEstadoHeladeraActual().getEstaActiva());
+
+        //debe avisar al técnico mas cernano
+        Mockito.verify(correoElectronicoMock, times(1)).notificar(any(Mensaje.class));
+
+    }
+
+    @Test
+    public void testSiNoHayTecnicoCercanoNoSeAvisaANadie() throws MessagingException {
+        Ubicacion ubicacionCoverturaTecnico = new Ubicacion(-34.609722F, -58.382592F);// Cerca de Buenos Aires
+
+        Zona zonaCovertura = new Zona();
+        zonaCovertura.setUbicacion(ubicacionCoverturaTecnico);
+        zonaCovertura.setRadio(2);//radio chico para que la heladera no entre en este radio
+
+        Ubicacion ubicacionHeladera = new Ubicacion(-34.705722F, -58.501592F);// Más lejos de Buenos Aires
+
+        //creo el tecnico mas cercano
+        PersonaHumana personaHumana = new PersonaHumana();
+        Tecnico rolTecnico = new Tecnico();
+
+        rolTecnico.agregarAreaDeCovertura(zonaCovertura);
+
+        personaHumana.setRol(rolTecnico);
+        personaHumana.addMedioDeContacto(correoElectronicoMock);
+
+        RepoPersona.getInstancia().agregar(personaHumana);
+
+        //creo la heladera
+        Heladera heladera = new Heladera();
+        heladera.setUbicacion(ubicacionHeladera);
+        EstadoHeladera estadoHeladeraPrevio= new EstadoHeladera(true);
+        heladera.setEstadoHeladeraActual(estadoHeladeraPrevio);
+
+        heladera.setNombre("Heladera Medrano UTN");
+        heladera.setDireccion("Medrano 1234");
+
+        SensorDeMovimiento sensorDeMovimiento = new SensorDeMovimiento();
+        sensorDeMovimiento.setHeladera(heladera);
+        sensorDeMovimiento.setEstaActivado(true);
+
+        //emito la alerta
+        sensorDeMovimiento.notificar();
+
+        //verifico que no se le aviso a nadie
+        Mockito.verify(correoElectronicoMock, times(0)).notificar(any(Mensaje.class));
     }
 }

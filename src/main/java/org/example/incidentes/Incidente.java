@@ -14,6 +14,7 @@ import org.example.repositorios.RepoPersona;
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -34,14 +35,19 @@ public abstract class Incidente {
     }
 
     private void avisarATecnico() throws MessagingException {
-        Persona tecnicoCercano = RepoPersona.getInstancia().tecnicoMasCercanoAHeladera(heladera);
+        Optional<Persona> tecnicoCercanoOp = RepoPersona.getInstancia().tecnicoMasCercanoAHeladera(heladera);
 
-        String asunto = Configuracion.obtenerProperties("mensaje.incidentes.heladera.titulo");
-        String contenido = Configuracion.obtenerProperties("mensaje.incidentes.heladera.contenido")
-                .replace("{nombreHeladera}", heladera.getNombre())
-                .replace("{direccionHeladera}", heladera.getDireccion())
-                .replace("{tipoIncidente}", this.tipoDeIncidente);
-        Mensaje mensaje = new Mensaje(asunto, contenido, tecnicoCercano);
-        tecnicoCercano.getMediosDeContacto().get(0).notificar(mensaje);//aviso por el primer medio de contacto que registró
+        if(tecnicoCercanoOp.isPresent()){
+            Persona tecnicoCercano = tecnicoCercanoOp.get();
+
+            String asunto = Configuracion.obtenerProperties("mensaje.incidentes.heladera.titulo");
+            String contenido = Configuracion.obtenerProperties("mensaje.incidentes.heladera.contenido")
+                    .replace("{nombreHeladera}", heladera.getNombre())
+                    .replace("{direccionHeladera}", heladera.getDireccion())
+                    .replace("{tipoIncidente}", this.tipoDeIncidente);
+            Mensaje mensaje = new Mensaje(asunto, contenido, tecnicoCercano);
+            tecnicoCercano.getMediosDeContacto().get(0).notificar(mensaje);//aviso por el primer medio de contacto que registró
+
+        } //si no hay tecnico cerca, no se avisa a nadie
     }
 }

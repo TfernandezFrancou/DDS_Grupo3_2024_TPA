@@ -1,5 +1,6 @@
 package org.example.repositorios;
 
+import org.apache.cxf.common.util.ReflectionInvokationHandler;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.MovimientoViandas;
@@ -14,6 +15,7 @@ import org.example.reportes.ItemReporteHeladera;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RepoPersona {
     private List<Persona> personas;
@@ -43,9 +45,9 @@ public class RepoPersona {
     }
 
 
-    public Persona tecnicoMasCercanoAHeladera(Heladera heladeraDada){
+    public Optional<Persona> tecnicoMasCercanoAHeladera(Heladera heladeraDada){
         List<Persona> tecnicos = this.buscarPersonasConRol(Tecnico.class);
-        Persona tecnicoMasCercano = null;
+        Optional<Persona> tecnicoMasCercano = Optional.empty();
         double distanciaMinima = Double.MAX_VALUE;//para obtener al tecnico con la distancia minima
         Ubicacion ubicacionHeladera = heladeraDada.getUbicacion();
 
@@ -55,7 +57,7 @@ public class RepoPersona {
                 double distancia = ubicacionHeladera.calcularDistanciaA(zona.getUbicacion());
                 if (distancia <= zona.getRadio() && distancia < distanciaMinima) {
                     distanciaMinima = distancia;
-                    tecnicoMasCercano = tecnico;
+                    tecnicoMasCercano = Optional.of(tecnico);
                 }
             }
         }
