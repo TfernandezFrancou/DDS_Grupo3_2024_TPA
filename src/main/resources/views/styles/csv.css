@@ -1,0 +1,24 @@
+.result-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 250px;
+}
+
+.result-message {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.result-message span {
+    margin-left: 10px;
+    font-size: 23px;
+}
+
+img.csv-formato {
+    margin: 30px 0px;
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes</title>
+    <link rel="stylesheet" href="../styles/reportes.css">
+    <link rel="stylesheet" href="../styles/navegacion.css">
+    <link rel="icon" type="image/x-icon" href="../imagenes/favicon.ico">
+</head>
+
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../imagenes/logo.png" alt="Logo" class="logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../colaboraciones/mis-colaboraciones.html">Mis colaboraciones</a></li>
+                <li><a href="../heladeras/registrar-heladera.html">Registrar heladera</a></li>
+                <li><a href="../heladeras/visualizar.html">Heladeras</a></li>
+                <li><a href="../colaboraciones/puntos.html">Puntos</a></li>
+                <li><a href="../colaboraciones/donar-viandas.html">Donar viandas</a></li>
+                <li><a href="./reportes.html" class="menu-select">Reportes</a></li>
+                <li><a href="../colaboraciones/registro-persona-vulnerable.html">Registrar persona</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="reportes">
+            <h1>Reportes</h1>
+            <div class="tabs">
+                <button class="tab active">Fallas por heladera</button>
+                <button class="tab">Viandas Retiradas/Colocadas por Heladera</button>
+                <button class="tab">Viandas por Colaborador</button>
+            </div>
+            <div class="report-list">
+                <a href="./reporte.html" class="report-item">
+                    <span class="nombre-heladera">Heladera 1</span>
+                    <span class="fecha-registro">01/09/2024</span>
+                    <span class="direccion">Av. Siempreviva 123</span>
+                    <span class="tipo-falla">Termostato roto</span>
+                </a>
+                <a href="./reporte.html" class="report-item">
+                    <span class="nombre-heladera">Heladera 2</span>
+                    <span class="fecha-registro">02/09/2024</span>
+                    <span class="direccion">Calle Falsa 456</span>
+                    <span class="tipo-falla">Fuga de gas</span>
+                </a>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

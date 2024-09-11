@@ -1,0 +1,60 @@
+:root {
+    --primary-color: #a6e1e1;
+    --primary-color-dark: #40bfbf;
+}
+
+body {
+    background-color: #f8f9fa;
+}
+
+.form-control {
+    border-radius: 25px;
+}
+
+.input-group-text {
+    background-color: transparent;
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 25px;
+    color: #000000;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-color-dark);
+}
+
+
+a {
+    color: #00473e;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #008080;
+}
+
+.input-group .form-control {
+    border-right: none;
+    /* Elimina el borde derecho del input */
+}
+
+.input-group .input-group-text {
+    border-left: none;
+    /* Elimina el borde izquierdo del span del icono */
+    border-radius: 0 25px 25px 0;
+    /* Bordes redondeados para el icono */
+}
+
+.input-group-text i {
+    font-size: 1.2rem;
+    /* Tamaño del icono */
+}
+
+.logo {
+    filter: drop-shadow(0px 4px 4px #b3b3b3);
+}

@@ -1,0 +1,69 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+
+main {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #2a5549;
+}
+
+.donation-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.donation-form label {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.donation-form input,
+.donation-form select {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.donation-form button {
+    background-color: #8cd1cd;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #000000;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.donation-form button:hover {
+    background-color: #40bfbf;
+    color: #ffffff;
+}
+
+label span {
+    color: #ff0000;
+}

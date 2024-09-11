@@ -1,0 +1,135 @@
+body {
+    background-color: #f9f9f9;
+}
+
+.container {
+    margin-bottom: 50px;
+}
+
+
+
+.boton-nuevo {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.formulario {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.formulario-input {
+    margin-right: 0.5rem;
+}
+
+.formulario-label {
+    margin-right: 1rem;
+}
+
+.back-Button {
+
+    background-color: transparent;
+    border: none;
+    text-decoration: none;
+    margin-top: 10px;
+    font-weight: normal !important;
+    text-decoration: none;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.back-Button:hover {
+    color: #333;
+}
+
+h1,
+h2 {
+    color: #0b5853;
+}
+
+
+.nav-lista {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.nav-lista li {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.alerta-caja {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 15px;
+}
+
+.alerta-fecha {
+    float: right;
+}
+
+.alerta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ccc;
+    /* Default color */
+}
+
+.status-si {
+    background-color: green;
+}
+
+.status-no {
+    background-color: red;
+}
+
+.btn {
+    font-weight: bold;
+}
+
+.but {
+    background-color: #8cd1cd;
+    border: #8cd1cd;
+    color: #333;
+}
+
+.but:hover {
+    background-color: #40bfbf;
+}
+
+.but2 {
+    background-color: transparent;
+    color: red;
+    border: none;
+    margin-right: 10px;
+}
+
+.but2:hover {
+    background-color: red;
+}

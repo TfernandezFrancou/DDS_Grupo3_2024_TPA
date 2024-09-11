@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sección</title>
+    <link rel="icon" type="image/x-icon" href="../imagenes/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="../styles/estilos-inicio-sección.css">
+
+</head>
+
+<body>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="text-center col-12 col-md-6 col-lg-3">
+            <!-- Logo -->
+            <img src="../imagenes/logo.png" alt="logo" class="img-fluid mb-4 logo" width="200px">
+
+            <!-- Formulario de login -->
+            <form>
+                <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="Usuario" autofocus required>
+                </div>
+                <div class="mb-3 input-group">
+                    <input type="password" id="password" class="form-control" placeholder="Contraseña" required>
+                    <span class="input-group-text bg-white border">
+                        <i class="bi bi-eye-slash-fill" id="togglePassword" style="cursor: pointer;"></i>
+                    </span>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+            </form>
+
+            <!-- Link para registro -->
+            <div class="mt-3">
+                <span>¿No tienes cuenta?</span>
+                <a href="./Registrarse.html">Regístrate</a>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function () {
+            // Cambia el tipo del input entre 'password' y 'text'
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+
+            // Alterna el ícono entre 'bi-eye-slash-fill' y 'bi-eye-fill'
+            if (this.classList.contains('bi-eye-slash-fill')) {
+                this.classList.remove('bi-eye-slash-fill');
+                this.classList.add('bi-eye-fill');
+            } else {
+                this.classList.remove('bi-eye-fill');
+                this.classList.add('bi-eye-slash-fill');
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function (ev) {
+            ev.preventDefault();
+            window.location = "../heladeras/visualizar.html";
+        })
+    </script>
+
+</body>
+
+</html>

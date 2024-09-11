@@ -1,0 +1,103 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../imagenes/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/heladeras.css">
+    <link rel="stylesheet" href="../styles/navegacion.css">
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDobH49Ls6a9qadpi4gctKSWX1YAnBtsVA&loading=async&libraries=maps,marker&v=beta"></script>
+</head>
+
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../imagenes/logo.png" alt="Logo" class="logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../colaboraciones/mis-colaboraciones.html">Mis colaboraciones</a></li>
+                <li><a href="./registrar-heladera.html">Registrar heladera</a></li>
+                <li><a href="./visualizar.html" class="menu-select">Heladeras</a></li>
+                <li><a href="../colaboraciones/puntos.html">Puntos</a></li>
+                <li><a href="../colaboraciones/donar-viandas.html">Donar viandas</a></li>
+                <li><a href="../reportes/reportes.html">Reportes</a></li>
+                <li><a href="../colaboraciones/registro-persona-vulnerable.html">Registrar persona</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="map-container">
+                    <gmp-map center="-34.5999311,-58.4147002" zoom="15" map-id="Prueba" style="height: 600px">
+                        <gmp-advanced-marker position="-34.5985827,-58.4201726"
+                            title="Medrano UTN"></gmp-advanced-marker>
+                        <gmp-advanced-marker position="-34.6041054,-58.3921404"
+                            title="callao y corrientes"></gmp-advanced-marker>
+                        <gmp-advanced-marker position="-34.6041054,-58.3921404"
+                            title="callao y corrientes"></gmp-advanced-marker>
+                        <gmp-advanced-marker position="-34.5998649,-58.3970982,58"
+                            title="Corrientes y Junin - Facultad de Medicina"></gmp-advanced-marker>
+                        <gmp-advanced-marker position="-34.6042067,-58.3698927,58" title="CCK"></gmp-advanced-marker>
+                        <gmp-advanced-marker position="-34.5911847,-58.3748711,58" title="Retiro"></gmp-advanced-marker>
+                        <gmp-advanced-marker position="-34.5996182,-58.5123297,85"
+                            title="Plaza arenales"></gmp-advanced-marker>
+                    </gmp-map>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-6 fw-bold fs-4" style="color: #69a7a3;">Heladeras</div>
+                    <div class="col-6 text-right fw-bold fs-4">Activo</div>
+                </div>
+                <div class="row">
+                    <a href="./caracteristicas.html" class="col-6">Medrano UTN</a>
+                    <div class="col-6 text-right"><span class="status-indicator status-si"></span> SI</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Lacroze</div>
+                    <div class="col-6 text-right"><span class="status-indicator status-si"></span> SI</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Callao y Corrientes</div>
+                    <div class="col-6 text-right"><span class="status-indicator status-no"></span> NO</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">FMED</div>
+                    <div class="col-6 text-right"><span class="status-indicator status-no"></span> NO</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">CCK</div>
+                    <div class="col-6 text-right"><span class="status-indicator status-si"></span> SI</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Retiro</div>
+                    <div class="col-6 text-right"><span class="status-indicator status-no"></span> NO</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Plaza Arenales</div>
+                    <div class="col-6 text-right"><span class="status-indicator status-si"></span> SI</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Acoyte</div>
+                    <div class="col-6 text-right"><span class="status-indicator status-si"></span> SI</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Plaza de Mayo</div>
+                    <div class="col-6 text-right"><span class="status-indicator status-si"></span> SI</div>
+                </div>
+            </div>
+            <div class="mt-4 text-end">
+                <!-- <button class="btn btn-secondary but2">Reportar Falla</button> -->
+                <!-- <button class="btn btn-primary but">Agregar Heladera</button> -->
+                <a href="./reporte.html" class="btn btn-secondary but2">Reportar Falla</a>
+                <a href="./caracteristicas.html" class="btn btn-primary but">Agregar Heladera</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
