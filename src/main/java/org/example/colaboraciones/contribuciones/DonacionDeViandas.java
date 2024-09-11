@@ -8,9 +8,6 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.config.Configuracion;
 import org.example.excepciones.SolicitudInexistente;
-import org.example.personas.Persona;
-import org.example.personas.roles.Colaborador;
-import org.example.repositorios.RepoPersona;
 import org.example.repositorios.RepositorioAperturasHeladera;
 import org.example.tarjetas.AperturaHeladera;
 import org.example.validadores.VerificadorAperturaHeladera;
@@ -32,7 +29,7 @@ public class DonacionDeViandas extends Contribucion {
     }
 
     public DonacionDeViandas(TipoDePersona tipo, LocalDate fecha, Integer cantidad) {
-        this.setTiposDePersona(tipo);
+        this.setTipoDePersona(tipo);
         this.setFecha(fecha);
         this.cantidadDeViandas = cantidad;
     }
@@ -60,10 +57,6 @@ public class DonacionDeViandas extends Contribucion {
         }
     }
 
-    @Override
-    public boolean puedeRealizarContribucion() {
-        return this.getTiposDePersona().equals(TipoDePersona.HUMANA);
-    }
 
     public void agregarVianda(Vianda vianda){
         this.viandas.add(vianda);

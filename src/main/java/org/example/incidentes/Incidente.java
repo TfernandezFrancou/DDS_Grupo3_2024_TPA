@@ -1,19 +1,15 @@
 package org.example.incidentes;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.colaboraciones.contribuciones.heladeras.EstadoHeladera;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.config.Configuracion;
 import org.example.personas.Persona;
 import org.example.personas.contacto.Mensaje;
-import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoPersona;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Getter

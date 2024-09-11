@@ -23,11 +23,6 @@ public class OfrecerProductos extends Contribucion {
         RepoOfertas.getInstancia().agregarTodas(ofertas);
     }
 
-    @Override
-    public boolean puedeRealizarContribucion() {
-        return this.getTiposDePersona().equals(TipoDePersona.JURIDICA);
-    }
-
     public void agregarOferta(Oferta oferta){
         this.ofertas.add(oferta);
     }

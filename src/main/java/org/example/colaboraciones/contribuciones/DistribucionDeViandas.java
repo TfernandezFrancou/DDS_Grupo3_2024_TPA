@@ -25,7 +25,7 @@ public class DistribucionDeViandas extends Contribucion {
     private String motivo;
 
     public DistribucionDeViandas(TipoDePersona tipo, LocalDate fecha, Integer cantidad) {
-        this.setTiposDePersona(tipo);
+        this.setTipoDePersona(tipo);
         this.setFecha(fecha);
         this.cantidad = cantidad;
     }
@@ -58,11 +58,6 @@ public class DistribucionDeViandas extends Contribucion {
         }else {
             throw new SolicitudInexistente(Configuracion.obtenerProperties("mensaje.apertura-heladera.solicitud-heladera-inexistente"));
         }
-    }
-
-    @Override
-    public boolean puedeRealizarContribucion() {
-        return this.getTiposDePersona().equals(TipoDePersona.HUMANA);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class MigradorContribucion {
     }
 
     private void migrarContribucion(PersonaHumana colaborador, Contribucion contribucion) throws MessagingException {
-        Usuario usuario = colaborador.buscarOCrearUsuario();
+        Usuario usuario = colaborador.buscarOCrearUsuario();//ya lo guarda en el repo
         ((Colaborador) colaborador.getRol()).agregarContribucion(contribucion);
     }
 }

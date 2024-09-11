@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.excepciones.ApiRequestFailedException;
-import org.example.personas.contacto.MedioDeContacto;
 import org.example.recomendacion.IAdapter;
 import org.example.recomendacion.Zona;
 import org.example.colaboraciones.Ubicacion;

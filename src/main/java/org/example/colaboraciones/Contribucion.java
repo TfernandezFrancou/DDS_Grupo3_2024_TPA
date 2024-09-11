@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 @Setter
 public abstract class Contribucion {
     protected Colaborador colaborador;
-    protected TipoDePersona tiposDePersona;
+    protected TipoDePersona tipoDePersona;
     private LocalDate fecha;
 
     public abstract float getCoeficientePuntaje();
@@ -25,7 +25,6 @@ public abstract class Contribucion {
         RepoContribucion.getInstancia().agregarContribucion(this);
     }
 
-    public abstract boolean puedeRealizarContribucion();
 
     public abstract float obtenerPuntaje();
 

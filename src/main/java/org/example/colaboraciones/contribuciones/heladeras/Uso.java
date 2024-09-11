@@ -2,7 +2,6 @@ package org.example.colaboraciones.contribuciones.heladeras;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 
 import java.time.LocalDateTime;
 

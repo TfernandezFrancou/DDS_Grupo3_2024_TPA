@@ -26,7 +26,7 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
     public RegistrarPersonasEnSituacionVulnerable(TipoDePersona tipo, LocalDate fecha, Integer cantidad) {
         this.personasRegistradas = new ArrayList<>();
         this.tarjetasAEntregar = new ArrayList<>();
-        this.setTiposDePersona(tipo);
+        this.setTipoDePersona(tipo);
         this.setFecha(fecha);
         this.tarjetasEntregadas = cantidad;
     }
@@ -50,10 +50,6 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
         this.setTarjetasEntregadas(personasRegistradas.size());
     }
 
-    @Override
-    public boolean puedeRealizarContribucion() {
-        return this.getTiposDePersona().equals(TipoDePersona.HUMANA);
-    }
 
     //cuando se tengan las tarjetas, se las envia al colaborador
     public void setTarjetasAEntregar(List<TarjetaHeladera> tarjetasAEntregar) throws MessagingException {

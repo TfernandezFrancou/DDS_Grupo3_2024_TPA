@@ -2,7 +2,6 @@ package org.example.colaboraciones.contribuciones;
 
 import lombok.Getter;
 import org.example.colaboraciones.Contribucion;
-import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.repositorios.RepoHeladeras;
 
@@ -22,11 +21,6 @@ public class HacerseCargoDeUnaHeladera extends Contribucion {
     public void ejecutarContribucion() throws Exception{
         super.ejecutarContribucion();
         RepoHeladeras.getInstancia().agregarTodas(heladerasColocadas);
-    }
-
-    @Override
-    public boolean puedeRealizarContribucion() {
-        return this.getTiposDePersona().equals(TipoDePersona.JURIDICA);
     }
 
     public void agregarHeladera(Heladera heladera){

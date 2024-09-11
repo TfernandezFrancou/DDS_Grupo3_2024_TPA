@@ -2,7 +2,6 @@ package org.example.validaciones;
 
 import org.example.config.Configuracion;
 
-import java.io.IOException;
 
 public class CaracterRepetido extends ValidacionContrasenia {
 

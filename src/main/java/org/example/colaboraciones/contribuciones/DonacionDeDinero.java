@@ -14,7 +14,7 @@ public class DonacionDeDinero extends Contribucion {
     private Integer frecuencia;
 
     public DonacionDeDinero(TipoDePersona tipo, LocalDate fecha, Integer cantidad) {
-        this.setTiposDePersona(tipo);
+        this.setTipoDePersona(tipo);
         this.setFecha(fecha);
         this.monto = cantidad;
     }
@@ -24,11 +24,6 @@ public class DonacionDeDinero extends Contribucion {
         super.ejecutarContribucion();
     }
 
-    @Override
-    public boolean puedeRealizarContribucion() {
-        return this.getTiposDePersona().equals(TipoDePersona.HUMANA)
-                    || this.getTiposDePersona().equals(TipoDePersona.JURIDICA);
-    }
 
     @Override
     public float getCoeficientePuntaje() {

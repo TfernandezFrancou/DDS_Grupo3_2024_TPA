@@ -11,7 +11,6 @@ import org.example.personas.roles.Rol;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.List;
 
 @Getter
 @Setter

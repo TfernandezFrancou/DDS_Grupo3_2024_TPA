@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.VisitaHeladera;
 import org.example.incidentes.Incidente;
-import org.example.personas.documentos.Documento;
 import org.example.recomendacion.Zona;
-import org.example.personas.contacto.MedioDeContacto;
 import org.example.repositorios.RepositorioVisitasTecnicos;
 
 import java.time.LocalDate;

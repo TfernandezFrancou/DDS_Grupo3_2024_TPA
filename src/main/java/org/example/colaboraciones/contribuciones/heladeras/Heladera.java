@@ -4,18 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.Ubicacion;
-import org.example.config.Configuracion;
-import org.example.excepciones.SolicitudVencida;
 import org.example.personas.Persona;
-import org.example.personas.PersonaHumana;
-import org.example.repositorios.RepositorioAperturasHeladera;
 import org.example.repositorios.RepoHeladeras;
-import org.example.repositorios.RepositorioSolicitudesApertura;
 import org.example.subscripcionesHeladeras.PublisherDesperfecto;
 import org.example.subscripcionesHeladeras.PublisherViandasDisponibles;
 import org.example.subscripcionesHeladeras.PublisherViandasFaltantes;
-import org.example.tarjetas.SolicitudDeApertura;
-import org.example.tarjetas.TarjetaColaborador;
 
 import javax.mail.MessagingException;
 import java.time.LocalDate;
