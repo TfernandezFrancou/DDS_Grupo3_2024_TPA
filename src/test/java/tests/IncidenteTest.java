@@ -23,6 +23,7 @@ import javax.mail.MessagingException;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
@@ -68,6 +69,7 @@ public class IncidenteTest {
         when(heladeraMock.getUbicacion()).thenReturn(ubicacionMock);
         when(heladeraMock.getNombre()).thenReturn("Heladera Medrano");
         when(heladeraMock.getDireccion()).thenReturn("Medrano 321");
+        when(heladeraMock.estaActiva()).thenReturn(true);
 
         //ejecuto
         sensorDeTemperatura.emitirAlerta("Tempratura");
@@ -111,6 +113,7 @@ public class IncidenteTest {
         when(heladeraMock.getUbicacion()).thenReturn(ubicacionMock);
         when(heladeraMock.getNombre()).thenReturn("Heladera Medrano");
         when(heladeraMock.getDireccion()).thenReturn("Medrano 321");
+        when(heladeraMock.estaActiva()).thenReturn(true);
 
         //reporto la falla técnica
         rolColaborador.reportarFallaTecnica(
@@ -178,6 +181,8 @@ public class IncidenteTest {
         //debe ser una alerta del tipo temperatura
         Assertions.assertEquals("Temperatura", ((Alerta)repoIncidente.obtenerTodasLasAlertas().get(0)).getTipoDeAlerta());
 
+        //se actualiza la temperatura actual de la heladera
+        Assertions.assertEquals(1, heladera.getTemperaturaActualHeladera());
 
         //se debe desactivar la heladera
         Assertions.assertEquals(false, heladera.getEstadoHeladeraActual().getEstaActiva());

@@ -40,6 +40,8 @@ public class Heladera {
 
     private List<Persona> colaboradoresAutorizados;
 
+    private int temperaturaActualHeladera;
+
     public Heladera(){
         this.historialEstadoHeldera = new ArrayList<>();
         this.viandasEnHeladera = 0;

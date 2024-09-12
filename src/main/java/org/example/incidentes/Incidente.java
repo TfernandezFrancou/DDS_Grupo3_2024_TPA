@@ -26,7 +26,10 @@ public abstract class Incidente {
     }
 
     public void reportarIncidente() throws MessagingException {
-        heladera.desactivarHeladera();
+        if(heladera.estaActiva()){//si ya esta desactivada no hago nada
+            heladera.desactivarHeladera();
+        }
+
         this.avisarATecnico();
     }
 

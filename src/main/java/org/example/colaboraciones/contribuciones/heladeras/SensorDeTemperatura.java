@@ -11,6 +11,11 @@ public class SensorDeTemperatura extends Sensor {
     private int temperatura;
 
     @Override
+    public void notificar() throws MessagingException {
+        super.notificar();
+        this.getHeladera().setTemperaturaActualHeladera(temperatura);
+    }
+    @Override
     public boolean getEstadoHeladera() throws MessagingException {
         TemperaturaHeladera temperaturaHeladera = super.getHeladera().getTemperaturasDeFuncionamiento();
 
