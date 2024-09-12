@@ -6,6 +6,7 @@ import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,8 +14,8 @@ public class DonacionDeDinero extends Contribucion {
     private float monto;
     private Integer frecuencia;
 
-    public DonacionDeDinero(TipoDePersona tipo, LocalDate fecha, Integer cantidad) {
-        this.setTipoDePersona(tipo);
+    public DonacionDeDinero(LocalDate fecha, Integer cantidad) {
+        this.tiposDePersona = Set.of(TipoDePersona.HUMANA, TipoDePersona.JURIDICA);
         this.setFecha(fecha);
         this.monto = cantidad;
     }

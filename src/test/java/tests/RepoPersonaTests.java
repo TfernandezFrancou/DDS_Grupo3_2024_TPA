@@ -52,14 +52,14 @@ public class RepoPersonaTests {
         LocalDateTime finSemana = now.with(java.time.temporal.TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY)).toLocalDate().atTime(23, 59, 59);
 
         Colaborador rolColaborador1 = (Colaborador) colaborador1.getRol();
-        rolColaborador1.agregarContribucion(new DonacionDeViandas(TipoDePersona.HUMANA, inicioSemana.plusDays(2).toLocalDate(), 10)); // miercoles
-        rolColaborador1.agregarContribucion(new DonacionDeViandas(TipoDePersona.HUMANA, inicioSemana.plusDays(3).toLocalDate(), 10)); // jueves
-        rolColaborador1.agregarContribucion(new DonacionDeViandas(TipoDePersona.HUMANA, inicioSemana.minusDays(1).toLocalDate(), 10)); // domingo de la anterior semana
+        rolColaborador1.agregarContribucion(new DonacionDeViandas(inicioSemana.plusDays(2).toLocalDate(), 10)); // miercoles
+        rolColaborador1.agregarContribucion(new DonacionDeViandas(inicioSemana.plusDays(3).toLocalDate(), 10)); // jueves
+        rolColaborador1.agregarContribucion(new DonacionDeViandas(inicioSemana.minusDays(1).toLocalDate(), 10)); // domingo de la anterior semana
 
         Colaborador rolColaborador2 = (Colaborador) colaborador2.getRol();
-        rolColaborador2.agregarContribucion(new DonacionDeViandas(TipoDePersona.HUMANA, inicioSemana.plusDays(4).toLocalDate(), 10)); // viernes
-        rolColaborador2.agregarContribucion(new DonacionDeViandas(TipoDePersona.HUMANA, inicioSemana.toLocalDate(), 15)); // lunes
-        rolColaborador2.agregarContribucion(new DonacionDeViandas(TipoDePersona.HUMANA, inicioSemana.minusDays(2).toLocalDate(), 10)); // sabado de la anterior semana
+        rolColaborador2.agregarContribucion(new DonacionDeViandas(inicioSemana.plusDays(4).toLocalDate(), 10)); // viernes
+        rolColaborador2.agregarContribucion(new DonacionDeViandas(inicioSemana.toLocalDate(), 15)); // lunes
+        rolColaborador2.agregarContribucion(new DonacionDeViandas(inicioSemana.minusDays(2).toLocalDate(), 10)); // sabado de la anterior semana
 
         List<ItemReporteColaborador> reporte = repoPersona.obtenerCantidadDeViandasDistribuidasPorColaborador(inicioSemana, finSemana);
 

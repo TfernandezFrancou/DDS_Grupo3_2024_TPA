@@ -10,12 +10,14 @@ import org.example.repositorios.RepoContribucion;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 public abstract class Contribucion {
     protected Colaborador colaborador;
-    protected TipoDePersona tipoDePersona;
+    protected Set<TipoDePersona> tiposDePersona;
     private LocalDate fecha;
 
     public abstract float getCoeficientePuntaje();
@@ -24,7 +26,6 @@ public abstract class Contribucion {
         colaborador.setPuntuaje(colaborador.getPuntuaje() + this.obtenerPuntaje());
         RepoContribucion.getInstancia().agregarContribucion(this);
     }
-
 
     public abstract float obtenerPuntaje();
 
@@ -52,10 +53,10 @@ public abstract class Contribucion {
             throw new ParseException("Tipo de colaboracion invalida", 1);
         }
         return switch (tipo) {
-            case DINERO -> new DonacionDeDinero(TipoDePersona.HUMANA, fecha, cantidad);
-            case DONACION_VIANDAS -> new DonacionDeViandas(TipoDePersona.HUMANA, fecha, cantidad);
-            case REDISTRIBUCION_VIANDAS -> new DistribucionDeViandas(TipoDePersona.HUMANA, fecha, cantidad);
-            case ENTREGA_TARJETAS -> new RegistrarPersonasEnSituacionVulnerable(TipoDePersona.HUMANA, fecha, cantidad);
+            case DINERO -> new DonacionDeDinero(fecha, cantidad);
+            case DONACION_VIANDAS -> new DonacionDeViandas(fecha, cantidad);
+            case REDISTRIBUCION_VIANDAS -> new DistribucionDeViandas(fecha, cantidad);
+            case ENTREGA_TARJETAS -> new RegistrarPersonasEnSituacionVulnerable(fecha, cantidad);
         };
     }
 }

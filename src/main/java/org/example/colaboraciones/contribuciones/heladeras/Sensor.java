@@ -22,7 +22,7 @@ public abstract class Sensor {
     }
 
     public void notificar() throws MessagingException {
-        heladera.actualizarEstadoHeladera(this);
+        heladera.actualizarEstadoHeladera(this.getEstadoHeladera());
     }
 
     public abstract boolean getEstadoHeladera() throws MessagingException;

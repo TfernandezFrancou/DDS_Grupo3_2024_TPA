@@ -156,9 +156,7 @@ public class IncidenteTest {
         heladera.setUbicacion(ubicacion); //misma ubicacion que el técnico
         EstadoHeladera estadoHeladeraPrevio= new EstadoHeladera(true);
         heladera.setEstadoHeladeraActual(estadoHeladeraPrevio);
-        TemperaturaHeladera temperaturaHeladera = new TemperaturaHeladera();
-        temperaturaHeladera.setTemperaturaMaxima(-1);
-        temperaturaHeladera.setTemperaturaMinima(-12);
+        TemperaturaHeladera temperaturaHeladera = new TemperaturaHeladera(-12, -1);
         heladera.setTemperaturasDeFuncionamiento(temperaturaHeladera);
         heladera.setNombre("Heladera Medrano UTN");
         heladera.setDireccion("Medrano 1234");

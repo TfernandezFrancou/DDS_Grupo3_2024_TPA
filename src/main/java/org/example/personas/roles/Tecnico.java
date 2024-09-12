@@ -7,6 +7,7 @@ import org.example.incidentes.Incidente;
 import org.example.recomendacion.Zona;
 import org.example.repositorios.RepositorioVisitasTecnicos;
 
+import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class Tecnico extends Rol {
                         String fotoUrl,
                         boolean incidenteSolucionado,
                         boolean trabajoCompletado
-    ){
+    ) throws MessagingException {
         VisitaHeladera visitaHeladera = new VisitaHeladera(
                 LocalDate.now(),
                 trabajoRealizado,

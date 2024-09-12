@@ -8,6 +8,7 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.config.Configuracion;
 import org.example.excepciones.SolicitudInexistente;
+import org.example.personas.roles.Colaborador;
 import org.example.repositorios.RepositorioAperturasHeladera;
 import org.example.tarjetas.AperturaHeladera;
 import org.example.validadores.VerificadorAperturaHeladera;
@@ -16,6 +17,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 @Getter
 public class DonacionDeViandas extends Contribucion {
     @Setter
@@ -25,11 +28,20 @@ public class DonacionDeViandas extends Contribucion {
     private Integer cantidadDeViandas = 0;
 
     public DonacionDeViandas(){
+        this.tiposDePersona = Set.of(TipoDePersona.HUMANA);
         this.viandas= new ArrayList<>();
     }
 
-    public DonacionDeViandas(TipoDePersona tipo, LocalDate fecha, Integer cantidad) {
-        this.setTipoDePersona(tipo);
+    public DonacionDeViandas(Heladera heladera, Colaborador colaborador, List<Vianda> viandas){
+        this.tiposDePersona = Set.of(TipoDePersona.HUMANA);
+        this.viandas= new ArrayList<>();
+        this.cantidadDeViandas = viandas.size();
+        this.heladera = heladera;
+        this.colaborador = colaborador;
+    }
+
+    public DonacionDeViandas(LocalDate fecha, Integer cantidad) {
+        this.tiposDePersona = Set.of(TipoDePersona.HUMANA);
         this.setFecha(fecha);
         this.cantidadDeViandas = cantidad;
     }

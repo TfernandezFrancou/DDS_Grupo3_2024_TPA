@@ -1,10 +1,13 @@
 package org.example.validadores;
 
 import org.example.colaboraciones.Contribucion;
+import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.*;
 import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
 import org.example.personas.PersonaJuridica;
+
+import java.util.Set;
 
 public class VerificadorContribucion {
     private static VerificadorContribucion instancia = null;
@@ -19,23 +22,12 @@ public class VerificadorContribucion {
     }
 
     public boolean puedeRealizarContribucion(Persona persona, Contribucion contribucion) {
-
-        boolean puedeHacerContribucion= false;
-
-        if(contribucion instanceof OfrecerProductos){
-            puedeHacerContribucion =persona instanceof PersonaJuridica;
-        } if(contribucion instanceof DonacionDeDinero
-                || contribucion instanceof HacerseCargoDeUnaHeladera
-        ){
-            puedeHacerContribucion =persona instanceof PersonaJuridica
-                    || persona instanceof PersonaHumana ;
-        }else if(contribucion instanceof DistribucionDeViandas
-                || contribucion instanceof DonacionDeViandas
-            || contribucion instanceof RegistrarPersonasEnSituacionVulnerable
-        ){
-            puedeHacerContribucion =persona instanceof PersonaHumana ;
+        if (persona instanceof PersonaHumana) {
+            return contribucion.getTiposDePersona().contains(TipoDePersona.HUMANA);
+        } else if (persona instanceof PersonaJuridica) {
+            return contribucion.getTiposDePersona().contains(TipoDePersona.JURIDICA);
+        } else {
+            return false;
         }
-
-        return puedeHacerContribucion;
     }
 }

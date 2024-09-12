@@ -170,7 +170,7 @@ public class MigradorContribucionTest {
             Mockito.when(repoUsuario.obtenerUsuarioPorDocumento(persona1.getDocumento())).thenReturn(usuario1);
 
             migradorContribucion.getColaboradores().add(persona1);
-            migradorContribucion.getContribuciones().add(new DonacionDeDinero(TipoDePersona.HUMANA, LocalDate.of(2022, 1, 1), 100));
+            migradorContribucion.getContribuciones().add(new DonacionDeDinero(LocalDate.of(2022, 1, 1), 100));
             migradorContribucion.migrarColaboradores();
 
             // se hace una busqueda
@@ -196,7 +196,7 @@ public class MigradorContribucionTest {
             Mockito.doNothing().when(repoUsuario).agregarUsuarios(Mockito.any());
 
             migradorContribucion.getColaboradores().add(persona1);
-            migradorContribucion.getContribuciones().add(new DonacionDeDinero(TipoDePersona.HUMANA, LocalDate.of(2022, 1, 1), 100));
+            migradorContribucion.getContribuciones().add(new DonacionDeDinero(LocalDate.of(2022, 1, 1), 100));
             migradorContribucion.migrarColaboradores();
 
             // se hace una busqueda

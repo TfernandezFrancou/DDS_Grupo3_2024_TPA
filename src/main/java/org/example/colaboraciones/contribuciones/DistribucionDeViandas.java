@@ -15,6 +15,7 @@ import org.example.validadores.VerificadorAperturaHeladera;
 import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,8 +25,8 @@ public class DistribucionDeViandas extends Contribucion {
     private Integer cantidad;
     private String motivo;
 
-    public DistribucionDeViandas(TipoDePersona tipo, LocalDate fecha, Integer cantidad) {
-        this.setTipoDePersona(tipo);
+    public DistribucionDeViandas(LocalDate fecha, Integer cantidad) {
+        this.tiposDePersona = Set.of(TipoDePersona.HUMANA);
         this.setFecha(fecha);
         this.cantidad = cantidad;
     }

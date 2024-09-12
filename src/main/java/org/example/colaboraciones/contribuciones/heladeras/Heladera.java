@@ -42,11 +42,22 @@ public class Heladera {
 
     public Heladera(){
         this.historialEstadoHeldera = new ArrayList<>();
+        this.viandasEnHeladera = 0;
+        this.historialMovimientos = new ArrayList<>();
+        this.colaboradoresAutorizados = new ArrayList<>();
+        this.temperaturasDeFuncionamiento = new TemperaturaHeladera(0, 200);
+        this.publisherDesperfecto = new PublisherDesperfecto();
+        this.publisherViandasFaltantes = new PublisherViandasFaltantes();
+        this.publisherViandasDisponibles = new PublisherViandasDisponibles();
         this.colaboradoresAutorizados = new ArrayList<>();
     }
 
     public boolean estaActiva() {
-        return this.estadoHeladeraActual.getEstaActiva();
+        if (this.estadoHeladeraActual == null) {
+            return false;
+        } else {
+            return this.estadoHeladeraActual.getEstaActiva();
+        }
     }
 
     public int obtenerMesesActivos() {
@@ -56,17 +67,15 @@ public class Heladera {
                 .reduce(0, Integer::sum);
     }
 
-    public void actualizarEstadoHeladera(Sensor sensor) throws MessagingException {
-        boolean nuevoEstado = sensor.getEstadoHeladera();
-        if (this.estadoHeladeraActual.getEstaActiva() != nuevoEstado) {
+    public void actualizarEstadoHeladera(boolean nuevoEstado) {
+        if (this.estadoHeladeraActual == null) {
+            this.estadoHeladeraActual = new EstadoHeladera(nuevoEstado);
+            this.historialEstadoHeldera.add(this.estadoHeladeraActual);
+        } else if (this.estadoHeladeraActual.getEstaActiva() != nuevoEstado) {
             this.estadoHeladeraActual.setFechaHoraFin(LocalDateTime.now());
             this.estadoHeladeraActual = new EstadoHeladera(nuevoEstado);
             this.historialEstadoHeldera.add(this.estadoHeladeraActual);
         }
-    }
-
-    public void agregarEstadoHeladeraAlHistorial(EstadoHeladera nuevoEstadoHeladera){
-        this.historialEstadoHeldera.add(nuevoEstadoHeladera);
     }
 
     public void notificarCambioViandas(int viandasIntroducidas, int viandasSacadas) throws MessagingException {
@@ -74,12 +83,12 @@ public class Heladera {
         this.historialMovimientos.add(m);
         this.viandasEnHeladera += viandasIntroducidas - viandasSacadas;
         RepoHeladeras.getInstancia().actualizar(this);
-        publisherViandasFaltantes.notificarATodos(this);
-        publisherViandasDisponibles.notificarATodos(this);
+        this.getPublisherViandasFaltantes().notificarATodos(this);
+        this.getPublisherViandasDisponibles().notificarATodos(this);
     }
 
     public void notificarDesperfecto() throws MessagingException {
-        publisherDesperfecto.notificarATodos(this);
+        this.getPublisherDesperfecto().notificarATodos(this);
     }
 
     public int faltanteParaLlenar(){
@@ -87,23 +96,12 @@ public class Heladera {
     }
 
     public void reactivarHeladera() {
-        //finalizo estado anterior
-        estadoHeladeraActual.setFechaHoraFin(LocalDateTime.now());
-
-        EstadoHeladera estadoHeladera = new EstadoHeladera(true);
-
-        this.setEstadoHeladeraActual(estadoHeladera);
-        this.agregarEstadoHeladeraAlHistorial(estadoHeladera);
+        this.actualizarEstadoHeladera(true);
     }
 
-    public void desactivarHeladera() {
-        //finalizo estado anterior
-        estadoHeladeraActual.setFechaHoraFin(LocalDateTime.now());
-
-        EstadoHeladera estadoHeladera = new EstadoHeladera(false);
-
-        this.setEstadoHeladeraActual(estadoHeladera);
-        this.agregarEstadoHeladeraAlHistorial(estadoHeladera);
+    public void desactivarHeladera() throws MessagingException {
+        this.actualizarEstadoHeladera(false);
+        this.notificarDesperfecto();
     }
 
     public void autorizarColaborador(Persona personaColaborador) {

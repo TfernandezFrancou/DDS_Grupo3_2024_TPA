@@ -59,7 +59,6 @@ public class DonacionDeViandasTest {
         donacionDeViandasMock.setCantidadDeViandas(2);
         donacionDeViandasMock.setFecha(LocalDate.now());
         donacionDeViandasMock.setColaborador(colaboradorMock);
-        donacionDeViandasMock.setTipoDePersona(TipoDePersona.HUMANA);
         donacionDeViandasMock.setHeladera(heladeraMock);
 
         when(heladeraMock.estaActiva()).thenReturn(true);

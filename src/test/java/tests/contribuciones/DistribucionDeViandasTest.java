@@ -57,7 +57,6 @@ public class DistribucionDeViandasTest {
 
     private DistribucionDeViandas crearDristribucionDeViandas(){
         DistribucionDeViandas distribucionDeViandasMock = new DistribucionDeViandas(
-                TipoDePersona.HUMANA,
                 LocalDate.now(),
                 2
         );

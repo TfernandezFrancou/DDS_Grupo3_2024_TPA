@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.config.Configuracion;
+import org.example.personas.Persona;
+import org.example.personas.contacto.MedioDeContacto;
 import org.example.personas.contacto.Mensaje;
 
 import javax.mail.MessagingException;
@@ -12,6 +14,12 @@ import javax.mail.MessagingException;
 @Setter
 public class SubscripcionViandasDisponibles extends SubscripcionHeladera {
     private int cantidadDeViandas;
+
+    public SubscripcionViandasDisponibles(Persona persona, MedioDeContacto medioDeContacto, int cantidad) {
+        this.subscriptor = persona;
+        this.medioDeContactoElegido = medioDeContacto;
+        this.cantidadDeViandas = cantidad;
+    }
 
     @Override
     public void notificar(Heladera heladera) throws MessagingException {

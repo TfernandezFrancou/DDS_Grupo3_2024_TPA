@@ -15,6 +15,7 @@ import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
@@ -23,10 +24,10 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
     @Setter
     private Integer tarjetasEntregadas;
 
-    public RegistrarPersonasEnSituacionVulnerable(TipoDePersona tipo, LocalDate fecha, Integer cantidad) {
+    public RegistrarPersonasEnSituacionVulnerable(LocalDate fecha, Integer cantidad) {
         this.personasRegistradas = new ArrayList<>();
         this.tarjetasAEntregar = new ArrayList<>();
-        this.setTipoDePersona(tipo);
+        this.tiposDePersona = Set.of(TipoDePersona.HUMANA);
         this.setFecha(fecha);
         this.tarjetasEntregadas = cantidad;
     }
@@ -34,12 +35,14 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
     public RegistrarPersonasEnSituacionVulnerable(List<TarjetaHeladera> tarjetasAEntregar) throws MessagingException {
         this.personasRegistradas = new ArrayList<>();
         this.tarjetasAEntregar = tarjetasAEntregar;
+        this.tiposDePersona = Set.of(TipoDePersona.HUMANA);
         this.enviarTarjetasViaMail();
     }
 
     public RegistrarPersonasEnSituacionVulnerable(){
         this.personasRegistradas = new ArrayList<>();
         this.tarjetasAEntregar = new ArrayList<>();
+        this.tiposDePersona = Set.of(TipoDePersona.HUMANA);
     }
 
     @Override

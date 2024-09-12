@@ -3,6 +3,7 @@ package tests;
 import org.example.broker.Broker;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.SensorDeTemperatura;
+import org.example.colaboraciones.contribuciones.heladeras.TemperaturaHeladera;
 import org.example.repositorios.RepoSensor;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.MockHandler;
 
 import javax.mail.MessagingException;
 
@@ -26,6 +28,7 @@ public class BrokerTest {
     public void setUp(){
         MockitoAnnotations.openMocks(this);
         RepoSensor.getInstancia().clean();
+        Mockito.when(heladeraMock.getTemperaturasDeFuncionamiento()).thenReturn(new TemperaturaHeladera(0, 200));
     }
 
     @Test
@@ -42,10 +45,10 @@ public class BrokerTest {
 
         //debe actualizarse el estado de la heladera
         Mockito.verify(heladeraMock, Mockito.times(1))
-                    .actualizarEstadoHeladera(sensorDeTemperatura);
+                    .actualizarEstadoHeladera(any(boolean.class));
 
         //el sensor  deben tener la temperatura actualizada de la heladera
-        Assert.assertEquals(temperaturaHeladera, sensorDeTemperatura.getTemperatura());
+        Assertions.assertEquals(temperaturaHeladera, sensorDeTemperatura.getTemperatura());
     }
 
     @Test
@@ -56,7 +59,7 @@ public class BrokerTest {
 
         //debe actualizarse el estado de la heladera
         Mockito.verify(heladeraMock, Mockito.times(1))
-                .actualizarEstadoHeladera(any(SensorDeTemperatura.class));
+                .actualizarEstadoHeladera(any(boolean.class));
 
         RepoSensor repoSensor = RepoSensor.getInstancia();
 

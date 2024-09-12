@@ -38,6 +38,7 @@ public class Colaborador extends Rol {
     public Colaborador(){
         this.formasContribucion = new ArrayList<>();
         this.ofertasCanjeadas = new ArrayList<>();
+        this.puntuaje = 0;
     }
 
     public void agregarContribucion(Contribucion contribucion)

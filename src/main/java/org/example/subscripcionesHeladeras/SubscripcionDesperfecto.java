@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.config.Configuracion;
+import org.example.personas.Persona;
+import org.example.personas.contacto.MedioDeContacto;
 import org.example.personas.contacto.Mensaje;
 import org.example.repositorios.RepoHeladeras;
 
@@ -13,6 +15,11 @@ import java.util.List;
 @Getter
 @Setter
 public class SubscripcionDesperfecto extends SubscripcionHeladera {
+
+    public SubscripcionDesperfecto(Persona suscriptor, MedioDeContacto medioDeContacto) {
+        super.subscriptor = suscriptor;
+        super.medioDeContactoElegido = medioDeContacto;
+    }
 
     @Override
     public void notificar(Heladera heladera) throws MessagingException {
