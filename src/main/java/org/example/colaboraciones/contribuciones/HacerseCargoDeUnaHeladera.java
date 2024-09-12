@@ -2,11 +2,13 @@ package org.example.colaboraciones.contribuciones;
 
 import lombok.Getter;
 import org.example.colaboraciones.Contribucion;
+import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.repositorios.RepoHeladeras;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 public class HacerseCargoDeUnaHeladera extends Contribucion {
@@ -14,6 +16,7 @@ public class HacerseCargoDeUnaHeladera extends Contribucion {
     private List<Heladera> heladerasColocadas;
 
     public HacerseCargoDeUnaHeladera(){
+        this.tiposDePersona = Set.of(TipoDePersona.JURIDICA, TipoDePersona.HUMANA);
         this.heladerasColocadas = new ArrayList<>();
     }
 

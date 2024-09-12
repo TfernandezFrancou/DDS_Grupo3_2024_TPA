@@ -8,12 +8,14 @@ import org.example.repositorios.RepoOfertas;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 public class OfrecerProductos extends Contribucion {
     private List<Oferta> ofertas;
 
     public OfrecerProductos(){
+        this.tiposDePersona = Set.of(TipoDePersona.JURIDICA);
         this.ofertas = new ArrayList<>();
     }
 
