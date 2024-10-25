@@ -24,6 +24,7 @@ public abstract class Incidente {
         this.heladera = heladera;
         this.tipoDeIncidente = tipoDeIncidente;
         this.fechaDeEmision = fechaDeEmision;
+        this.solucionado = false;
     }
 
     public void reportarIncidente() throws MessagingException {
