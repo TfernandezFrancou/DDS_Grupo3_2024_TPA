@@ -22,6 +22,7 @@ import org.mockito.MockitoAnnotations;
 import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 
@@ -81,7 +82,7 @@ public class DonacionDeViandasTest {
         Assertions.assertDoesNotThrow(donacionDeViandasMock::ejecutarContribucion);
 
         //Verifico si se notifica a la heladera del cambio de viandas
-        Mockito.verify(heladeraMock, Mockito.times(1)).notificarCambioViandas(2,0);
+        Mockito.verify(heladeraMock, Mockito.times(1)).notificarCambioViandas(List.of(vianda1, vianda2),List.of());
 
         // debe registrarse la apertura fehaciente de la heladera
         RepositorioAperturasHeladera repoApreturaFehaciente = RepositorioAperturasHeladera.getInstancia();
@@ -99,7 +100,7 @@ public class DonacionDeViandasTest {
         Assertions.assertThrows(SolicitudInexistente.class, donacionDeViandasMock::ejecutarContribucion);
 
         //no se debe notificar a la heladera ya que no hay cambios
-        Mockito.verify(heladeraMock, Mockito.times(0)).notificarCambioViandas(2,0);
+        Mockito.verify(heladeraMock, Mockito.times(0)).notificarCambioViandas(List.of(new Vianda(), new Vianda()),List.of());
 
 
         // No debe registrarse la apertura fehaciente de la heladera

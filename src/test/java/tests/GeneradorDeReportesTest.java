@@ -1,10 +1,16 @@
 package tests;
 
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
+import org.example.colaboraciones.contribuciones.viandas.Vianda;
+import org.example.incidentes.FallaTecnica;
+import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
 import org.example.reportes.GeneradorDeReportes;
-import org.example.reportes.ItemReporteColaborador;
-import org.example.reportes.ItemReporteHeladera;
+import org.example.reportes.ReportesDeLaSemana;
+import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
+import org.example.reportes.itemsReportes.ItemReporteViandasColocadasPorHeladera;
+import org.example.reportes.itemsReportes.ItemReporteViandasDistribuidasPorColaborador;
+import org.example.reportes.itemsReportes.ItemReporteViandasRetiradasPorHeladera;
 import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoPersona;
@@ -37,6 +43,8 @@ public class GeneradorDeReportesTest {
         generadorDeReportes = new GeneradorDeReportes();
     }
 
+
+
     @Test
     public void testGenerarReportesDeLaSemana() {
         LocalDateTime now = LocalDateTime.now();
@@ -57,25 +65,28 @@ public class GeneradorDeReportesTest {
                     when(RepoPersona.getInstancia()).thenReturn(repoPersona);
                     // indico que devolver cuando se llame a cada metodo
 
+                    Heladera heladeraRandom = new Heladera();
+                    FallaTecnica mockFallaTecnica = new FallaTecnica(heladeraRandom,"falla",LocalDateTime.now());
                     when(repoIncidente.obtenerCantidadDeFallasPorHeladeraDeLaSemana(inicioSemana, finSemana)).thenReturn(List.of(
-                            new ItemReporteHeladera( 2, new Heladera()),
-                            new ItemReporteHeladera(1,new Heladera())
+                            new ItemReporteFallasPorHeladera( List.of(mockFallaTecnica, mockFallaTecnica), heladeraRandom),
+                            new ItemReporteFallasPorHeladera(List.of(mockFallaTecnica),heladeraRandom)
                     ));
 
-
+                    Vianda viandaMock = new Vianda();
                     when(repoHeladeras.obtenerCantidadDeViandasColocadasPorHeladeraDeLaSemana(inicioSemana, finSemana)).thenReturn(List.of(
-                            new ItemReporteHeladera(5, new Heladera()),
-                            new ItemReporteHeladera(3, new Heladera())
+                            new ItemReporteViandasColocadasPorHeladera(List.of(viandaMock,viandaMock,viandaMock,viandaMock,viandaMock), heladeraRandom),//5
+                            new ItemReporteViandasColocadasPorHeladera(List.of(viandaMock,viandaMock,viandaMock), heladeraRandom)//3
                     ));
 
                     when(repoHeladeras.obtenerCantidadDeViandasRetiradasPorHeladeraDeLaSemana(inicioSemana, finSemana)).thenReturn(List.of(
-                            new ItemReporteHeladera(4, new Heladera()),
-                            new ItemReporteHeladera(2, new Heladera())
+                            new ItemReporteViandasRetiradasPorHeladera(List.of(viandaMock,viandaMock,viandaMock,viandaMock), heladeraRandom),
+                            new ItemReporteViandasRetiradasPorHeladera(List.of(viandaMock,viandaMock), heladeraRandom)
                     ));
 
+                    PersonaHumana colaboradorMock = new PersonaHumana();
                     when(repoPersona.obtenerCantidadDeViandasDistribuidasPorColaborador(inicioSemana, finSemana)).thenReturn(List.of(
-                            new ItemReporteColaborador(4, new PersonaHumana()),
-                            new ItemReporteColaborador(2, new PersonaHumana())
+                            new ItemReporteViandasDistribuidasPorColaborador(List.of(viandaMock,viandaMock,viandaMock,viandaMock), colaboradorMock),
+                            new ItemReporteViandasDistribuidasPorColaborador(List.of(viandaMock,viandaMock), colaboradorMock)
                     ));
 
                     // Genero los reportes para testear
@@ -87,17 +98,18 @@ public class GeneradorDeReportesTest {
                     Mockito.verify(repoHeladeras, Mockito.times(1)).obtenerCantidadDeViandasRetiradasPorHeladeraDeLaSemana(inicioSemana, finSemana);
                     Mockito.verify(repoPersona, Mockito.times(1)).obtenerCantidadDeViandasDistribuidasPorColaborador(inicioSemana, finSemana);
 
+                    ReportesDeLaSemana reportes = generadorDeReportes.getReportesSemanaActual();
                     // Verificar que los reportes fueron generados correctamente
-                    Assertions.assertNotNull(generadorDeReportes.getReporteCantidadDeFallasPorHeladera());
-                    Assertions.assertNotNull(generadorDeReportes.getReporteCantidadDeViandasColocadasPorHeladera());
-                    Assertions.assertNotNull(generadorDeReportes.getReporteCantidadDeViandasRetiradasPorHeladera());
-                    Assertions.assertNotNull(generadorDeReportes.getReporteCantidadDeviandasDistribuidasPorColaborador());
+                    Assertions.assertNotNull(reportes.getReporteCantidadDeFallasPorHeladera());
+                    Assertions.assertNotNull(reportes.getReporteCantidadDeViandasColocadasPorHeladera());
+                    Assertions.assertNotNull(reportes.getReporteCantidadDeViandasRetiradasPorHeladera());
+                    Assertions.assertNotNull(reportes.getReporteCantidadDeviandasDistribuidasPorColaborador());
 
 
-                    Assertions.assertEquals(2, generadorDeReportes.getReporteCantidadDeFallasPorHeladera().size());
-                    Assertions.assertEquals(2, generadorDeReportes.getReporteCantidadDeViandasColocadasPorHeladera().size());
-                    Assertions.assertEquals(2, generadorDeReportes.getReporteCantidadDeViandasRetiradasPorHeladera().size());
-                    Assertions.assertEquals(2, generadorDeReportes.getReporteCantidadDeviandasDistribuidasPorColaborador().size());
+                    Assertions.assertEquals(2, reportes.getReporteCantidadDeFallasPorHeladera().size());
+                    Assertions.assertEquals(2, reportes.getReporteCantidadDeViandasColocadasPorHeladera().size());
+                    Assertions.assertEquals(2, reportes.getReporteCantidadDeViandasRetiradasPorHeladera().size());
+                    Assertions.assertEquals(2, reportes.getReporteCantidadDeviandasDistribuidasPorColaborador().size());
 
                 }
             }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.Ubicacion;
+import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.personas.Persona;
 import org.example.repositorios.RepoHeladeras;
 import org.example.subscripcionesHeladeras.PublisherDesperfecto;
@@ -80,10 +81,10 @@ public class Heladera {
         }
     }
 
-    public void notificarCambioViandas(int viandasIntroducidas, int viandasSacadas) throws MessagingException {
+    public void notificarCambioViandas(List<Vianda> viandasIntroducidas, List<Vianda> viandasSacadas) throws MessagingException {
         MovimientoViandas m = new MovimientoViandas(viandasIntroducidas, viandasSacadas, LocalDateTime.now());
         this.historialMovimientos.add(m);
-        this.viandasEnHeladera += viandasIntroducidas - viandasSacadas;
+        this.viandasEnHeladera += viandasIntroducidas.size() - viandasSacadas.size();
         RepoHeladeras.getInstancia().actualizar(this);
         this.getPublisherViandasFaltantes().notificarATodos(this);
         this.getPublisherViandasDisponibles().notificarATodos(this);

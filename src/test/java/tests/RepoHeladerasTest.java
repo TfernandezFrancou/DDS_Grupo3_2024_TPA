@@ -3,7 +3,10 @@ package tests;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.MovimientoViandas;
-import org.example.reportes.ItemReporteHeladera;
+import org.example.colaboraciones.contribuciones.viandas.Vianda;
+import org.example.reportes.itemsReportes.ItemReporte;
+import org.example.reportes.itemsReportes.ItemReporteViandasColocadasPorHeladera;
+import org.example.reportes.itemsReportes.ItemReporteViandasRetiradasPorHeladera;
 import org.example.repositorios.RepoHeladeras;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,30 +46,33 @@ public class RepoHeladerasTest {
 
         // crear historial de movimientos de cada heladera
 
+
         heladera1.setHistorialMovimientos(List.of(
-                new MovimientoViandas(10,0,inicioSemana.plusDays(1)),// Martes
-                new MovimientoViandas(20,10,inicioSemana.plusDays(2)),// Miércoles
-                new MovimientoViandas(20,10,inicioSemana.minusDays(1))// Domingo anterior
+                new MovimientoViandas(List.of(new Vianda(), new Vianda(), new Vianda()),List.of(),inicioSemana.plusDays(1)),// Martes
+                new MovimientoViandas(List.of(new Vianda(), new Vianda()),List.of(new Vianda(), new Vianda(), new Vianda()),inicioSemana.plusDays(2)),// Miércoles
+                new MovimientoViandas(List.of(new Vianda()),List.of(new Vianda()),inicioSemana.minusDays(1))// Domingo anterior
         ));
 
         heladera2.setHistorialMovimientos(List.of(
-                new MovimientoViandas(10,0,finSemana.minusDays(1)),// Sábado
-                new MovimientoViandas(100,20,finSemana.plusDays(1)) // Lunes siguiente
+                new MovimientoViandas(List.of(new Vianda(), new Vianda(), new Vianda()),List.of(),finSemana.minusDays(1)),// Sábado
+                new MovimientoViandas(List.of(new Vianda()),List.of(new Vianda(), new Vianda(), new Vianda()),finSemana.plusDays(1)) // Lunes siguiente
         ));
 
         // Agregar heladeras al repo
         repoHeladeras.agregar(heladera1);
         repoHeladeras.agregar(heladera2);
 
-        List<ItemReporteHeladera> reporte = repoHeladeras.obtenerCantidadDeViandasColocadasPorHeladeraDeLaSemana(inicioSemana, finSemana);
+        List<ItemReporte> reporte = repoHeladeras.obtenerCantidadDeViandasColocadasPorHeladeraDeLaSemana(inicioSemana, finSemana);
 
         Assertions.assertEquals(2, reporte.size(), "Debe haber reportes para dos heladeras");
 
-        for (ItemReporteHeladera item : reporte) {
-            if (item.getHeladera().equals(heladera1)) {
-                Assertions.assertEquals(30, item.getCantidad(), "Heladera 1 debe tener 40 viandas colocadas en la semana");
-            } else if (item.getHeladera().equals(heladera2)) {
-                Assertions.assertEquals(10, item.getCantidad(), "Heladera 2 debe tener 10 viandas colocadas en la semana");
+        for (ItemReporte item : reporte) {
+            ItemReporteViandasColocadasPorHeladera itemReporteViandasColocadasPorHeladera = (ItemReporteViandasColocadasPorHeladera) item;
+            if (itemReporteViandasColocadasPorHeladera.getHeladera().equals(heladera1)) {
+
+                Assertions.assertEquals(5, itemReporteViandasColocadasPorHeladera.getViandasColocadas().size(), "Heladera 1 debe tener 5 viandas colocadas en la semana");
+            } else if (itemReporteViandasColocadasPorHeladera.getHeladera().equals(heladera2)) {
+                Assertions.assertEquals(3, itemReporteViandasColocadasPorHeladera.getViandasColocadas().size(), "Heladera 2 debe tener 3 viandas colocadas en la semana");
             } else {
                 Assertions.fail("Heladera no esperada en el reporte");
             }
@@ -78,29 +84,30 @@ public class RepoHeladerasTest {
         // crear historial de movimientos de cada heladera
 
         heladera1.setHistorialMovimientos(List.of(
-                new MovimientoViandas(10,0,inicioSemana.plusDays(1)),// Martes
-                new MovimientoViandas(20,10,inicioSemana.plusDays(2)),// Miércoles
-                new MovimientoViandas(20,10,inicioSemana.minusDays(1))// Domingo anterior
+                new MovimientoViandas(List.of(new Vianda(), new Vianda(), new Vianda()),List.of(),inicioSemana.plusDays(1)),// Martes
+                new MovimientoViandas(List.of(new Vianda(), new Vianda()),List.of(new Vianda(), new Vianda(), new Vianda()),inicioSemana.plusDays(2)),// Miércoles
+                new MovimientoViandas(List.of(new Vianda()),List.of(new Vianda()),inicioSemana.minusDays(1))// Domingo anterior
         ));
 
         heladera2.setHistorialMovimientos(List.of(
-                new MovimientoViandas(10,0,finSemana.minusDays(1)),// Sábado
-                new MovimientoViandas(100,20,finSemana.plusDays(1)) // Lunes siguiente
+                new MovimientoViandas(List.of(new Vianda(), new Vianda(), new Vianda()),List.of(),finSemana.minusDays(1)),// Sábado
+                new MovimientoViandas(List.of(new Vianda()),List.of(new Vianda(), new Vianda(), new Vianda()),finSemana.plusDays(1)) // Lunes siguiente
         ));
 
         // Agregar heladeras al repo
         repoHeladeras.agregar(heladera1);
         repoHeladeras.agregar(heladera2);
 
-        List<ItemReporteHeladera> reporte = repoHeladeras.obtenerCantidadDeViandasRetiradasPorHeladeraDeLaSemana(inicioSemana, finSemana);
+        List<ItemReporte> reporte = repoHeladeras.obtenerCantidadDeViandasRetiradasPorHeladeraDeLaSemana(inicioSemana, finSemana);
 
         Assertions.assertEquals(2, reporte.size(), "Debe haber reportes para dos heladeras");
 
-        for (ItemReporteHeladera item : reporte) {
-            if (item.getHeladera().equals(heladera1)) {
-                Assertions.assertEquals(10, item.getCantidad(), "Heladera 1 debe tener 10 viandas retiradas en la semana");
-            } else if (item.getHeladera().equals(heladera2)) {
-                Assertions.assertEquals(0, item.getCantidad(), "Heladera 2 debe tener 0 viandas retiradas en la semana");
+        for (ItemReporte item : reporte) {
+            ItemReporteViandasRetiradasPorHeladera itemReporteViandasRetiradasPorHeladera =(ItemReporteViandasRetiradasPorHeladera) item;
+            if (itemReporteViandasRetiradasPorHeladera.getHeladera().equals(heladera1)) {
+                Assertions.assertEquals(3, itemReporteViandasRetiradasPorHeladera.getViandasRetiradas().size(), "Heladera 1 debe tener 3 viandas retiradas en la semana");
+            } else if (itemReporteViandasRetiradasPorHeladera.getHeladera().equals(heladera2)) {
+                Assertions.assertEquals(0, itemReporteViandasRetiradasPorHeladera.getViandasRetiradas().size(), "Heladera 2 debe tener 0 viandas retiradas en la semana");
             } else {
                 Assertions.fail("Heladera no esperada en el reporte");
             }

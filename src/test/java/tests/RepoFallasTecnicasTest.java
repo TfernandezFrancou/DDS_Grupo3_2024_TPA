@@ -1,15 +1,14 @@
 package tests;
 
 import org.example.colaboraciones.Ubicacion;
-import org.example.colaboraciones.contribuciones.heladeras.EstadoHeladera;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.incidentes.FallaTecnica;
 import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
-import org.example.personas.roles.Tecnico;
 import org.example.recomendacion.Zona;
-import org.example.reportes.ItemReporteHeladera;
+import org.example.reportes.itemsReportes.ItemReporte;
+import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
 import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoPersona;
 import org.junit.jupiter.api.Assertions;
@@ -85,15 +84,16 @@ public class RepoFallasTecnicasTest {
         repoFallasTecnicas.agregarFalla(new FallaTecnica(colaborador,"esta todo caliente","url", heladera1,"no enfria",inicioSemana.minusDays(1))); // Domingo anterior
         repoFallasTecnicas.agregarFalla(new FallaTecnica(colaborador,"esta todo caliente","url", heladera2,"no enfria", finSemana.plusDays(1))); // Lunes siguiente
 
-        List<ItemReporteHeladera> reporte = repoFallasTecnicas.obtenerCantidadDeFallasPorHeladeraDeLaSemana(inicioSemana, finSemana);
+        List<ItemReporte> reporte = repoFallasTecnicas.obtenerCantidadDeFallasPorHeladeraDeLaSemana(inicioSemana, finSemana);
 
         Assertions.assertEquals(2, reporte.size(), "Debe haber reportes para dos heladeras");
 
-        for (ItemReporteHeladera item : reporte) {
-            if (item.getHeladera().equals(heladera1)) {
-                Assertions.assertEquals(2, item.getCantidad(), "Heladera 1 debe tener 2 fallas");
-            } else if (item.getHeladera().equals(heladera2)) {
-                Assertions.assertEquals(1, item.getCantidad(), "Heladera 2 debe tener 1 falla");
+        for (ItemReporte item : reporte) {
+            ItemReporteFallasPorHeladera itemReporteFallasPorHeladera = (ItemReporteFallasPorHeladera) item;
+            if (itemReporteFallasPorHeladera.getHeladera().equals(heladera1)) {
+                Assertions.assertEquals(2, itemReporteFallasPorHeladera.getFallas().size(), "Heladera 1 debe tener 2 fallas");
+            } else if (itemReporteFallasPorHeladera.getHeladera().equals(heladera2)) {
+                Assertions.assertEquals(1, itemReporteFallasPorHeladera.getFallas().size(), "Heladera 2 debe tener 1 falla");
             } else {
                 Assertions.fail("Heladera no esperada en el reporte");
             }

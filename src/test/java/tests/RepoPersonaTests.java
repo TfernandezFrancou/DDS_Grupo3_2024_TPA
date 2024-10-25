@@ -4,13 +4,14 @@ import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
+import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.roles.Tecnico;
 import org.example.recomendacion.Zona;
-import org.example.reportes.ItemReporteColaborador;
-import org.example.reportes.ItemReporteHeladera;
+import org.example.reportes.itemsReportes.ItemReporte;
+import org.example.reportes.itemsReportes.ItemReporteViandasDistribuidasPorColaborador;
 import org.example.repositorios.RepoPersona;
 
 import org.junit.jupiter.api.Assertions;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -52,24 +54,30 @@ public class RepoPersonaTests {
         LocalDateTime finSemana = now.with(java.time.temporal.TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY)).toLocalDate().atTime(23, 59, 59);
 
         Colaborador rolColaborador1 = (Colaborador) colaborador1.getRol();
-        rolColaborador1.agregarContribucion(new DonacionDeViandas(inicioSemana.plusDays(2).toLocalDate(), 10)); // miercoles
-        rolColaborador1.agregarContribucion(new DonacionDeViandas(inicioSemana.plusDays(3).toLocalDate(), 10)); // jueves
-        rolColaborador1.agregarContribucion(new DonacionDeViandas(inicioSemana.minusDays(1).toLocalDate(), 10)); // domingo de la anterior semana
+        Heladera heladeraRandom = new Heladera();
+
+        rolColaborador1.agregarContribucion(new DonacionDeViandas(heladeraRandom, rolColaborador1, List.of(new Vianda(), new Vianda(), new Vianda()), inicioSemana.plusDays(2).toLocalDate())); // miercoles
+        rolColaborador1.agregarContribucion(new DonacionDeViandas(heladeraRandom, rolColaborador1, List.of(new Vianda(), new Vianda()),inicioSemana.plusDays(3).toLocalDate())); // jueves
+        rolColaborador1.agregarContribucion(new DonacionDeViandas(heladeraRandom, rolColaborador1, List.of(new Vianda(), new Vianda()), inicioSemana.minusDays(1).toLocalDate())); // domingo de la anterior semana
+
+        //los migrados los ignoro ya que no hay forma de saber que vianda se dono
+        rolColaborador1.agregarContribucion(new DonacionDeViandas(inicioSemana.plusDays(4).toLocalDate(), 10)); // Viernes
 
         Colaborador rolColaborador2 = (Colaborador) colaborador2.getRol();
-        rolColaborador2.agregarContribucion(new DonacionDeViandas(inicioSemana.plusDays(4).toLocalDate(), 10)); // viernes
-        rolColaborador2.agregarContribucion(new DonacionDeViandas(inicioSemana.toLocalDate(), 15)); // lunes
-        rolColaborador2.agregarContribucion(new DonacionDeViandas(inicioSemana.minusDays(2).toLocalDate(), 10)); // sabado de la anterior semana
+        rolColaborador2.agregarContribucion(new DonacionDeViandas(heladeraRandom, rolColaborador2, List.of(new Vianda(), new Vianda(), new Vianda()), inicioSemana.plusDays(4).toLocalDate())); // viernes
+        rolColaborador2.agregarContribucion(new DonacionDeViandas(heladeraRandom, rolColaborador2, List.of(new Vianda(), new Vianda(), new Vianda(), new Vianda()), inicioSemana.toLocalDate())); // lunes
+        rolColaborador2.agregarContribucion(new DonacionDeViandas(heladeraRandom, rolColaborador2, List.of(new Vianda()), inicioSemana.minusDays(2).toLocalDate())); // sabado de la anterior semana
 
-        List<ItemReporteColaborador> reporte = repoPersona.obtenerCantidadDeViandasDistribuidasPorColaborador(inicioSemana, finSemana);
+        List<ItemReporte> reporte = repoPersona.obtenerCantidadDeViandasDistribuidasPorColaborador(inicioSemana, finSemana);
 
         Assertions.assertEquals(2, reporte.size(), "Debe haber reportes para dos heladeras");
 
-        for (ItemReporteColaborador item : reporte) {
-            if (item.getColaborador().equals(colaborador1)) {
-                Assertions.assertEquals(20, item.getCantidad(), "Colaborador 1 debe tener 20 viandas donadas en la semana");
-            } else if (item.getColaborador().equals(colaborador2)) {
-                Assertions.assertEquals(25, item.getCantidad(), "Colaborador 2 debe tener 25 viandas donadas en la semana");
+        for (ItemReporte item : reporte) {
+            ItemReporteViandasDistribuidasPorColaborador itemReporteViandasDistribuidasPorColaborador = (ItemReporteViandasDistribuidasPorColaborador) item;
+            if (itemReporteViandasDistribuidasPorColaborador.getColaborador().equals(colaborador1)) {
+                Assertions.assertEquals(5, itemReporteViandasDistribuidasPorColaborador.getViandasDistribuidas().size(), "Colaborador 1 debe tener 5 viandas donadas en la semana");
+            } else if (itemReporteViandasDistribuidasPorColaborador.getColaborador().equals(colaborador2)) {
+                Assertions.assertEquals(7, itemReporteViandasDistribuidasPorColaborador.getViandasDistribuidas().size(), "Colaborador 2 debe tener 7 viandas donadas en la semana");
             } else {
                 Assertions.fail("Colaborador no esperado en el reporte");
             }

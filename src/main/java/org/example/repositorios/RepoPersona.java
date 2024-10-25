@@ -1,16 +1,15 @@
 package org.example.repositorios;
 
-import org.apache.cxf.common.util.ReflectionInvokationHandler;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
-import org.example.colaboraciones.contribuciones.heladeras.MovimientoViandas;
+import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.personas.Persona;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.roles.Rol;
 import org.example.personas.roles.Tecnico;
 import org.example.recomendacion.Zona;
-import org.example.reportes.ItemReporteColaborador;
-import org.example.reportes.ItemReporteHeladera;
+import org.example.reportes.itemsReportes.ItemReporte;
+import org.example.reportes.itemsReportes.ItemReporteViandasDistribuidasPorColaborador;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -96,15 +95,17 @@ public class RepoPersona {
                 .orElseThrow();
     }
 
-    public List<ItemReporteColaborador> obtenerCantidadDeViandasDistribuidasPorColaborador(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual) {
+    public List<ItemReporte> obtenerCantidadDeViandasDistribuidasPorColaborador(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual) {
         List<Persona> colaboradores = this.buscarPersonasConRol(Colaborador.class);
-        List<ItemReporteColaborador> reporte = new ArrayList<>();
+        List<ItemReporte> reporte = new ArrayList<>();
 
         for (Persona colaborador : colaboradores) {
             Colaborador  rolColaborador = (Colaborador) colaborador.getRol();
-            int viandasDonadasEnLaSemana = rolColaborador.cantidadDeViandasDistribuidasEnLaSemana(inicioSemanaActual, finSemanaActual);
-
-           reporte.add(new ItemReporteColaborador(viandasDonadasEnLaSemana, colaborador));
+            List<Vianda> viandasDonadasEnLaSemana = rolColaborador.cantidadDeViandasDistribuidasEnLaSemana(inicioSemanaActual, finSemanaActual);
+            ItemReporteViandasDistribuidasPorColaborador item = new ItemReporteViandasDistribuidasPorColaborador();
+            item.setColaborador(colaborador);
+            item.setViandasDistribuidas(viandasDonadasEnLaSemana);
+           reporte.add(item);
         }
 
         return reporte;

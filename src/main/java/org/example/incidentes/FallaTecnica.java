@@ -1,6 +1,7 @@
 package org.example.incidentes;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.personas.Persona;
@@ -20,5 +21,9 @@ public class FallaTecnica extends Incidente {
         this.colaborador = colaborador;
         this.descripcion = descripcion;
         this.foto = foto;
+    }
+
+    public FallaTecnica(Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) {
+        super(heladera, tipoDeIncidente,fechaDeEmision);
     }
 }

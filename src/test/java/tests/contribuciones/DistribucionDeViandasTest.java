@@ -22,6 +22,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.mockito.Mockito.when;
 
@@ -43,6 +44,9 @@ public class DistribucionDeViandasTest {
     private Heladera heladeraMockDestino;
 
     @Mock
+    private Vianda viandaMock;
+
+    @Mock
     private TarjetaColaborador tarjetaColaboradorMock;
 
     @Mock
@@ -58,7 +62,7 @@ public class DistribucionDeViandasTest {
     private DistribucionDeViandas crearDristribucionDeViandas(){
         DistribucionDeViandas distribucionDeViandasMock = new DistribucionDeViandas(
                 LocalDate.now(),
-                2
+                List.of(viandaMock, viandaMock)
         );
         distribucionDeViandasMock.setColaborador(colaboradorMock);
         distribucionDeViandasMock.setOrigen(heladeraMockOrigen);
@@ -89,8 +93,8 @@ public class DistribucionDeViandasTest {
         Assertions.assertDoesNotThrow(distribucionDeViandasMock::ejecutarContribucion);
 
         //verifico que se notifiquen el cambio de viandas a las heladeras correspondientes
-        Mockito.verify(heladeraMockOrigen, Mockito.times(1)).notificarCambioViandas(0,2);
-        Mockito.verify(heladeraMockDestino, Mockito.times(1)).notificarCambioViandas(2,0);
+        Mockito.verify(heladeraMockOrigen, Mockito.times(1)).notificarCambioViandas(List.of(), List.of(viandaMock, viandaMock));
+        Mockito.verify(heladeraMockDestino, Mockito.times(1)).notificarCambioViandas(List.of(viandaMock, viandaMock),List.of());
 
         // debe registrarse la apertura fehaciente de la heladera
         RepositorioAperturasHeladera repoApreturaFehaciente = RepositorioAperturasHeladera.getInstancia();

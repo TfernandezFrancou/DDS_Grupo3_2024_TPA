@@ -32,12 +32,13 @@ public class DonacionDeViandas extends Contribucion {
         this.viandas= new ArrayList<>();
     }
 
-    public DonacionDeViandas(Heladera heladera, Colaborador colaborador, List<Vianda> viandas){
+    public DonacionDeViandas(Heladera heladera, Colaborador colaborador, List<Vianda> viandas, LocalDate fecha){
         this.tiposDePersona = Set.of(TipoDePersona.HUMANA);
-        this.viandas= new ArrayList<>();
+        this.viandas= viandas;
         this.cantidadDeViandas = viandas.size();
         this.heladera = heladera;
         this.colaborador = colaborador;
+        this.setFecha(fecha);
     }
 
     public DonacionDeViandas(LocalDate fecha, Integer cantidad) {
@@ -61,7 +62,7 @@ public class DonacionDeViandas extends Contribucion {
                     )
             );
 
-            heladera.notificarCambioViandas(cantidadDeViandas, 0);
+            heladera.notificarCambioViandas(viandas, List.of());
             //si quiere volver a abrir la heladera, debe solicitar autorizacion
             heladera.desautorizarColaborador(colaborador.getPersona());
         }else {

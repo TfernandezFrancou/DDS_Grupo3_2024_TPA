@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.example.broker.Broker;
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
+import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.config.Configuracion;
 import org.example.excepciones.NoRegistroDireccionException;
 import org.example.incidentes.FallaTecnica;
@@ -25,6 +26,8 @@ import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -109,7 +112,7 @@ public class Colaborador extends Rol {
         fallaTecnica.reportarIncidente();
         RepoIncidente.getInstancia().agregarFalla(fallaTecnica);
     }
-    public int cantidadDeViandasDistribuidasEnLaSemana(LocalDateTime inicioSemana, LocalDateTime finSemana){
+    public List<Vianda> cantidadDeViandasDistribuidasEnLaSemana(LocalDateTime inicioSemana, LocalDateTime finSemana){
 
        return this.formasContribucion.stream()
                 .filter(contribucion -> contribucion instanceof DonacionDeViandas &&
@@ -119,8 +122,10 @@ public class Colaborador extends Rol {
                                     contribucion.getFecha().equals(finSemana.toLocalDate())
                             )
                         )
-                .mapToInt((contribucion -> ((DonacionDeViandas) contribucion).getCantidadDeViandas()))
-                .sum();
+                .map(contribucion -> ((DonacionDeViandas) contribucion).getViandas())
+               .filter(Objects::nonNull) //filtro las viandas null
+               .flatMap(List::stream)//junto las viandas en un stream
+               .collect(Collectors.toList()); // lo paso a list
     }
 
     public Persona getPersona(){

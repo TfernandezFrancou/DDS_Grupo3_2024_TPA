@@ -3,16 +3,17 @@ package org.example.repositorios;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.MovimientoViandas;
-import org.example.incidentes.FallaTecnica;
-import org.example.reportes.ItemReporteHeladera;
+import org.example.colaboraciones.contribuciones.viandas.Vianda;
+import org.example.reportes.itemsReportes.ItemReporte;
+import org.example.reportes.itemsReportes.ItemReporteViandasColocadasPorHeladera;
+import org.example.reportes.itemsReportes.ItemReporteViandasRetiradasPorHeladera;
 
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.ToIntFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class RepoHeladeras {
     private List<Heladera> heladeras;
@@ -85,16 +86,17 @@ public class RepoHeladeras {
                 heladeraN -> heladeraN.getNombre().equals(heladeraAEncontrar.getNombre())
         ).findFirst().get();
     }
-    public List<ItemReporteHeladera> obtenerCantidadDeViandasColocadasPorHeladeraDeLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual) {
-        return obtenerCantidadDeViandasPorHeladeraDeLaSemana(inicioSemanaActual, finSemanaActual, MovimientoViandas::getCantidadDeViandasIntroducidas);
+    public List<ItemReporte> obtenerCantidadDeViandasColocadasPorHeladeraDeLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual) {
+        return obtenerViandasPorHeladeraDeLaSemana(inicioSemanaActual, finSemanaActual, true);
     }
 
-    public List<ItemReporteHeladera> obtenerCantidadDeViandasRetiradasPorHeladeraDeLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual) {
-        return obtenerCantidadDeViandasPorHeladeraDeLaSemana(inicioSemanaActual, finSemanaActual, MovimientoViandas::getCantidadDeViandasSacadas);
+    public List<ItemReporte> obtenerCantidadDeViandasRetiradasPorHeladeraDeLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual) {
+        return obtenerViandasPorHeladeraDeLaSemana(inicioSemanaActual, finSemanaActual, false);
     }
 
-    private List<ItemReporteHeladera> obtenerCantidadDeViandasPorHeladeraDeLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual, ToIntFunction<MovimientoViandas> extractorDeCantidad) {
-        List<ItemReporteHeladera> reporte = new ArrayList<>();
+    private List<ItemReporte> obtenerViandasPorHeladeraDeLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual, boolean viandasColocadas) {
+        List<ItemReporte> reporte = new ArrayList<>();
+
 
         for (Heladera heladera : heladeras) {
             List<MovimientoViandas> movimientosDeLaSemana = heladera.getHistorialMovimientos().stream()
@@ -106,8 +108,28 @@ public class RepoHeladeras {
                                     )
                     ).toList();
 
-            int cantidadViandasEnLaSemana = movimientosDeLaSemana.stream().mapToInt(extractorDeCantidad).sum();
-            reporte.add(new ItemReporteHeladera(cantidadViandasEnLaSemana, heladera));
+            Function<MovimientoViandas, Stream<Vianda>> extractorFuncion;
+            if(viandasColocadas){//si necesito viandas colocadas
+                extractorFuncion = (movimientoViandas -> movimientoViandas.getViandasIntroducidas().stream());
+            } else {//si necesito viandas retiradas
+                extractorFuncion = (movimientoViandas -> movimientoViandas.getViandasSacadas().stream());
+            }
+
+            List<Vianda> viandas =  movimientosDeLaSemana.stream()
+                    .flatMap(extractorFuncion)
+                    .collect(Collectors.toList());
+
+            if(viandasColocadas){//si necesito viandas colocadas
+                ItemReporteViandasColocadasPorHeladera item = new ItemReporteViandasColocadasPorHeladera();
+                item.setHeladera(heladera);
+                item.setViandasColocadas(viandas);
+                reporte.add(item);
+            } else {//si necesito viandas retiradas
+                ItemReporteViandasRetiradasPorHeladera item = new ItemReporteViandasRetiradasPorHeladera();
+                item.setHeladera(heladera);
+                item.setViandasRetiradas(viandas);
+                reporte.add(item);
+            }
         }
 
         return reporte;

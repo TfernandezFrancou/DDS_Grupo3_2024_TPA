@@ -22,6 +22,7 @@ import org.mockito.MockitoAnnotations;
 
 import javax.mail.MessagingException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -82,13 +83,13 @@ public class SubscripcionTest {
 
         broker.gestionarSolicitudApertura(new SolicitudDeApertura(heladera, LocalDateTime.now(), colaborador.getTarjetaColaborador()), persona2);
 
-        new DonacionDeViandas(heladera, colaborador, List.of(new Vianda())).ejecutarContribucion();
+        new DonacionDeViandas(heladera, colaborador, List.of(new Vianda()), LocalDate.now()).ejecutarContribucion();
 
         Mockito.verify(correoElectronicoMock, times(0)).notificar(any(Mensaje.class));
 
         broker.gestionarSolicitudApertura(new SolicitudDeApertura(heladera, LocalDateTime.now(), colaborador.getTarjetaColaborador()), persona2);
 
-        new DonacionDeViandas(heladera, colaborador, List.of(new Vianda())).ejecutarContribucion();
+        new DonacionDeViandas(heladera, colaborador, List.of(new Vianda()),  LocalDate.now()).ejecutarContribucion();
 
         Mockito.verify(correoElectronicoMock, times(1)).notificar(any(Mensaje.class));
     }
