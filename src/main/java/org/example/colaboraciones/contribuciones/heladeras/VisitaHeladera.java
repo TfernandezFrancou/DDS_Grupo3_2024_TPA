@@ -14,7 +14,6 @@ public class VisitaHeladera {
     private LocalDate fechaVisita;
     private String trabajoRealizado;
     private String foto;
-    private Boolean incidenteSolucionado;
     private Boolean trabajoCompletado;
     private Incidente incidenteASolucionar;
 

@@ -35,11 +35,12 @@ public class Tecnico extends Rol {
                         boolean incidenteSolucionado,
                         boolean trabajoCompletado
     ) throws MessagingException {
+        incidente.setSolucionado(incidenteSolucionado);
+
         VisitaHeladera visitaHeladera = new VisitaHeladera(
                 LocalDate.now(),
                 trabajoRealizado,
                 fotoUrl,
-                incidenteSolucionado,
                 trabajoCompletado,
                 incidente
         );

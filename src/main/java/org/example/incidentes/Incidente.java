@@ -18,6 +18,7 @@ public abstract class Incidente {
     private Heladera heladera;
     private String tipoDeIncidente;
     private LocalDateTime fechaDeEmision;
+    private boolean solucionado;
 
     public Incidente(Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) {
         this.heladera = heladera;
