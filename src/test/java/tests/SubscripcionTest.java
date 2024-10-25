@@ -12,8 +12,9 @@ import org.example.personas.contacto.Mensaje;
 import org.example.personas.roles.Colaborador;
 import org.example.repositorios.*;
 import org.example.subscripcionesHeladeras.*;
-import org.example.tarjetas.SolicitudDeApertura;
+import org.example.tarjetas.Apertura;
 import org.example.tarjetas.TarjetaColaborador;
+import org.example.tarjetas.TipoDeApertura;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -81,13 +82,13 @@ public class SubscripcionTest {
         RepoTarjetas.getInstancia().agregar(colaborador.getTarjetaColaborador());
         RepoPersona.getInstancia().agregar(persona2);
 
-        broker.gestionarSolicitudApertura(new SolicitudDeApertura(heladera, LocalDateTime.now(), colaborador.getTarjetaColaborador()), persona2);
+        broker.gestionarSolicitudApertura(new Apertura(colaborador.getTarjetaColaborador(),heladera, LocalDateTime.now(), TipoDeApertura.SOLICITUD_APERTURA), persona2);
 
         new DonacionDeViandas(heladera, colaborador, List.of(new Vianda()), LocalDate.now()).ejecutarContribucion();
 
         Mockito.verify(correoElectronicoMock, times(0)).notificar(any(Mensaje.class));
 
-        broker.gestionarSolicitudApertura(new SolicitudDeApertura(heladera, LocalDateTime.now(), colaborador.getTarjetaColaborador()), persona2);
+        broker.gestionarSolicitudApertura(new Apertura( colaborador.getTarjetaColaborador(), heladera, LocalDateTime.now(), TipoDeApertura.SOLICITUD_APERTURA), persona2);
 
         new DonacionDeViandas(heladera, colaborador, List.of(new Vianda()),  LocalDate.now()).ejecutarContribucion();
 

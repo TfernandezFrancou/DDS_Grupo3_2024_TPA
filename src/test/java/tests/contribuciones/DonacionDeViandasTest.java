@@ -7,11 +7,10 @@ import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.excepciones.SolicitudInexistente;
 import org.example.personas.PersonaHumana;
 import org.example.personas.roles.Colaborador;
-import org.example.repositorios.RepoPersona;
-import org.example.repositorios.RepositorioAperturasHeladera;
-import org.example.repositorios.RepositorioSolicitudesApertura;
-import org.example.tarjetas.SolicitudDeApertura;
+import org.example.repositorios.RepoApertura;
+import org.example.tarjetas.Apertura;
 import org.example.tarjetas.TarjetaColaborador;
+import org.example.tarjetas.TipoDeApertura;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,8 +48,7 @@ public class DonacionDeViandasTest {
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);//crea los mocks
-        RepositorioSolicitudesApertura.getInstancia().clean();
-        RepositorioAperturasHeladera.getInstancia().clean();
+        RepoApertura.getInstancia().clean();
     }
 
     private DonacionDeViandas crearDonacionDeViandas(){
@@ -75,8 +73,8 @@ public class DonacionDeViandasTest {
     public void testPuedeDonarViandas() throws Exception {
         DonacionDeViandas donacionDeViandasMock = this.crearDonacionDeViandas();
 
-        RepositorioSolicitudesApertura repo = RepositorioSolicitudesApertura.getInstancia();
-        repo.agregarSolicitudDeApertura(new SolicitudDeApertura(heladeraMock, LocalDateTime.now(),tarjetaColaboradorMock));
+        RepoApertura repo = RepoApertura.getInstancia();
+        repo.agregarApertura(new Apertura(tarjetaColaboradorMock, heladeraMock, LocalDateTime.now(), TipoDeApertura.SOLICITUD_APERTURA));
 
         // no debe tirar error al ejecutar la donacion
         Assertions.assertDoesNotThrow(donacionDeViandasMock::ejecutarContribucion);
@@ -85,11 +83,9 @@ public class DonacionDeViandasTest {
         Mockito.verify(heladeraMock, Mockito.times(1)).notificarCambioViandas(List.of(vianda1, vianda2),List.of());
 
         // debe registrarse la apertura fehaciente de la heladera
-        RepositorioAperturasHeladera repoApreturaFehaciente = RepositorioAperturasHeladera.getInstancia();
-
-        Assertions.assertEquals(1,repoApreturaFehaciente.getAperturas().size());
-        Assertions.assertEquals(heladeraMock,repoApreturaFehaciente.getAperturas().get(0).getHeladera());
-        Assertions.assertEquals(tarjetaColaboradorMock,repoApreturaFehaciente.getAperturas().get(0).getTarjeta());
+        Assertions.assertEquals(1,repo.obtenerAperturasFehacientes().size());
+        Assertions.assertEquals(heladeraMock,repo.obtenerAperturasFehacientes().get(0).getHeladera());
+        Assertions.assertEquals(tarjetaColaboradorMock,repo.obtenerAperturasFehacientes().get(0).getTarjeta());
     }
 
     @Test
@@ -104,8 +100,8 @@ public class DonacionDeViandasTest {
 
 
         // No debe registrarse la apertura fehaciente de la heladera
-        RepositorioAperturasHeladera repoApreturaFehaciente = RepositorioAperturasHeladera.getInstancia();
-        Assertions.assertEquals(0,repoApreturaFehaciente.getAperturas().size());
+        RepoApertura repoApreturaFehaciente = RepoApertura.getInstancia();
+        Assertions.assertEquals(0,repoApreturaFehaciente.obtenerAperturasFehacientes().size());
     }
 
 }

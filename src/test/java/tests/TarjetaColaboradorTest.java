@@ -3,9 +3,10 @@ package tests;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.excepciones.LimiteDeTiempoSuperado;
 import org.example.personas.roles.Colaborador;
-import org.example.repositorios.RepositorioSolicitudesApertura;
-import org.example.tarjetas.SolicitudDeApertura;
+import org.example.repositorios.RepoApertura;
+import org.example.tarjetas.Apertura;
 import org.example.tarjetas.TarjetaColaborador;
+import org.example.tarjetas.TipoDeApertura;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,13 +26,13 @@ public class TarjetaColaboradorTest {
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);
-        RepositorioSolicitudesApertura.getInstancia().clean();
+        RepoApertura.getInstancia().clean();
     }
 
     @Test
     public void usarTarjeta() throws LimiteDeTiempoSuperado{
-        RepositorioSolicitudesApertura repositorioSolicitudesApertura = RepositorioSolicitudesApertura.getInstancia();
-        repositorioSolicitudesApertura.agregarSolicitudDeApertura(new SolicitudDeApertura(heladeraMock, LocalDateTime.now(),tarjetaColaborador));
+        RepoApertura repoApertura = RepoApertura.getInstancia();
+        repoApertura.agregarApertura(new Apertura(tarjetaColaborador,heladeraMock, LocalDateTime.now(), TipoDeApertura.SOLICITUD_APERTURA));
         tarjetaColaborador.usar(duenioMock, heladeraMock);
 
         Assertions.assertEquals(1,tarjetaColaborador.getUsos().size());
@@ -39,8 +40,8 @@ public class TarjetaColaboradorTest {
 
     @Test
     public void testNoSePuedeExcederElLimiteDeTiempo() throws LimiteDeTiempoSuperado{
-        RepositorioSolicitudesApertura repositorioSolicitudesApertura = RepositorioSolicitudesApertura.getInstancia();
-        repositorioSolicitudesApertura.agregarSolicitudDeApertura(new SolicitudDeApertura(heladeraMock, LocalDateTime.now().minusHours(4),tarjetaColaborador));
+        RepoApertura repoApertura = RepoApertura.getInstancia();
+        repoApertura.agregarApertura(new Apertura(tarjetaColaborador, heladeraMock, LocalDateTime.now().minusHours(4), TipoDeApertura.SOLICITUD_APERTURA));
 
         Assertions.assertThrows(LimiteDeTiempoSuperado.class, ()->tarjetaColaborador.usar(duenioMock,heladeraMock));
     }

@@ -9,8 +9,9 @@ import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.config.Configuracion;
 import org.example.excepciones.SolicitudInexistente;
 import org.example.personas.roles.Colaborador;
-import org.example.repositorios.RepositorioAperturasHeladera;
-import org.example.tarjetas.AperturaHeladera;
+import org.example.repositorios.RepoApertura;
+import org.example.tarjetas.Apertura;
+import org.example.tarjetas.TipoDeApertura;
 import org.example.validadores.VerificadorAperturaHeladera;
 
 import java.time.LocalDate;
@@ -54,11 +55,12 @@ public class DonacionDeViandas extends Contribucion {
         if(VerificadorAperturaHeladera.getInstancia().puedeAbrirHeladera(heladera, colaborador)){
             colaborador.getTarjetaColaborador().usar(colaborador, heladera);
 
-            RepositorioAperturasHeladera.getInstancia().agregarApertura(
-                    new AperturaHeladera(
-                            heladera,
+            RepoApertura.getInstancia().agregarApertura(
+                    new Apertura(
                             colaborador.getTarjetaColaborador(),
-                            LocalDateTime.now()
+                            heladera,
+                            LocalDateTime.now(),
+                            TipoDeApertura.APERTURA_FEHACIENTE
                     )
             );
 

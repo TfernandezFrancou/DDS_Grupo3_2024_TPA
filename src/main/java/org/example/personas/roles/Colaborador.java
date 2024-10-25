@@ -13,12 +13,13 @@ import org.example.personas.Persona;
 import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoPersona;
 import org.example.repositorios.RepoTarjetas;
-import org.example.tarjetas.SolicitudDeApertura;
+import org.example.tarjetas.Apertura;
 import org.example.tarjetas.TarjetaColaborador;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
 import org.example.excepciones.PuntosInsuficienteParaCanjearOferta;
 import org.example.colaboraciones.Contribucion;
 import org.example.repositorios.RepoContribucion;
+import org.example.tarjetas.TipoDeApertura;
 
 
 import javax.mail.MessagingException;
@@ -101,7 +102,7 @@ public class Colaborador extends Rol {
             this.asignarTarjeta();
         }
 
-        SolicitudDeApertura solicitudDeApertura = new SolicitudDeApertura(heladera,LocalDateTime.now(), this.getTarjetaColaborador());
+        Apertura solicitudDeApertura = new Apertura(this.getTarjetaColaborador(),heladera,LocalDateTime.now(), TipoDeApertura.SOLICITUD_APERTURA);
         Broker broker = new Broker();
         broker.gestionarSolicitudApertura(solicitudDeApertura, this.getPersona());
     }

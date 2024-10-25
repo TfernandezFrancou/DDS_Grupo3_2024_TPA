@@ -4,19 +4,19 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.SensorDeTemperatura;
 import org.example.incidentes.Alerta;
 import org.example.personas.Persona;
+import org.example.repositorios.RepoApertura;
 import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoSensor;
-import org.example.repositorios.RepositorioSolicitudesApertura;
-import org.example.tarjetas.SolicitudDeApertura;
+import org.example.tarjetas.Apertura;
 
 import javax.mail.MessagingException;
 import java.util.NoSuchElementException;
 
 public class Broker {
 
-    public void gestionarSolicitudApertura(SolicitudDeApertura solicitudDeApertura, Persona personaColaborador){
+    public void gestionarSolicitudApertura(Apertura solicitudDeApertura, Persona personaColaborador){
         solicitudDeApertura.getHeladera().autorizarColaborador(personaColaborador);
-        RepositorioSolicitudesApertura.getInstancia().agregarSolicitudDeApertura(solicitudDeApertura);
+        RepoApertura.getInstancia().agregarApertura(solicitudDeApertura);
     }
 
     public void mandarTemperaturasHeladeras(Heladera heladera, int temperatura) throws MessagingException {

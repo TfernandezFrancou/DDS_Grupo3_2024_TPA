@@ -2,7 +2,7 @@ package org.example.validadores;
 
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.personas.roles.Colaborador;
-import org.example.repositorios.RepositorioSolicitudesApertura;
+import org.example.repositorios.RepoApertura;
 
 public class VerificadorAperturaHeladera {
 
@@ -20,7 +20,7 @@ public class VerificadorAperturaHeladera {
     public boolean puedeAbrirHeladera(Heladera heladera, Colaborador colaborador){
         return heladera.estaActiva() &&
                 heladera.puedeAbrirHeladera(colaborador.getPersona()) &&
-                RepositorioSolicitudesApertura.getInstancia()
+                RepoApertura.getInstancia()
                         .existeSolicitudDeAperturaDeTarjetaParaHeladera(
                                 colaborador.getTarjetaColaborador(),
                                 heladera

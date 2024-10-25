@@ -6,7 +6,7 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.Uso;
 import org.example.excepciones.LimiteDeTiempoSuperado;
 import org.example.personas.roles.Rol;
-import org.example.repositorios.RepositorioSolicitudesApertura;
+import org.example.repositorios.RepoApertura;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,11 +24,11 @@ public class TarjetaColaborador extends Tarjeta  {
     @Override
     public void usar(Rol duenio, Heladera heladera) throws LimiteDeTiempoSuperado
     {
-        RepositorioSolicitudesApertura repositorioSolicitudesApertura = RepositorioSolicitudesApertura.getInstancia();
+        RepoApertura repoApertura = RepoApertura.getInstancia();
 
-        SolicitudDeApertura solicitudDeApertura = repositorioSolicitudesApertura.buscarSolicitudDeApertura(heladera,this);
+        Apertura solicitudDeApertura = repoApertura.buscarSolicitudDeApertura(heladera,this);
         LocalDateTime fechaActual = LocalDateTime.now();
-        if(solicitudDeApertura.getFechaCreacion().plusHours(limiteDeTiempoDeUsoEnHoras).isBefore(fechaActual)){
+        if(solicitudDeApertura.getFechahoraCreacion().plusHours(limiteDeTiempoDeUsoEnHoras).isBefore(fechaActual)){
             throw new LimiteDeTiempoSuperado();
         }
         Uso nuevoUso = new Uso(fechaActual, heladera);
