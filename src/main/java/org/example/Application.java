@@ -1,6 +1,7 @@
 package org.example;
 
 import io.javalin.Javalin;
+import org.example.Presentacion.GetLocalidadesHandler;
 
 public class Application {
 
@@ -18,5 +19,7 @@ public class Application {
         app.exception(IllegalArgumentException.class, (e, ctx) -> {
             ctx.status(400);
         });
+
+        app.get("/api/localidades", new GetLocalidadesHandler());
     }
 }

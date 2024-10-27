@@ -6,6 +6,7 @@ import org.example.incidentes.Alerta;
 import org.example.incidentes.Incidente;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
+import org.example.personas.contacto.Direccion;
 import org.example.personas.contacto.Mensaje;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.roles.Tecnico;
@@ -68,7 +69,12 @@ public class IncidenteTest {
 
         when(heladeraMock.getUbicacion()).thenReturn(ubicacionMock);
         when(heladeraMock.getNombre()).thenReturn("Heladera Medrano");
-        when(heladeraMock.getDireccion()).thenReturn("Medrano 321");
+
+        Direccion direccionMock = new Direccion();
+        direccionMock.setNombreCalle("Medrano");
+        direccionMock.setAltura("321");
+
+        when(heladeraMock.getDireccion()).thenReturn(direccionMock);
         when(heladeraMock.estaActiva()).thenReturn(true);
 
         //ejecuto
@@ -112,7 +118,12 @@ public class IncidenteTest {
 
         when(heladeraMock.getUbicacion()).thenReturn(ubicacionMock);
         when(heladeraMock.getNombre()).thenReturn("Heladera Medrano");
-        when(heladeraMock.getDireccion()).thenReturn("Medrano 321");
+
+        Direccion direccionMock = new Direccion();
+        direccionMock.setNombreCalle("Medrano");
+        direccionMock.setAltura("321");
+
+        when(heladeraMock.getDireccion()).thenReturn(direccionMock);
         when(heladeraMock.estaActiva()).thenReturn(true);
 
         //reporto la falla técnica
@@ -162,7 +173,11 @@ public class IncidenteTest {
         TemperaturaHeladera temperaturaHeladera = new TemperaturaHeladera(-12, -1);
         heladera.setTemperaturasDeFuncionamiento(temperaturaHeladera);
         heladera.setNombre("Heladera Medrano UTN");
-        heladera.setDireccion("Medrano 1234");
+
+        Direccion direccionMock = new Direccion();
+        direccionMock.setNombreCalle("Medrano");
+        direccionMock.setAltura("321");
+        heladera.setDireccion(direccionMock);
 
 
         sensorDeTemperatura.setHeladera(heladera);
@@ -217,7 +232,12 @@ public class IncidenteTest {
         EstadoHeladera estadoHeladeraPrevio= new EstadoHeladera(true);
         heladera.setEstadoHeladeraActual(estadoHeladeraPrevio);
         heladera.setNombre("Heladera Medrano UTN");
-        heladera.setDireccion("Medrano 1234");
+
+
+        Direccion direccionMock = new Direccion();
+        direccionMock.setNombreCalle("Medrano");
+        direccionMock.setAltura("321");
+        heladera.setDireccion(direccionMock);
 
 
         sensorDeMovimiento.setHeladera(heladera);
@@ -272,7 +292,11 @@ public class IncidenteTest {
         heladera.setEstadoHeladeraActual(estadoHeladeraPrevio);
 
         heladera.setNombre("Heladera Medrano UTN");
-        heladera.setDireccion("Medrano 1234");
+
+        Direccion direccionMock = new Direccion();
+        direccionMock.setNombreCalle("Medrano");
+        direccionMock.setAltura("321");
+        heladera.setDireccion(direccionMock);
 
         SensorDeMovimiento sensorDeMovimiento = new SensorDeMovimiento();
         sensorDeMovimiento.setHeladera(heladera);

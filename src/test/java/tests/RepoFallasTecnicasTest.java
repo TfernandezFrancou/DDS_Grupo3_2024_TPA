@@ -6,6 +6,7 @@ import org.example.incidentes.FallaTecnica;
 import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
+import org.example.personas.contacto.Direccion;
 import org.example.recomendacion.Zona;
 import org.example.reportes.itemsReportes.ItemReporte;
 import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
@@ -68,11 +69,15 @@ public class RepoFallasTecnicasTest {
 
         //mockeo llamadas a las heladeras
         when(heladera1.getNombre()).thenReturn("Heladera1");
-        when(heladera1.getDireccion()).thenReturn("Medrano 123");
+
+        Direccion direccionMock = new Direccion();
+        direccionMock.setNombreCalle("Medrano");
+        direccionMock.setAltura("321");
+        when(heladera1.getDireccion()).thenReturn(direccionMock);
         when(heladera1.getUbicacion()).thenReturn(ubicacionMock);
 
         when(heladera2.getNombre()).thenReturn("Heladera2");
-        when(heladera2.getDireccion()).thenReturn("Medrano 123");
+        when(heladera2.getDireccion()).thenReturn(direccionMock);
         when(heladera2.getUbicacion()).thenReturn(ubicacionMock);
 
         // Agregar fallas dentro de la semana actual

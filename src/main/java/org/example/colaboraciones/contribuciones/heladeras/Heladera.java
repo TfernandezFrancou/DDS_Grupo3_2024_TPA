@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.personas.Persona;
+import org.example.personas.contacto.Direccion;
 import org.example.repositorios.RepoHeladeras;
 import org.example.subscripcionesHeladeras.PublisherDesperfecto;
 import org.example.subscripcionesHeladeras.PublisherViandasDisponibles;
@@ -22,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Heladera {
     private Ubicacion ubicacion;
-    private String direccion;
+    private Direccion direccion;
     private String nombre;
 
     private Integer capacidadEnViandas;

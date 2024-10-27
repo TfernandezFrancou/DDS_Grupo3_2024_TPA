@@ -8,6 +8,7 @@ import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
 import org.example.personas.roles.Colaborador;
+import org.example.personas.roles.PersonaEnSituacionVulnerable;
 import org.example.personas.roles.Tecnico;
 import org.example.recomendacion.Zona;
 import org.example.reportes.itemsReportes.ItemReporte;
@@ -150,6 +151,39 @@ public class RepoPersonaTests {
         Optional<Persona> tecnicoMasCercanoOp = repoPersona.tecnicoMasCercanoAHeladera(heladeraEnBuenosAires);
 
         Assertions.assertTrue(tecnicoMasCercanoOp.isEmpty());
+    }
+
+
+    @Test
+    public void testObtenerPersonasEnSituacionVulnerable(){
+        repoPersona.clean();
+
+        PersonaHumana persona1 = new PersonaHumana();
+        persona1.setNombre("Carlitos");
+        persona1.setApellido("1.0");
+
+        PersonaEnSituacionVulnerable rolPersonaEnSituacionVulnerable = new PersonaEnSituacionVulnerable();
+        rolPersonaEnSituacionVulnerable.setFechaNac(LocalDate.now());
+
+        persona1.setRol(rolPersonaEnSituacionVulnerable);
+
+        PersonaHumana persona2 = new PersonaHumana();
+        persona1.setNombre("Carlitos");
+        persona1.setApellido("2.0");
+
+        PersonaEnSituacionVulnerable rolPersonaEnSituacionVulnerable2 = new PersonaEnSituacionVulnerable();
+        rolPersonaEnSituacionVulnerable2.setFechaNac(LocalDate.now());
+
+        persona2.setRol(rolPersonaEnSituacionVulnerable2);
+
+        repoPersona.agregar(persona1);
+        repoPersona.agregar(persona2);
+
+        List<PersonaHumana> personas = repoPersona.obtenerPersonasEnSituacionVulnerable();
+
+        Assertions.assertEquals(2, personas.size());
+        Assertions.assertTrue(personas.contains(persona1));
+        Assertions.assertTrue(personas.contains(persona2));
     }
 
 }

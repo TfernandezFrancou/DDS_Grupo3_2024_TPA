@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.config.Configuracion;
 import org.example.personas.Persona;
+import org.example.personas.contacto.Direccion;
 import org.example.personas.contacto.Mensaje;
 import org.example.repositorios.RepoPersona;
 
@@ -41,10 +42,11 @@ public abstract class Incidente {
         if(tecnicoCercanoOp.isPresent()){
             Persona tecnicoCercano = tecnicoCercanoOp.get();
 
+            Direccion direccion = heladera.getDireccion();
             String asunto = Configuracion.obtenerProperties("mensaje.incidentes.heladera.titulo");
             String contenido = Configuracion.obtenerProperties("mensaje.incidentes.heladera.contenido")
                     .replace("{nombreHeladera}", heladera.getNombre())
-                    .replace("{direccionHeladera}", heladera.getDireccion())
+                    .replace("{direccionHeladera}", direccion.getNombreCalle() +' '+direccion.getAltura() )
                     .replace("{tipoIncidente}", this.tipoDeIncidente);
             Mensaje mensaje = new Mensaje(asunto, contenido, tecnicoCercano);
             tecnicoCercano.getMediosDeContacto().get(0).notificar(mensaje);//aviso por el primer medio de contacto que registró

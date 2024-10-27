@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.example.autenticacion.Usuario;
 import org.example.excepciones.UserException;
 import org.example.personas.contacto.CorreoElectronico;
+import org.example.personas.contacto.Direccion;
 import org.example.personas.contacto.MedioDeContacto;
 import org.example.personas.documentos.Documento;
 import org.example.personas.roles.Rol;
@@ -18,7 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class Persona {
-    protected String direccion;
+    protected Direccion direccion;
     protected Rol rol;
     protected Documento documento;
     protected List<MedioDeContacto> mediosDeContacto;

@@ -3,8 +3,11 @@ package org.example.repositorios;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
+import org.example.incidentes.FallaTecnica;
 import org.example.personas.Persona;
+import org.example.personas.PersonaHumana;
 import org.example.personas.roles.Colaborador;
+import org.example.personas.roles.PersonaEnSituacionVulnerable;
 import org.example.personas.roles.Rol;
 import org.example.personas.roles.Tecnico;
 import org.example.recomendacion.Zona;
@@ -15,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class RepoPersona {
     private List<Persona> personas;
@@ -109,5 +113,13 @@ public class RepoPersona {
         }
 
         return reporte;
+    }
+
+    public List<PersonaHumana> obtenerPersonasEnSituacionVulnerable(){
+        return this.personas.stream()
+                .filter(persona-> persona instanceof PersonaHumana)
+                .filter(personaHumana -> personaHumana.getRol() instanceof PersonaEnSituacionVulnerable)
+                .map(PersonaHumana.class::cast)           // Hago el cast a la clase PersonaHumana
+                .collect(Collectors.toList());
     }
 }
