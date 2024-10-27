@@ -6,7 +6,7 @@ import org.example.incidentes.Alerta;
 import org.example.incidentes.Incidente;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
-import org.example.personas.contacto.Direccion;
+import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.personas.contacto.Mensaje;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.roles.Tecnico;
@@ -24,7 +24,6 @@ import javax.mail.MessagingException;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 

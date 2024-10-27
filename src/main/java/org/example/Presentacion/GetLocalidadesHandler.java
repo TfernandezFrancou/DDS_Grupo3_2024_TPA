@@ -6,7 +6,7 @@ import org.example.Presentacion.dtos.LocalidadDTO;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.Uso;
 import org.example.personas.PersonaHumana;
-import org.example.personas.contacto.Direccion;
+import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.personas.roles.PersonaEnSituacionVulnerable;
 import org.example.repositorios.RepoPersona;
 import org.jetbrains.annotations.NotNull;
@@ -50,11 +50,17 @@ public class GetLocalidadesHandler  implements Handler {
 
                 if(localidadExistente.isPresent()){
                     LocalidadDTO localidadDTO1 = localidadExistente.get();
-                    localidadDTO1.agregarPersona(persona.getNombre() + ' ' + persona.getApellido());
+
+                    //si no exite lo agrego
+                    if(!localidadDTO1.getNombresYApellidosDePersonas().contains(persona.getNombre())){
+                        localidadDTO1.agregarPersona(persona.getNombre());//= nombre + ' ' + apellido
+                    }
+
                 }else {
                     LocalidadDTO localidadDTO = new LocalidadDTO();
                     localidadDTO.setNombreLocalidad(nombreLocalidad);
-                    localidadDTO.agregarPersona(persona.getNombre() + ' ' + persona.getApellido());
+                    localidadDTO.agregarPersona(persona.getNombre());//= nombre + ' ' + apellido
+                    respuesta.add(localidadDTO);
                 }
 
             }

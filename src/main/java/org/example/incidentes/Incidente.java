@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.config.Configuracion;
 import org.example.personas.Persona;
-import org.example.personas.contacto.Direccion;
+import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.personas.contacto.Mensaje;
 import org.example.repositorios.RepoPersona;
 

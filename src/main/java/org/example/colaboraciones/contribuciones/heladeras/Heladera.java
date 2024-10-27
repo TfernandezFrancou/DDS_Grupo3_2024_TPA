@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.personas.Persona;
-import org.example.personas.contacto.Direccion;
 import org.example.repositorios.RepoHeladeras;
 import org.example.subscripcionesHeladeras.PublisherDesperfecto;
 import org.example.subscripcionesHeladeras.PublisherViandasDisponibles;

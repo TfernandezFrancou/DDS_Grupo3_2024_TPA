@@ -6,7 +6,7 @@ import org.example.incidentes.FallaTecnica;
 import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
-import org.example.personas.contacto.Direccion;
+import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.recomendacion.Zona;
 import org.example.reportes.itemsReportes.ItemReporte;
 import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;

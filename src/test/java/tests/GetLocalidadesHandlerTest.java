@@ -2,23 +2,25 @@ package tests;
 
 import io.javalin.http.Context;
 import org.example.Presentacion.GetLocalidadesHandler;
+import org.example.Presentacion.dtos.LocalidadDTO;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.Uso;
 import org.example.personas.PersonaHumana;
-import org.example.personas.contacto.Direccion;
-import org.example.personas.roles.Colaborador;
+import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.personas.roles.PersonaEnSituacionVulnerable;
 import org.example.repositorios.RepoPersona;
 import org.example.tarjetas.TarjetaHeladera;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class GetLocalidadesHandlerTest {
 
@@ -51,9 +53,9 @@ public class GetLocalidadesHandlerTest {
         heladeraMock2.setDireccion(new Direccion("Medrano", "123","San Telmo"));
 
         Uso uso1 = new Uso(LocalDateTime.now(), heladeraMock);
-        Uso uso2 = new Uso(LocalDateTime.now().minusDays(1), heladeraMock);
-
-        tarjetaHeladera.setUsos(List.of(uso1, uso2));
+        Uso uso2 = new Uso(LocalDateTime.now().minusDays(1), heladeraMock2);
+        Uso uso3 = new Uso(LocalDateTime.now(), heladeraMock);
+        tarjetaHeladera.setUsos(List.of(uso1, uso2, uso3));
         rolPersonaEnSituacionVulnerable.setTarjetaHeladera(tarjetaHeladera);
 
         persona1.setRol(rolPersonaEnSituacionVulnerable);
@@ -62,8 +64,21 @@ public class GetLocalidadesHandlerTest {
 
         GetLocalidadesHandler handlerLocalidades = new GetLocalidadesHandler();
 
-        handlerLocalidades.handle(contextMock);
-        when(contextMock.json(List));
+        ArgumentCaptor<List<LocalidadDTO>> argumentCaptor = ArgumentCaptor.forClass(List.class);
 
+        handlerLocalidades.handle(contextMock);
+
+        verify(contextMock).json(argumentCaptor.capture());
+
+        List<LocalidadDTO> respuestaCapturada = argumentCaptor.getValue();
+
+        Assertions.assertEquals(2, respuestaCapturada.size());
+        Assertions.assertEquals("Palermo", respuestaCapturada.get(0).getNombreLocalidad());
+        Assertions.assertEquals(1, respuestaCapturada.get(0).getCantidadDePersonas());
+        Assertions.assertEquals("Carlitos 1.0", respuestaCapturada.get(0).getNombresYApellidosDePersonas().get(0));
+
+        Assertions.assertEquals("San Telmo", respuestaCapturada.get(1).getNombreLocalidad());
+        Assertions.assertEquals(1, respuestaCapturada.get(1).getCantidadDePersonas());
+        Assertions.assertEquals("Carlitos 1.0", respuestaCapturada.get(1).getNombresYApellidosDePersonas().get(0));
     }
 }

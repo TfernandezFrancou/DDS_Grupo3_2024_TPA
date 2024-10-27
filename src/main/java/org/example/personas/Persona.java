@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.example.autenticacion.Usuario;
 import org.example.excepciones.UserException;
 import org.example.personas.contacto.CorreoElectronico;
-import org.example.personas.contacto.Direccion;
+import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.personas.contacto.MedioDeContacto;
 import org.example.personas.documentos.Documento;
 import org.example.personas.roles.Rol;
