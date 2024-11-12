@@ -14,11 +14,12 @@ import org.example.config.Configuracion;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.persistence.Entity;
 import java.io.IOException;
 import java.util.Properties;
 
-
-public class CorreoElectronico implements MedioDeContacto {
+@Entity
+public class CorreoElectronico extends MedioDeContacto {
     @Getter
     @Setter
     private String mail;

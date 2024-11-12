@@ -5,14 +5,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.text.ParseException;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class Documento {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idDocumento;
+
     private String numeroDocumento;
+
+    @Enumerated(EnumType.STRING)
     private TipoDocumento tipoDocumento;
 
     public Documento(TipoDocumento tipo, String numero) {

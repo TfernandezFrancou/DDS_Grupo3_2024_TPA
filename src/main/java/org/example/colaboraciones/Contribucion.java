@@ -7,6 +7,7 @@ import org.example.migracion.TipoColaboracion;
 import org.example.personas.roles.Colaborador;
 import org.example.repositorios.RepoContribucion;
 
+import javax.persistence.*;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,9 +16,27 @@ import java.util.Set;
 
 @Getter
 @Setter
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Contribucion {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id_contribucion")
+    private int idContribucion;
+
+    @ManyToOne
     protected Colaborador colaborador;
+
+    @ElementCollection(targetClass = TipoDePersona.class)
+    @CollectionTable(
+            name = "tipo_persona",
+            joinColumns = @JoinColumn(name = "id_contribucion")
+    )
+    @Column(name = "descripcion")
+    @Enumerated(EnumType.STRING)
     protected Set<TipoDePersona> tiposDePersona;
+
     private LocalDate fecha;
 
     public abstract float getCoeficientePuntaje();

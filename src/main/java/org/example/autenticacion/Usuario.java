@@ -1,5 +1,7 @@
 package org.example.autenticacion;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.example.config.Configuracion;
 import org.example.excepciones.PasswordException;
 import org.example.personas.Persona;
@@ -10,15 +12,38 @@ import org.example.personas.roles.Colaborador;
 import org.example.validaciones.VerificadorContrasenia;
 
 import javax.mail.MessagingException;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Entity
 public class Usuario {
+
+    @Getter
+    @Setter
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idUsuario;
+
+    @OneToOne
     private Documento documento;
+
     private String nombreDeUsuario;
+
+    @OneToOne
     private Persona colaborador;
-    private String contrasenia;
+    private String contrasenia;//la contraseña se debe guardar hasheada, pero bueno
     private LocalDateTime fechaExpiracionContrasenia;
+
+    @Getter
+    @Setter
+    @Column(columnDefinition = "INT")
+    private Boolean estanDatosCorrectos;
+
+    @Getter
+    @Setter
+    @Column(columnDefinition = "INT")
+    private Boolean estanDatosCompletos;
 
     public Usuario(String nombreDeUsuario, String contrasenia, LocalDateTime fechaExpiracionContrasenia) {
         this.nombreDeUsuario = nombreDeUsuario;

@@ -5,11 +5,15 @@ import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
 @Setter
+@Entity
+@PrimaryKeyJoinColumn(name = "id_contribucion")
 public class DonacionDeDinero extends Contribucion {
     private float monto;
     private Integer frecuencia;

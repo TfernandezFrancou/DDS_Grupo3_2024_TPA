@@ -5,10 +5,12 @@ import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 
 import javax.mail.MessagingException;
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Entity
 public class Alerta extends Incidente {
     private String tipoDeAlerta;
 

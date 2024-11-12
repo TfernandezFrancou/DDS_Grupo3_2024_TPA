@@ -8,11 +8,13 @@ import org.example.excepciones.LimiteDeTiempoSuperado;
 import org.example.personas.roles.Rol;
 import org.example.repositorios.RepoApertura;
 
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Getter
 @Setter
+@Entity
 public class TarjetaColaborador extends Tarjeta  {
     private int limiteDeTiempoDeUsoEnHoras;
 

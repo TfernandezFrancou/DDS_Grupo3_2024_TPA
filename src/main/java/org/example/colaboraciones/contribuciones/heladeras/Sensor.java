@@ -6,11 +6,23 @@ import org.example.broker.Broker;
 import org.example.incidentes.Alerta;
 
 import javax.mail.MessagingException;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="discriminator")
 public abstract class Sensor {
+
     @Getter
     @Setter
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idSensor;
+
+    @Getter
+    @Setter
+    @ManyToOne
     private Heladera heladera;
 
     public void agregar(Heladera heladera) {

@@ -10,10 +10,12 @@ import org.example.personas.contacto.Mensaje;
 import org.example.repositorios.RepoHeladeras;
 
 import javax.mail.MessagingException;
+import javax.persistence.Entity;
 import java.util.List;
 
 @Getter
 @Setter
+@Entity
 public class SubscripcionDesperfecto extends SubscripcionHeladera {
 
     public SubscripcionDesperfecto(Persona suscriptor, MedioDeContacto medioDeContacto) {

@@ -14,6 +14,10 @@ import org.example.tarjetas.Apertura;
 import org.example.tarjetas.TipoDeApertura;
 import org.example.validadores.VerificadorAperturaHeladera;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,11 +25,15 @@ import java.util.List;
 import java.util.Set;
 
 @Getter
+@Setter
+@Entity
+@PrimaryKeyJoinColumn(name = "id_contribucion")
 public class DonacionDeViandas extends Contribucion {
-    @Setter
+    @ManyToOne
     private Heladera heladera;
+    @OneToMany
     private List<Vianda> viandas;
-    @Setter
+
     private Integer cantidadDeViandas = 0;
 
     public DonacionDeViandas(){

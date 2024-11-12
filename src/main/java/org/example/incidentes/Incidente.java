@@ -10,15 +10,26 @@ import org.example.personas.contacto.Mensaje;
 import org.example.repositorios.RepoPersona;
 
 import javax.mail.MessagingException;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Getter
 @Setter
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="discriminator")
 public abstract class Incidente {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idIncidente;
+
+    @ManyToOne
     private Heladera heladera;
+
     private String tipoDeIncidente;
     private LocalDateTime fechaDeEmision;
+    @Column(columnDefinition = "INT")
     private boolean solucionado;
 
     public Incidente(Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) {

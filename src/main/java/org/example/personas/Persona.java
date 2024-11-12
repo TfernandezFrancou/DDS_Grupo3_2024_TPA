@@ -12,16 +12,29 @@ import org.example.personas.roles.Rol;
 import org.example.repositorios.RepoUsuario;
 
 import javax.mail.MessagingException;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Getter
 @Setter
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Persona {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idPersona;
+
+    @OneToOne
     protected Direccion direccion;
+    @OneToOne
     protected Rol rol;
+    @OneToOne
     protected Documento documento;
+    @OneToMany
+    @JoinColumn(name ="id_persona")
     protected List<MedioDeContacto> mediosDeContacto;
 
     public Persona(){

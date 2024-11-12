@@ -1,9 +1,11 @@
 package org.example.colaboraciones.contribuciones.heladeras;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.Ubicacion;
+import org.example.colaboraciones.contribuciones.HacerseCargoDeUnaHeladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.personas.Persona;
 import org.example.repositorios.RepoHeladeras;
@@ -12,6 +14,7 @@ import org.example.subscripcionesHeladeras.PublisherViandasDisponibles;
 import org.example.subscripcionesHeladeras.PublisherViandasFaltantes;
 
 import javax.mail.MessagingException;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,9 +23,18 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@Entity
 public class Heladera {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idHeladera;
+
+    @OneToOne
     private Ubicacion ubicacion;
+    @OneToOne
     private Direccion direccion;
+
     private String nombre;
 
     private Integer capacidadEnViandas;
@@ -30,15 +42,29 @@ public class Heladera {
 
     private LocalDate fechaInicioFuncionamiento;
 
+    @OneToOne
     private EstadoHeladera estadoHeladeraActual;
+
+    @OneToMany(mappedBy = "heladera")
     private List<EstadoHeladera> historialEstadoHeldera;
+
+    @OneToMany(mappedBy = "heladera")
     private List<MovimientoViandas> historialMovimientos;
+
+    @OneToOne
     private TemperaturaHeladera temperaturasDeFuncionamiento;
 
+    @Transient
     private PublisherViandasDisponibles publisherViandasDisponibles;
+
+    @Transient
     private PublisherViandasFaltantes publisherViandasFaltantes;
+
+    @Transient
     private PublisherDesperfecto publisherDesperfecto;
 
+    @ManyToMany
+    @JoinTable(name = "Colaboradores_autorizados")
     private List<Persona> colaboradoresAutorizados;
 
     private int temperaturaActualHeladera;

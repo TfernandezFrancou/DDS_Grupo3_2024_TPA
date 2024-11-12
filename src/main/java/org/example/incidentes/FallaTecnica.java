@@ -7,13 +7,21 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.personas.Persona;
 
 import javax.mail.MessagingException;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Entity
 public class FallaTecnica extends Incidente {
+    @ManyToOne
     private Persona colaborador;
+
     private String descripcion;
+
+    @Column(columnDefinition = "TEXT")//la url puede ser muy larga por eso no basta con un varchar
     private String foto;
 
     public FallaTecnica(Persona colaborador, String descripcion, String foto, Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) throws MessagingException {

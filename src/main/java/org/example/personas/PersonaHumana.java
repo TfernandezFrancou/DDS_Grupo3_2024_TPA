@@ -8,13 +8,16 @@ import org.example.personas.documentos.Documento;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.roles.Rol;
 
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Arrays;
 
 @Getter
 @Setter
-
+@Entity
+@PrimaryKeyJoinColumn(name = "id_persona")
 public class PersonaHumana extends Persona {
     private String nombre;
     private String apellido;

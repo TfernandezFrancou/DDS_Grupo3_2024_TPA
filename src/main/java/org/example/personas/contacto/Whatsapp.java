@@ -1,17 +1,23 @@
 package org.example.personas.contacto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.config.Configuracion;
 
+import javax.persistence.Entity;
+
 @Getter
 @Setter
-
-public class Whatsapp implements MedioDeContacto {
+@Entity
+public class Whatsapp extends MedioDeContacto {
+    @JsonIgnore
     private static final String ACCOUNT_SID = Configuracion.obtenerProperties("twilio.account-sid");
+    @JsonIgnore
     private static final String AUTH_TOKEN = Configuracion.obtenerProperties("twilio.auth-token");
+    @JsonIgnore
     private static final String WHATSAPP_SENDER = Configuracion.obtenerProperties("twilio.whatsapp-sender");
 
     private String telefono;

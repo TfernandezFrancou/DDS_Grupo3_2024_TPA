@@ -12,16 +12,26 @@ import org.example.tarjetas.TarjetaHeladera;
 import org.example.personas.Persona;
 
 import javax.mail.MessagingException;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 @Getter
+@Setter
+@Entity
+@PrimaryKeyJoinColumn(name = "id_contribucion")
 public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
+    @OneToMany
+    @JoinColumn(name = "id_contribucion_registro")
     private List<Persona> personasRegistradas;
+    @OneToMany
+    @JoinColumn(name = "id_contribucion_registro")
     private List<TarjetaHeladera> tarjetasAEntregar;
-    @Setter
     private Integer tarjetasEntregadas;
 
     public RegistrarPersonasEnSituacionVulnerable(LocalDate fecha, Integer cantidad) {
@@ -72,7 +82,7 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
         StringBuilder stringBuilderTarjetas = new StringBuilder();
 
         for(TarjetaHeladera tarjetaHeladera: tarjetasAEntregar){
-            stringBuilderTarjetas.append("- Id tarjeta: ").append(tarjetaHeladera.getId()).append("\n");
+            stringBuilderTarjetas.append("- Id tarjeta: ").append(tarjetaHeladera.getIdTarjeta()).append("\n");
         }
         return stringBuilderTarjetas.toString();
     }

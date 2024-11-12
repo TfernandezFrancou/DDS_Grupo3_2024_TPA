@@ -2,6 +2,9 @@ package org.example;
 
 import io.javalin.Javalin;
 import org.example.Presentacion.GetLocalidadesHandler;
+import org.example.utils.BDUtils;
+
+import javax.persistence.EntityManager;
 
 public class Application {
 
@@ -21,5 +24,7 @@ public class Application {
         });
 
         app.get("/api/localidades", new GetLocalidadesHandler());
+
+        EntityManager em = BDUtils.getEntityManager();
     }
 }

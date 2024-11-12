@@ -8,15 +8,21 @@ import org.example.recomendacion.Zona;
 import org.example.repositorios.RepositorioVisitasTecnicos;
 
 import javax.mail.MessagingException;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@Entity
 public class Tecnico extends Rol {
     private String apellido;
     private String cuil;
+    @OneToMany
+    @JoinColumn(name="id_rol_tecnico")
     private List<Zona> areasDeCobertura;
 
     public Tecnico(){

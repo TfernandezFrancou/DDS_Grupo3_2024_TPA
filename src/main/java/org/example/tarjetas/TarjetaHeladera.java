@@ -1,5 +1,6 @@
 package org.example.tarjetas;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
@@ -8,16 +9,26 @@ import org.example.excepciones.LimiteDeUsosDiariosSuperados;
 import org.example.personas.roles.PersonaEnSituacionVulnerable;
 import org.example.personas.roles.Rol;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+@Entity
 public class TarjetaHeladera extends Tarjeta{
+
+    @Transient
     private static final int usosMinimosPorDia = 4;
+
+    @Transient
     private static final int multiplicadorPorHijos = 2;
+
     @Getter
+    @Setter
     private Integer limiteDeUsuarios;
     @Getter
+    @Setter
     private Integer cantidadDeUsosEnElDia;
     @Getter
     @Setter

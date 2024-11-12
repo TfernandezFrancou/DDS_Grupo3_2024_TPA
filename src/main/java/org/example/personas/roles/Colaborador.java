@@ -23,6 +23,7 @@ import org.example.tarjetas.TipoDeApertura;
 
 
 import javax.mail.MessagingException;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
@@ -32,11 +33,20 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-
+@Entity
 public class Colaborador extends Rol {
+
+    @OneToMany(mappedBy = "colaborador")
     private List<Contribucion> formasContribucion;
+
     private float puntuaje;
+
+    @ManyToMany
+    @JoinTable(name = "ofertas_canjeadas")
     private List<Oferta> ofertasCanjeadas;
+
+    @OneToOne
+    @JoinColumn(name="id_tarjeta_colaborador")
     private TarjetaColaborador tarjetaColaborador;
 
     public Colaborador(){

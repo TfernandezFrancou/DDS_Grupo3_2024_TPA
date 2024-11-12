@@ -1,5 +1,6 @@
 package org.example.personas;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,14 +9,21 @@ import org.example.recomendacion.IAdapter;
 import org.example.recomendacion.Zona;
 import org.example.colaboraciones.Ubicacion;
 
+import javax.persistence.*;
 import java.util.List;
 
 @Getter
 @Setter
+@Entity
+@PrimaryKeyJoinColumn(name = "id_persona")
 public class PersonaJuridica extends Persona{
     private String razonSocial;
+
+    @Enumerated(EnumType.STRING)
     private TipoJuridico tipo;
     private String rubro;
+
+    @Transient
     private IAdapter recomendadorDeUbicaciones;
 
 

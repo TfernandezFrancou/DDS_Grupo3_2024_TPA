@@ -4,10 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.mail.MessagingException;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
 @Getter
 @Setter
+@Entity
 public class SensorDeMovimiento extends Sensor {
+    @Column(columnDefinition = "INT")
     private boolean estaActivado;
 
     @Override

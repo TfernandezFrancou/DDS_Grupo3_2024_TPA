@@ -9,9 +9,11 @@ import org.example.personas.contacto.MedioDeContacto;
 import org.example.personas.contacto.Mensaje;
 
 import javax.mail.MessagingException;
+import javax.persistence.Entity;
 
 @Getter
 @Setter
+@Entity
 public class SubscripcionViandasDisponibles extends SubscripcionHeladera {
     private int cantidadDeViandas;
 

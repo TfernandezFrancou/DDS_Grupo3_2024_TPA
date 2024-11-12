@@ -36,7 +36,7 @@ public class RepoTarjetas {
 
     public Tarjeta buscarTarjetaPorId(String id) {
         return this.tarjetas.stream()
-                .filter((t) -> t.getId().equals(id))
+                .filter((t) -> t.getIdTarjeta().equals(id))
                 .findFirst()
                 .orElseThrow();
     }
