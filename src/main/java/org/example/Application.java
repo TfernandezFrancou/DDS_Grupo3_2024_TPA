@@ -1,7 +1,10 @@
 package org.example;
 
 import io.javalin.Javalin;
+import org.example.Presentacion.AlertasHandler;
+import org.example.Presentacion.CaracteristicasHandler;
 import org.example.Presentacion.GetLocalidadesHandler;
+import org.example.Presentacion.VisualizarHandler;
 import org.example.utils.BDUtils;
 
 import javax.persistence.EntityManager;
@@ -24,6 +27,9 @@ public class Application {
         });
 
         app.get("/api/localidades", new GetLocalidadesHandler());
+        app.get("/alertas/{nombre}", new AlertasHandler());
+        app.get("/caracteristicas/{nombre}", new CaracteristicasHandler());
+        app.get("/visualizar", new VisualizarHandler());
 
         EntityManager em = BDUtils.getEntityManager();
     }

@@ -11,6 +11,7 @@ import org.example.reportes.itemsReportes.ItemReporteViandasRetiradasPorHeladera
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -133,5 +134,13 @@ public class RepoHeladeras {
         }
 
         return reporte;
+    }
+
+    public Optional<Heladera> buscarHeladeraPorNombre(String nombreABuscar){
+        return this.heladeras.stream().filter(heladera -> heladera.getNombre().equals(nombreABuscar)).findFirst();
+    }
+
+    public List<Heladera> obtenerTodas(){
+        return this.heladeras;
     }
 }

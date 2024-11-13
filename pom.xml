@@ -111,6 +111,12 @@
             <artifactId>hibernate-entitymanager</artifactId>
             <version>5.4.18.Final</version>
         </dependency>
+        <!--libreria de renderizado de templates web-->
+        <dependency>
+            <groupId>com.github.spullara.mustache.java</groupId>
+            <artifactId>compiler</artifactId>
+            <version>0.9.7</version>
+        </dependency>
     </dependencies>
 
 </project>
