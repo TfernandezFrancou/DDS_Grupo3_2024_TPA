@@ -94,7 +94,7 @@ public class HeladerasController {
             System.err.println("Error al agregar la heladera: " + e);
         }
 
-        context.redirect("/heladeras/visualizar");
+        context.redirect("/heladeras");
     }
 
     public static void getReporte(@NotNull Context context) throws Exception {
