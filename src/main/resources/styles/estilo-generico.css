@@ -81,7 +81,7 @@ select {
     display: flex;
     justify-content: center;
 }
-
+/*
 .file-upload input[type="file"] {
     position: absolute;
     top: 0;
@@ -90,7 +90,7 @@ select {
     height: 100%;
     opacity: 0;
     cursor: pointer;
-}
+}*/
 
 .file-upload:hover {
     background-color: #f0f0f0;
@@ -227,4 +227,8 @@ select {
     font-size: 16px;
     font-weight: bold;
     transition: background-color 0.3s ease;
+}
+
+.error{
+    color: red;
 }

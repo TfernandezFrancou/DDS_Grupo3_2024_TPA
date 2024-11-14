@@ -2,6 +2,7 @@ package org.example;
 
 import io.javalin.Javalin;
 import org.example.Presentacion.AlertasHandler;
+import org.example.Presentacion.CargaCSVController;
 import org.example.Presentacion.HeladerasController;
 import org.example.Presentacion.GetLocalidadesHandler;
 import org.example.Presentacion.UsuarioController;
@@ -47,6 +48,11 @@ public class Application {
                 post("inicio-session", UsuarioController::postInicioSeccion);
                 post("registrarse", UsuarioController::postRegistrarse);
                 get("registrarse", UsuarioController::getRegistrarUsuario);
+            });
+
+            path("carga-csv", ()->{
+                post("upload", CargaCSVController::postUploadCSV);
+                get("", CargaCSVController::getUploadCSV);
             });
 
         });

@@ -33,7 +33,7 @@ public abstract class Persona {
     protected Rol rol;
     @OneToOne(cascade = CascadeType.PERSIST)
     protected Documento documento;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name ="id_persona")
     protected List<MedioDeContacto> mediosDeContacto;
 
