@@ -51,11 +51,9 @@ public class RepoHeladeras {
     }
 
     public void agregarTodas(List<Heladera> heladeras) {
-        //this.heladeras.addAll(heladeras);
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();
-
-        for(Heladera heladera: heladeras){
+        for (Heladera heladera : heladeras) {
             em.persist(heladera);
         }
         em.getTransaction().commit();

@@ -6,7 +6,10 @@ import org.example.incidentes.FallaTecnica;
 import org.example.incidentes.Incidente;
 import org.example.reportes.itemsReportes.ItemReporte;
 import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
+import org.example.utils.BDUtils;
+import org.hibernate.Criteria;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +32,17 @@ public class RepoIncidente {
     }
 
     public void agregarFalla(FallaTecnica fallaTecnica) {
-        this.incidentes.add(fallaTecnica);
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.persist(fallaTecnica);
+        em.getTransaction().commit();
     }
 
     public void agregarAlerta(Alerta alerta) {
-        this.incidentes.add(alerta);
-    }
-
-    public void eliminarIncidente(Incidente incidente) {
-        this.incidentes.remove(incidente);
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.persist(alerta);
+        em.getTransaction().commit();
     }
 
     public List<Incidente> obtenerTodasLasFallasTecnicas(){
@@ -46,6 +51,14 @@ public class RepoIncidente {
 
     public List<Incidente> obtenerTodasLasAlertas(){
         return this.incidentes.stream().filter(incidente -> incidente instanceof Alerta).toList();
+    }
+
+    public List<Incidente> buscarPorHeladera(Integer idHeladera) {
+        return BDUtils
+                .getEntityManager()
+                .createQuery("from Incidente where heladera.idHeladera = :heladera", Incidente.class)
+                .setParameter("heladera", idHeladera)
+                .getResultList();
     }
 
     private List<FallaTecnica> obtenerTodasLasFallasTecnicasDeHeladera(Heladera heladera, LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual){

@@ -10,6 +10,7 @@ import javax.mail.MessagingException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -21,7 +22,7 @@ public class FallaTecnica extends Incidente {
 
     private String descripcion;
 
-    @Column(columnDefinition = "TEXT")//la url puede ser muy larga por eso no basta con un varchar
+    @Column(columnDefinition = "TEXT") //la url puede ser muy larga por eso no basta con un varchar
     private String foto;
 
     public FallaTecnica(Persona colaborador, String descripcion, String foto, Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) throws MessagingException {
@@ -32,6 +33,10 @@ public class FallaTecnica extends Incidente {
     }
 
     public FallaTecnica(Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) {
-        super(heladera, tipoDeIncidente,fechaDeEmision);
+        super(heladera, tipoDeIncidente, fechaDeEmision);
+    }
+
+    public FallaTecnica() {
+        super();
     }
 }

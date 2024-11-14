@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 public class Alerta extends Incidente {
     private String tipoDeAlerta;
 
+    public Alerta() { }
+
     public Alerta(String tipoDeAlerta, Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) throws MessagingException {
         super(heladera, tipoDeIncidente, fechaDeEmision);
         this.tipoDeAlerta = tipoDeAlerta;
