@@ -48,7 +48,8 @@ public class Heladera {
     @OneToMany(mappedBy = "heladera", cascade = CascadeType.PERSIST)
     private List<EstadoHeladera> historialEstadoHeldera;
 
-    @OneToMany(mappedBy = "heladera", cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="idHeladera")
     private List<MovimientoViandas> historialMovimientos;
 
     @OneToOne(cascade = CascadeType.PERSIST)

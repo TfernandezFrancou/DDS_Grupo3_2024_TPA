@@ -41,11 +41,24 @@ public class RepoHeladeras {
     }
 
     public void clean(){
-        this.heladeras.clear();
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.createQuery("delete from MovimientoViandas").executeUpdate();
+        em.createQuery("delete from Heladera").executeUpdate();
+        em.createQuery("delete from Ubicacion").executeUpdate();
+        em.getTransaction().commit();
+        //this.heladeras.clear();
     }
 
     public void agregarTodas(List<Heladera> heladeras) {
-        this.heladeras.addAll(heladeras);
+        //this.heladeras.addAll(heladeras);
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+
+        for(Heladera heladera: heladeras){
+            em.persist(heladera);
+        }
+        em.getTransaction().commit();
     }
 
     public void agregar(Heladera heladera) {
@@ -68,11 +81,16 @@ public class RepoHeladeras {
     }
 
     public void eliminar(Heladera heladera) {
-        this.heladeras.remove(heladera);
+        //this.heladeras.remove(heladera);
+
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.remove(heladera);
+        em.getTransaction().commit();
     }
 
     public List<Heladera> buscarHeladerasActivas() {
-        return heladeras.stream().filter(Heladera::estaActiva).toList();
+        return this.obtenerTodas().stream().filter(Heladera::estaActiva).toList();
     }
 
     public List<Heladera> buscarHeladerasCercanasA(Heladera heladeraDada, double distanciaMaximaKm) {
@@ -80,7 +98,7 @@ public class RepoHeladeras {
         List<Heladera> heladerasCercanas = new ArrayList<>();
         Ubicacion ubicacionDada = heladeraDada.getUbicacion();
 
-        for (Heladera heladera : heladeras) {
+        for (Heladera heladera : this.obtenerTodas()) {
             if (!heladera.equals(heladeraDada)) {
                 double distancia = ubicacionDada.calcularDistanciaA(heladera.getUbicacion());
                 if (distancia <= distanciaMaximaKm) {
@@ -89,15 +107,25 @@ public class RepoHeladeras {
             }
         }
 
+        Optional<Heladera> heladeraOp = heladerasCercanas.stream()
+                .filter(heladera ->
+                        heladera.getIdHeladera() == heladeraDada.getIdHeladera())
+                .findFirst();
+        heladeraOp.ifPresent(heladerasCercanas::remove);
+
         return heladerasCercanas;
     }
 
 
 
     public Heladera buscarHeladera(Heladera heladeraAEncontrar){
-        return this.heladeras.stream().filter(
-                heladeraN -> heladeraN.getNombre().equals(heladeraAEncontrar.getNombre())
-        ).findFirst().get();
+
+        EntityManager em = BDUtils.getEntityManager();
+
+        List<Heladera> heladeras1 = em.createQuery("FROM Heladera WHERE nombre=:nombre", Heladera.class)
+                    .setParameter("nombre", heladeraAEncontrar.getNombre()).getResultList();
+
+        return heladeras1.stream().findFirst().get();
     }
     public List<ItemReporte> obtenerCantidadDeViandasColocadasPorHeladeraDeLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual) {
         return obtenerViandasPorHeladeraDeLaSemana(inicioSemanaActual, finSemanaActual, true);
@@ -107,11 +135,17 @@ public class RepoHeladeras {
         return obtenerViandasPorHeladeraDeLaSemana(inicioSemanaActual, finSemanaActual, false);
     }
 
+    /*private List<MovimientoViandas> getHistorialDeMovimientos(){
+        EntityManager em = BDUtils.getEntityManager();
+        em.createQuery("FROM ")
+    }*/
+
     private List<ItemReporte> obtenerViandasPorHeladeraDeLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual, boolean viandasColocadas) {
         List<ItemReporte> reporte = new ArrayList<>();
 
+        List<Heladera> heladeras1 = this.obtenerTodas();
 
-        for (Heladera heladera : heladeras) {
+        for (Heladera heladera : heladeras1) {
             List<MovimientoViandas> movimientosDeLaSemana = heladera.getHistorialMovimientos().stream()
                     .filter(movimiento ->
                             (movimiento.getFechaMovimiento().isAfter(inicioSemanaActual) &&
@@ -149,7 +183,12 @@ public class RepoHeladeras {
     }
 
     public Optional<Heladera> buscarHeladeraPorNombre(String nombreABuscar){
-        return this.heladeras.stream().filter(heladera -> heladera.getNombre().equals(nombreABuscar)).findFirst();
+        EntityManager em = BDUtils.getEntityManager();
+
+        List<Heladera> heladeras1 = em.createQuery("FROM Heladera WHERE nombre=:nombre", Heladera.class)
+                .setParameter("nombre", nombreABuscar).getResultList();
+
+        return heladeras1.stream().filter(heladera -> heladera.getNombre().equals(nombreABuscar)).findFirst();
     }
 
     public Optional<Heladera> buscarPorId(Integer id) {

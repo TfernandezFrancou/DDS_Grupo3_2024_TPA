@@ -68,10 +68,10 @@ public class RepoHeladerasTest {
 
         for (ItemReporte item : reporte) {
             ItemReporteViandasColocadasPorHeladera itemReporteViandasColocadasPorHeladera = (ItemReporteViandasColocadasPorHeladera) item;
-            if (itemReporteViandasColocadasPorHeladera.getHeladera().equals(heladera1)) {
+            if (itemReporteViandasColocadasPorHeladera.getHeladera().getIdHeladera() == heladera1.getIdHeladera()) {
 
                 Assertions.assertEquals(5, itemReporteViandasColocadasPorHeladera.getViandasColocadas().size(), "Heladera 1 debe tener 5 viandas colocadas en la semana");
-            } else if (itemReporteViandasColocadasPorHeladera.getHeladera().equals(heladera2)) {
+            } else if (itemReporteViandasColocadasPorHeladera.getHeladera().getIdHeladera() == heladera2.getIdHeladera()) {
                 Assertions.assertEquals(3, itemReporteViandasColocadasPorHeladera.getViandasColocadas().size(), "Heladera 2 debe tener 3 viandas colocadas en la semana");
             } else {
                 Assertions.fail("Heladera no esperada en el reporte");
@@ -104,9 +104,9 @@ public class RepoHeladerasTest {
 
         for (ItemReporte item : reporte) {
             ItemReporteViandasRetiradasPorHeladera itemReporteViandasRetiradasPorHeladera =(ItemReporteViandasRetiradasPorHeladera) item;
-            if (itemReporteViandasRetiradasPorHeladera.getHeladera().equals(heladera1)) {
+            if (itemReporteViandasRetiradasPorHeladera.getHeladera().getIdHeladera() == heladera1.getIdHeladera()) {
                 Assertions.assertEquals(3, itemReporteViandasRetiradasPorHeladera.getViandasRetiradas().size(), "Heladera 1 debe tener 3 viandas retiradas en la semana");
-            } else if (itemReporteViandasRetiradasPorHeladera.getHeladera().equals(heladera2)) {
+            } else if (itemReporteViandasRetiradasPorHeladera.getHeladera().getIdHeladera() == heladera2.getIdHeladera()) {
                 Assertions.assertEquals(0, itemReporteViandasRetiradasPorHeladera.getViandasRetiradas().size(), "Heladera 2 debe tener 0 viandas retiradas en la semana");
             } else {
                 Assertions.fail("Heladera no esperada en el reporte");
@@ -142,8 +142,9 @@ public class RepoHeladerasTest {
 
         Assertions.assertEquals(2, heladerasCercanas.size(), "Deben ser 2 heladeras cercanas en un radio de 10 km");
 
-        Assertions.assertTrue(heladerasCercanas.contains(heladera1));
-        Assertions.assertTrue(heladerasCercanas.contains(heladera4));
+        List<Integer> idsHeladerasCercanas = heladerasCercanas.stream().map(Heladera::getIdHeladera).toList();
+        Assertions.assertTrue(idsHeladerasCercanas.contains(heladera1.getIdHeladera()));
+        Assertions.assertTrue(idsHeladerasCercanas.contains(heladera4.getIdHeladera()));
 
         Assertions.assertFalse(heladerasCercanas.contains(heladeraEnBuenosAires), "la heladera en buenos aires no debe estar en el resultado");
     }
