@@ -7,6 +7,7 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.personas.Persona;
 
 import javax.mail.MessagingException;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 public class FallaTecnica extends Incidente {
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Persona colaborador;
 
     private String descripcion;

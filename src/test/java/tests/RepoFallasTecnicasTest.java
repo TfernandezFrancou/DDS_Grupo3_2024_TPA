@@ -7,9 +7,12 @@ import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
+import org.example.personas.documentos.Documento;
+import org.example.personas.documentos.TipoDocumento;
 import org.example.recomendacion.Zona;
 import org.example.reportes.itemsReportes.ItemReporte;
 import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
+import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoPersona;
 import org.junit.jupiter.api.Assertions;
@@ -30,13 +33,13 @@ public class RepoFallasTecnicasTest {
     private RepoIncidente repoFallasTecnicas;
 
     private RepoPersona repoPersona;
-    @Mock
+
     private Persona colaborador;
 
-    @Mock
+
     private Heladera heladera1;
 
-    @Mock
+
     private Heladera heladera2;
 
     @Mock
@@ -56,6 +59,11 @@ public class RepoFallasTecnicasTest {
         MockitoAnnotations.openMocks(this);
         this.repoFallasTecnicas  = RepoIncidente.getInstancia();
         this.repoPersona = RepoPersona.getInstancia();
+        this.colaborador = new PersonaHumana();
+        this.colaborador.setDocumento(new Documento(TipoDocumento.DNI, "43244599"));
+
+        this.heladera1 = new Heladera();
+        this.heladera2 = new Heladera();
 
         repoPersona.clean();
         repoFallasTecnicas.clean();
@@ -68,17 +76,24 @@ public class RepoFallasTecnicasTest {
         LocalDateTime finSemana = now.with(java.time.temporal.TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY)).toLocalDate().atTime(23, 59, 59);
 
         //mockeo llamadas a las heladeras
-        when(heladera1.getNombre()).thenReturn("Heladera1");
+        //when(heladera1.getNombre()).thenReturn("Heladera1");
+        this.heladera1.setNombre("Heladera1");
 
         Direccion direccionMock = new Direccion();
         direccionMock.setNombreCalle("Medrano");
         direccionMock.setAltura("321");
-        when(heladera1.getDireccion()).thenReturn(direccionMock);
-        when(heladera1.getUbicacion()).thenReturn(ubicacionMock);
+        this.heladera1.setDireccion(direccionMock);
+       // when(heladera1.getDireccion()).thenReturn(direccionMock);
+        //when(heladera1.getUbicacion()).thenReturn(ubicacionMock);
 
-        when(heladera2.getNombre()).thenReturn("Heladera2");
-        when(heladera2.getDireccion()).thenReturn(direccionMock);
-        when(heladera2.getUbicacion()).thenReturn(ubicacionMock);
+        //when(heladera2.getNombre()).thenReturn("Heladera2");
+        this.heladera2.setNombre("Heladera2");
+        //when(heladera2.getDireccion()).thenReturn(direccionMock);
+        this.heladera2.setDireccion(direccionMock);
+        //when(heladera2.getUbicacion()).thenReturn(ubicacionMock);
+        this.heladera2.setUbicacion(ubicacionMock);
+
+        RepoHeladeras.getInstancia().agregarTodas(List.of(heladera1, heladera2));
 
         // Agregar fallas dentro de la semana actual
         repoFallasTecnicas.agregarFalla(new FallaTecnica(colaborador,"esta todo caliente","url", heladera1,"no enfria",inicioSemana.plusDays(1))); // Martes
@@ -95,9 +110,9 @@ public class RepoFallasTecnicasTest {
 
         for (ItemReporte item : reporte) {
             ItemReporteFallasPorHeladera itemReporteFallasPorHeladera = (ItemReporteFallasPorHeladera) item;
-            if (itemReporteFallasPorHeladera.getHeladera().equals(heladera1)) {
+            if (itemReporteFallasPorHeladera.getHeladera().getIdHeladera() == heladera1.getIdHeladera()) {
                 Assertions.assertEquals(2, itemReporteFallasPorHeladera.getFallas().size(), "Heladera 1 debe tener 2 fallas");
-            } else if (itemReporteFallasPorHeladera.getHeladera().equals(heladera2)) {
+            } else if (itemReporteFallasPorHeladera.getHeladera().getIdHeladera() ==heladera2.getIdHeladera()) {
                 Assertions.assertEquals(1, itemReporteFallasPorHeladera.getFallas().size(), "Heladera 2 debe tener 1 falla");
             } else {
                 Assertions.fail("Heladera no esperada en el reporte");

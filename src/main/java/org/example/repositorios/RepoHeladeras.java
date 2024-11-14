@@ -44,8 +44,9 @@ public class RepoHeladeras {
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();
         em.createQuery("delete from MovimientoViandas").executeUpdate();
+        em.createQuery("delete from Incidente").executeUpdate();
         em.createQuery("delete from Heladera").executeUpdate();
-        em.createQuery("delete from Ubicacion").executeUpdate();
+        //em.createQuery("delete from Ubicacion").executeUpdate();
         em.getTransaction().commit();
         //this.heladeras.clear();
     }
@@ -132,11 +133,6 @@ public class RepoHeladeras {
     public List<ItemReporte> obtenerCantidadDeViandasRetiradasPorHeladeraDeLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual) {
         return obtenerViandasPorHeladeraDeLaSemana(inicioSemanaActual, finSemanaActual, false);
     }
-
-    /*private List<MovimientoViandas> getHistorialDeMovimientos(){
-        EntityManager em = BDUtils.getEntityManager();
-        em.createQuery("FROM ")
-    }*/
 
     private List<ItemReporte> obtenerViandasPorHeladeraDeLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual, boolean viandasColocadas) {
         List<ItemReporte> reporte = new ArrayList<>();

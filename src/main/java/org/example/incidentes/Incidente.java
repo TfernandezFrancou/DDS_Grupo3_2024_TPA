@@ -24,7 +24,7 @@ public abstract class Incidente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idIncidente;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Heladera heladera;
 
     private String tipoDeIncidente;

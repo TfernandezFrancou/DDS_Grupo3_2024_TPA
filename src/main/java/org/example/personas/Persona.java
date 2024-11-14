@@ -29,9 +29,9 @@ public abstract class Persona {
 
     @OneToOne
     protected Direccion direccion;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     protected Rol rol;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     protected Documento documento;
     @OneToMany
     @JoinColumn(name ="id_persona")

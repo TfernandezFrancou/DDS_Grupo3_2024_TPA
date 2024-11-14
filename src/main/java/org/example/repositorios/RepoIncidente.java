@@ -34,23 +34,40 @@ public class RepoIncidente {
     public void agregarFalla(FallaTecnica fallaTecnica) {
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();
-        em.persist(fallaTecnica);
+        List<Heladera> heladeras = em.createQuery("from Heladera where idHeladera = :idHeladera", Heladera.class)
+                        .setParameter("idHeladera",fallaTecnica.getHeladera().getIdHeladera()).getResultList();
+       if(heladeras.size() > 0){
+           fallaTecnica.setHeladera(heladeras.get(0));
+       }
+        em.merge(fallaTecnica);
         em.getTransaction().commit();
     }
 
     public void agregarAlerta(Alerta alerta) {
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();
-        em.persist(alerta);
+        List<Heladera> heladeras = em.createQuery("from Heladera where idHeladera = :idHeladera", Heladera.class)
+                .setParameter("idHeladera",alerta.getHeladera().getIdHeladera()).getResultList();
+        if(heladeras.size() > 0){
+            alerta.setHeladera(heladeras.get(0));
+        }
+        em.merge(alerta);
         em.getTransaction().commit();
     }
 
+    private List<Incidente> obtenerTodas(){
+        EntityManager em = BDUtils.getEntityManager();
+        return em.createQuery("FROM Incidente", Incidente.class).getResultList();
+    }
+
     public List<Incidente> obtenerTodasLasFallasTecnicas(){
-        return this.incidentes.stream().filter(incidente -> incidente instanceof FallaTecnica).toList();
+
+
+        return this.obtenerTodas().stream().filter(incidente -> incidente instanceof FallaTecnica).toList();
     }
 
     public List<Incidente> obtenerTodasLasAlertas(){
-        return this.incidentes.stream().filter(incidente -> incidente instanceof Alerta).toList();
+        return this.obtenerTodas().stream().filter(incidente -> incidente instanceof Alerta).toList();
     }
 
     public List<Incidente> buscarPorHeladera(Integer idHeladera) {
@@ -62,8 +79,10 @@ public class RepoIncidente {
     }
 
     private List<FallaTecnica> obtenerTodasLasFallasTecnicasDeHeladera(Heladera heladera, LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual){
-        return this.obtenerTodasLasFallasTecnicas().stream()
-                .filter(falla -> (falla.getHeladera().equals(heladera)) &&
+        List<Incidente> fallas = this.obtenerTodasLasFallasTecnicas();
+
+        return fallas.stream()
+                .filter(falla -> (falla.getHeladera().getIdHeladera() == heladera.getIdHeladera()) &&
                         ((falla.getFechaDeEmision().isAfter(inicioSemanaActual) && falla.getFechaDeEmision().isBefore(finSemanaActual)
                         ) || (falla.getFechaDeEmision().equals(inicioSemanaActual) || falla.getFechaDeEmision().equals(finSemanaActual)))
                 )
@@ -100,6 +119,12 @@ public class RepoIncidente {
     }
 
     public void clean() {
-        this.incidentes.clear();
+        //this.incidentes.clear();
+
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.createQuery("delete from Incidente").executeUpdate();
+        em.createQuery("delete from Heladera").executeUpdate();
+        em.getTransaction().commit();
     }
 }
