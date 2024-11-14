@@ -1,9 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
     const personaToggle = document.getElementById("personaToggle");
+    const razonSocial = document.getElementById("razonSocial");
+    const rubro = document.getElementById("rubro");
+    const tipoRazonSocialField = document.getElementById("tipoRazonSocial");
     const razonSocialFields = document.getElementById("razonSocialFields");
-    const nombreField = document.getElementById("nombre").parentElement;
-    const apellidoField = document.getElementById("apellido").parentElement;
-    const fechaNacimientoField = document.getElementById("fechaNacimiento").parentElement;
+
+    const nombreFieldParent = document.getElementById("nombre").parentElement;
+    const apellidoFieldParent = document.getElementById("apellido").parentElement;
+    const fechaNacimientoFieldParent = document.getElementById("fechaNacimiento").parentElement;
+
+    const nombreField = document.getElementById("nombre");
+    const apellidoField = document.getElementById("apellido");
+    const fechaNacimientoField = document.getElementById("fechaNacimiento");
 
     // Colaboraciones
     const donarVianda = document.getElementById("donarVianda");
@@ -11,39 +19,110 @@ document.addEventListener("DOMContentLoaded", function () {
     const registrarPersonaEnSituaciónVulnerable = document.getElementById("registrarPersonasSituacionVulnerable");
     const ofrecerProductos = document.getElementById("ofrecerProductos");
 
-    personaToggle.addEventListener("change", function () {
+    function resetElements(){
         if (personaToggle.checked) {
-            // Cambios para Persona Jurídica
-            nombreField.style.display = "none";
-            apellidoField.style.display = "none";
-            fechaNacimientoField.style.display = "none";
+                // Cambios para Persona Jurídica
 
-            razonSocialFields.style.display = "block"; // Mostrar campos de razón social
+                nombreField.removeAttribute("name");
+                nombreFieldParent.style.display = "none";
+                nombreField.setAttribute("disabled", true);
 
-            // Ocultar colaboraciones específicas
-            donarVianda.style.display = "none";
-            distribuirViandas.style.display = "none";
-            registrarPersonaEnSituaciónVulnerable.style.display = "none";
+                apellidoField.removeAttribute("name");
+                apellidoFieldParent.style.display = "none";
+                apellidoField.setAttribute("disabled", true);
 
-            // Mostrar "Ofrecer Productos"
-            ofrecerProductos.style.display = "block";
-        } else {
-            // Revertir a Persona Humana
-            nombreField.style.display = "block";
-            apellidoField.style.display = "block";
-            fechaNacimientoField.style.display = "block";
 
-            razonSocialFields.style.display = "none"; // Ocultar campos de razón social
+                fechaNacimientoField.removeAttribute("name");
+                fechaNacimientoFieldParent.style.display = "none";
+                fechaNacimientoField.setAttribute("disabled", true);
 
-            // Mostrar colaboraciones originales
-            donarVianda.style.display = "block";
-            distribuirViandas.style.display = "block";
-            registrarPersonaEnSituaciónVulnerable.style.display = "block";
 
-            // Ocultar "Ofrecer Productos"
-            ofrecerProductos.style.display = "none";
-        }
-    });
+                razonSocialFields.style.display = "block"; // Mostrar campos de razón social
+                razonSocialFields.setAttribute("name", "razonSocialFields");
+                razonSocialFields.removeAttribute("disabled");
+
+                razonSocial.style.display = "block"; // Mostrar campos de razón social
+                razonSocial.setAttribute("name", "razonSocial");
+                razonSocial.removeAttribute("disabled");
+
+                tipoRazonSocialField.style.display = "block"
+                tipoRazonSocialField.setAttribute("name", "tipoRazonSocial")
+                tipoRazonSocialField.removeAttribute("disabled")
+
+                rubro.style.display = "block"
+                rubro.setAttribute("name", "rubro")
+                rubro.removeAttribute("disabled")
+
+                // Ocultar colaboraciones específicas
+                donarVianda.removeAttribute("name");
+                donarVianda.style.display = "none";
+                donarVianda.setAttribute("disabled", true);
+
+                distribuirViandas.removeAttribute("name");
+                distribuirViandas.style.display = "none";
+                distribuirViandas.setAttribute("disabled", true);
+
+                registrarPersonaEnSituaciónVulnerable.removeAttribute("name");
+                registrarPersonaEnSituaciónVulnerable.style.display = "none";
+                registrarPersonaEnSituaciónVulnerable.setAttribute("disabled", true);
+
+                // Mostrar "Ofrecer Productos"
+                ofrecerProductos.style.display = "block";
+                ofrecerProductos.setAttribute("name", "ofrecerProductos");
+                ofrecerProductos.removeAttribute("disabled");
+            } else {
+                // Revertir a Persona Humana
+                nombreFieldParent.style.display = "block";
+                nombreField.setAttribute("name", "nombre");
+                nombreField.removeAttribute("disabled");
+
+                apellidoFieldParent.style.display = "block";
+                apellidoField.setAttribute("name", "apellido");
+                apellidoField.removeAttribute("disabled");
+
+                fechaNacimientoFieldParent.style.display = "block";
+                fechaNacimientoField.setAttribute("name", "fechaNacimiento");
+                fechaNacimientoField.removeAttribute("disabled");
+
+                razonSocialFields.removeAttribute("name");
+                razonSocialFields.style.display = "none"; // Ocultar campos de razón social
+                razonSocialFields.setAttribute("disabled", true);
+
+                razonSocial.removeAttribute("name");
+                razonSocial.style.display = "none"; // Ocultar campos de razón social
+                razonSocial.setAttribute("disabled", true);
+
+                tipoRazonSocialField.removeAttribute("name")
+                tipoRazonSocialField.style.display = "none"
+                tipoRazonSocialField.setAttribute("disabled", true)
+
+                rubro.removeAttribute("name")
+                rubro.style.display = "none"
+                rubro.setAttribute("disabled", true)
+
+                // Mostrar colaboraciones originales
+                donarVianda.style.display = "block";
+                donarVianda.setAttribute("name", "donarVianda");
+                donarVianda.removeAttribute("disabled");
+
+                distribuirViandas.style.display = "block";
+                distribuirViandas.setAttribute("name", "distribuirViandas");
+                distribuirViandas.removeAttribute("disabled");
+
+                registrarPersonaEnSituaciónVulnerable.style.display = "block";
+                registrarPersonaEnSituaciónVulnerable.setAttribute("name", "registrarPersonasSituacionVulnerable");
+                registrarPersonaEnSituaciónVulnerable.removeAttribute("disabled");
+
+                // Ocultar "Ofrecer Productos"
+                ofrecerProductos.removeAttribute("name");
+                ofrecerProductos.style.display = "none";
+                ofrecerProductos.setAttribute("disabled", true);
+            }
+    }
+
+    resetElements()//reset inicial
+
+    personaToggle.addEventListener("change", resetElements);
 
     //placeholder de medios de contacto
 
@@ -171,4 +250,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     verificarBotonQuitar(); // Inicializar la verificación del botón al cargar
 
+});
+
+document.getElementById('form').addEventListener('submit', function (e) {
+    this.querySelectorAll('input').forEach(input => {
+        if (input.disabled) {
+            input.removeAttribute('name');  // Elimina el 'name' para evitar que se envíe
+        }
+    });
+
+    document.getElementById("nombre").setAttribute("name", "nombre");
 });

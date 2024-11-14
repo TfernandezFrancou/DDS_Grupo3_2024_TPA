@@ -13,14 +13,11 @@ public class RegistrarUsuario {
 
 
   public RegistrarUsuario() {
-
+    this.repoUsuario = RepoUsuario.getInstancia();
   }
 
-  public RegistrarUsuario(RepoUsuario repoUsuario) {
-    this.repoUsuario = repoUsuario;
-  }
 
-  public void registrarUsuario(String usuario, String contrasenia) throws EmailYaRegistrado, PasswordException {
+  public Usuario registrarUsuario(String usuario, String contrasenia) throws EmailYaRegistrado, PasswordException {
     VerificadorContrasenia.getInstancia().validarContrasenia(contrasenia); // validamos si cumple con todas las validaciones de contrasenia
     Usuario usuarioNuevo = new Usuario(usuario, contrasenia, LocalDateTime.now()); // Solo si pasa la validación instanciamos el usuario
     //Le sumo 90 días a la fecha que se registró el usuario
@@ -28,6 +25,8 @@ public class RegistrarUsuario {
 
     this.repoUsuario.agregarUsuarios(usuarioNuevo); // guardamos al usuario en una lista a modo de ejemplo
     System.out.println(Configuracion.obtenerProperties("mensaje.registrar-usuario.registro-correcto"));
+
+    return usuarioNuevo;
   }
 
 

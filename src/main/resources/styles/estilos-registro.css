@@ -146,3 +146,7 @@
  .btn-primary:hover {
      background-color: var(--primary-color-dark);
  }
+
+ .error{
+    color:red;
+ }

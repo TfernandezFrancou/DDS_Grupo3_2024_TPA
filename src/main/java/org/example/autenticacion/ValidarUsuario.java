@@ -10,7 +10,7 @@ public class ValidarUsuario {
   }
 
   public static ValidarUsuario getInstancia() {
-    if (instancia != null) {
+    if (instancia == null) {
       instancia = new ValidarUsuario();
     }
     return instancia;

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Persona</title>
+    <link rel="icon" type="image/x-icon" href="/views/imagenes/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/estilos-registro.css">
+</head>
+
+<body>
+
+<form id="form" class="container mt-md-5" method="post" action="/usuarios/registrarse">
+    <!-- Toggle Persona Humana / Persona Jurídica -->
+    <div class="toggle-container mb-4 row  justify-content-center">
+        <div class="col-12 col-sm-4 d-flex justify-content-center align-items-center">
+            <span class="mx-3 fw-bold fs-4 fs-md-3 fs-lg-2">Persona humana</span>
+        </div>
+        <div class="col-12 col-sm-4 d-flex justify-content-center align-items-center">
+            <label class="switch">
+                <input type="checkbox" name="esJuridica" id="personaToggle">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <div class="col-12 col-sm-4 d-flex justify-content-center align-items-center">
+            <span class="mx-3 fw-bold fs-4 fs-md-3 fs-lg-2">Persona jurídica</span>
+        </div>
+    </div>
+
+    <!-- Formulario -->
+    <div>
+        <div class="row">
+            <!-- Datos personales -->
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="tipoDocumento" class="form-label">Tipo Documento<span>*</span></label>
+                    <select class="form-select" name="tipoDocumento" id="tipoDocumento" required>
+                        <option value="" disabled selected>Seleccionar</option>
+                        <option value="LC">Libreta cívica</option>
+                        <option value="LE">Libreta de Enrolamiento</option>
+                        <option value="DNI">DNI</option>
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="documento" class="form-label">Documento<span>*</span></label>
+                    <input type="number" name="documento" placeholder="12344577" class="form-control rounded-pill" id="documento" autofocus required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="nombre" class="form-label">Nombre<span>*</span></label>
+                    <input type="text" class="form-control rounded-pill" id="nombre" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="apellido" class="form-label">Apellido<span>*</span></label>
+                    <input type="text"  class="form-control rounded-pill" id="apellido" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="fechaNacimiento" class="form-label">Fecha de nacimiento</label>
+                    <input type="date" class="form-control rounded-pill" id="fechaNacimiento">
+                </div>
+
+                <div id="razonSocialFields" style="display: none;">
+                    <div class="form-group mb-3">
+                        <label for="razonSocial" class="form-label">Razón Social<span>*</span></label>
+                        <input type="text" class="form-control rounded-pill" id="razonSocial" autofocus required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="tipoRazonSocial" class="form-label">Tipo de Razón Social<span>*</span></label>
+                        <select class="form-select" id="tipoRazonSocial" required>
+                            <option value="" disabled selected>Seleccionar</option>
+                            <option value="gubernamental">Gubernamental</option>
+                            <option value="ong">ONG</option>
+                            <option value="empresa">Empresa</option>
+                            <option value="institucion">Institución</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="rubro" class="form-label">Rubro<span>*</span></label>
+                        <input type="text" class="form-control rounded-pill" id="rubro" required>
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="direccion" class="form-label">Dirección</label>
+                    <input type="text" placeholder="CalleEjemplo 123" name="direccion" class="form-control rounded-pill" id="direccion">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="localidad" class="form-label">Localidad</label>
+                    <input type="text" placeholder="Palermo" name="localidad" class="form-control rounded-pill" id="localidad">
+                </div>
+            </div>
+
+            <!-- Colaboraciones -->
+            <div class="col-md-6">
+                <h5>Colaboraciones</h5>
+                <div class="form-check mb-2">
+                    <input type="checkbox" class="form-check-input" name="donarDinero" id="donarDinero">
+                    <label class="form-check-label" for="donarDinero">Donar Dinero</label>
+                </div>
+                <div class="form-check mb-2" id="donarVianda">
+
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input">Donar Vianda
+                    </label>
+                </div>
+                <div class="form-check mb-2" id="cargoHeladera">
+
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input" name="cargoHeladera"> Hacerme Cargo De Una Heladera
+                    </label>
+                </div>
+                <div class="form-check mb-2" id="distribuirViandas">
+
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input">Distribuir Viandas
+                    </label>
+                </div>
+                <div class="form-check mb-2" id="registrarPersonasSituacionVulnerable">
+
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input">Registrar personas en situación vulnerable
+                    </label>
+                </div>
+                <div class="form-check mb-2" id="ofrecerProductos" style="display: none;">
+
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input">Ofrecer Productos
+                    </label>
+                </div>
+                <small class="form-text text-muted">Seleccionar las formas en las que puede colaborar</small>
+
+                <div class="form-group mb-3" style="margin-top:10px;">
+                    <label for="username" class="form-label">Nombre de Usuario <span>*</span></label>
+                    <input type="text" name="username" class="form-control rounded-pill" id="username">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="password" class="form-label">Contraseña <span>*</span></label>
+                    <input type="password" name="password" class="form-control rounded-pill" id="password">
+                </div>
+            </div>
+        </div>
+
+        <!-- Medios de Contacto -->
+        <div class="mt-4">
+            <h5>Medios De Contacto</h5>
+            <div class="row" id="mediosContactoContainer">
+                <div class="col-4 contacto-grupo">
+                    <div class="form-group mb-3">
+                        <label for="tipoContacto" class="form-label">Tipo</label>
+                        <select class="form-select" name="tipoContacto" id="tipoContacto" required>
+                            <option value="" disabled selected>Seleccionar</option>
+                            <option value="email">Email</option>
+                            <option value="telefono">Teléfono</option>
+                            <option value="whatsapp">WhatsApp</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-8 contacto-grupo">
+                    <div class="form-group mb-3">
+                        <label for="contacto" class="form-label">Contacto</label>
+                        <input type="text" class="form-control rounded-pill" id="contacto"
+                               placeholder="Introduce tu contacto" name="contacto" required>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <a href="#" id="agregarContacto" class="d-block mt-2">+ Agregar otro medio de contacto</a>
+                <a href="#" id="quitarContacto" class="mt-2 d-inline-block ms-3">- Quitar medio de
+                    contacto</a>
+            </div>
+        </div>
+
+        <p class="error">
+            {{error}}
+        </p>
+
+        <!-- Link para regresar a la página de inicio sección -->
+        <div class="d-flex-column d-md-flex mt-4 align-items-baseline">
+            <button type="submit" class="btn btn-primary me-2 col-6 col-sm-3">Registrarse</button>
+            <div class="col-12 col-md-6 mt-3">
+                <span>¿Ya tienes cuenta?</span>
+                <a href="/views/usuarios/InicioSesion.html">Inicia Sesión</a>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/views/js/mainRegistrarse.js"></script>
+</body>
+
+</html>

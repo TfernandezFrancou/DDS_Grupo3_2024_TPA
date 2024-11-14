@@ -1,6 +1,8 @@
 package org.example.Presentacion;
 
-import com.google.maps.*;
+
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
 import com.google.maps.model.*;
 import io.javalin.http.Context;
 import org.example.colaboraciones.Ubicacion;
