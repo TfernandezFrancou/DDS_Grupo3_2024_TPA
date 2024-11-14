@@ -21,7 +21,7 @@ public class AlertasHandler implements Handler {
 
     @Override
     public void handle(@NotNull Context context) throws Exception {
-        prueba();
+        // prueba();
         String nombreHeladera = context.pathParamAsClass("nombre",String.class).get();
         var resultadoBusqueda = repoIncidente.obtenerTodasLasAlertas().stream()
                 .filter(incidente -> incidente.getHeladera().getNombre().equals(nombreHeladera)).collect(Collectors.toList());

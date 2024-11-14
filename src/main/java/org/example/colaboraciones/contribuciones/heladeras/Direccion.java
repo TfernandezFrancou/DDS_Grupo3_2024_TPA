@@ -23,4 +23,10 @@ public class Direccion {
     private String nombreCalle;
     private String altura;
     private String localidad;
+
+    public Direccion(String nombreCalle, String altura, String localidad) {
+        this.nombreCalle = nombreCalle;
+        this.altura = altura;
+        this.localidad = localidad;
+    }
 }

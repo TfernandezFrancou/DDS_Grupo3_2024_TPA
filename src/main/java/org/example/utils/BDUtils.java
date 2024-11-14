@@ -18,11 +18,12 @@ public class BDUtils {
         return em;
     }
 
-    public static void comenzarTransaccion(EntityManager em) {
+    public static EntityTransaction comenzarTransaccion(EntityManager em) {
         EntityTransaction tx = em.getTransaction();
         if (!tx.isActive()) {
             tx.begin();
         }
+        return tx;
     }
 
     public static void commit(EntityManager em) {

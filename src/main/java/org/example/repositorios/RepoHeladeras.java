@@ -1,5 +1,7 @@
 package org.example.repositorios;
 
+import com.fasterxml.classmate.AnnotationConfiguration;
+import com.fasterxml.classmate.AnnotationInclusion;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.MovimientoViandas;
@@ -7,7 +9,14 @@ import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.reportes.itemsReportes.ItemReporte;
 import org.example.reportes.itemsReportes.ItemReporteViandasColocadasPorHeladera;
 import org.example.reportes.itemsReportes.ItemReporteViandasRetiradasPorHeladera;
+import org.example.utils.BDUtils;
+import org.hibernate.SessionFactory;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +49,10 @@ public class RepoHeladeras {
     }
 
     public void agregar(Heladera heladera) {
-        this.heladeras.add(heladera);
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.persist(heladera);
+        em.getTransaction().commit();
     }
 
     public void actualizar(Heladera heladeraActualizada) {
@@ -140,7 +152,20 @@ public class RepoHeladeras {
         return this.heladeras.stream().filter(heladera -> heladera.getNombre().equals(nombreABuscar)).findFirst();
     }
 
-    public List<Heladera> obtenerTodas(){
-        return this.heladeras;
+    public Optional<Heladera> buscarPorId(Integer id) {
+        return BDUtils
+                .getEntityManager()
+                .createQuery("from Heladera where idHeladera = :id", Heladera.class)
+                .setParameter("id", id)
+                .getResultList()
+                .stream()
+                .findFirst();
+    }
+
+    public List<Heladera> obtenerTodas() {
+        return BDUtils
+                .getEntityManager()
+                .createQuery("from Heladera", Heladera.class)
+                .getResultList();
     }
 }

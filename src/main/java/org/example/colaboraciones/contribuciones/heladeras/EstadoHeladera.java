@@ -1,5 +1,6 @@
 package org.example.colaboraciones.contribuciones.heladeras;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,12 @@ public class EstadoHeladera {
 
     @ManyToOne
     private Heladera heladera;
+
+    public EstadoHeladera() {
+        estaActiva = true;
+        fechaHoraInicio = LocalDateTime.now();
+        fechaHoraFin = null;
+    }
 
     public EstadoHeladera(boolean activa) {
         this.estaActiva = activa;

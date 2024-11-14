@@ -24,4 +24,9 @@ public class TemperaturaHeladera {
         this.temperaturaMinima = temperaturaMinima;
         this.temperaturaMaxima = temperaturaMaxima;
     }
+
+    public TemperaturaHeladera() {
+        temperaturaMinima = 0;
+        temperaturaMaxima = 100;
+    }
 }

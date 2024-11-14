@@ -24,6 +24,11 @@ public class Ubicacion {
     private float latitud;
     private float longitud;
 
+    public Ubicacion(float latitud, float longitud) {
+        this.latitud = latitud;
+        this.longitud = longitud;
+    }
+
     public double calcularDistanciaA(Ubicacion ubicacion) {
         final int RADIO_TIERRA_KM = 6371; // Radio de la tierra en kilómetros
         double lat1 = this.getLatitud();

@@ -30,9 +30,9 @@ public class Heladera {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idHeladera;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Ubicacion ubicacion;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Direccion direccion;
 
     private String nombre;
@@ -42,16 +42,16 @@ public class Heladera {
 
     private LocalDate fechaInicioFuncionamiento;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private EstadoHeladera estadoHeladeraActual;
 
-    @OneToMany(mappedBy = "heladera")
+    @OneToMany(mappedBy = "heladera", cascade = CascadeType.PERSIST)
     private List<EstadoHeladera> historialEstadoHeldera;
 
-    @OneToMany(mappedBy = "heladera")
+    @OneToMany(mappedBy = "heladera", cascade = CascadeType.PERSIST)
     private List<MovimientoViandas> historialMovimientos;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private TemperaturaHeladera temperaturasDeFuncionamiento;
 
     @Transient
@@ -70,8 +70,8 @@ public class Heladera {
     private int temperaturaActualHeladera;
 
     public Heladera(){
-        this.historialEstadoHeldera = new ArrayList<>();
         this.viandasEnHeladera = 0;
+        this.historialEstadoHeldera = new ArrayList<>();
         this.historialMovimientos = new ArrayList<>();
         this.colaboradoresAutorizados = new ArrayList<>();
         this.temperaturasDeFuncionamiento = new TemperaturaHeladera(0, 200);
@@ -79,6 +79,24 @@ public class Heladera {
         this.publisherViandasFaltantes = new PublisherViandasFaltantes();
         this.publisherViandasDisponibles = new PublisherViandasDisponibles();
         this.colaboradoresAutorizados = new ArrayList<>();
+    }
+
+    public Heladera(String nombre, Ubicacion ubicacion, Direccion direccion, Integer capacidadEnViandas) {
+        this.nombre = nombre;
+        this.ubicacion = ubicacion;
+        this.direccion = direccion;
+        this.capacidadEnViandas = capacidadEnViandas;
+        this.viandasEnHeladera = 0;
+        this.historialEstadoHeldera = new ArrayList<>();
+        this.historialMovimientos = new ArrayList<>();
+        this.colaboradoresAutorizados = new ArrayList<>();
+        this.temperaturasDeFuncionamiento = new TemperaturaHeladera(0, 200);
+        this.publisherDesperfecto = new PublisherDesperfecto();
+        this.publisherViandasFaltantes = new PublisherViandasFaltantes();
+        this.publisherViandasDisponibles = new PublisherViandasDisponibles();
+        this.colaboradoresAutorizados = new ArrayList<>();
+        this.fechaInicioFuncionamiento = LocalDate.now();
+        this.actualizarEstadoHeladera(true);
     }
 
     public boolean estaActiva() {
