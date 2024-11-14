@@ -1,6 +1,7 @@
 package org.example.autenticacion;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.config.Configuracion;
 import org.example.excepciones.PasswordException;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@NoArgsConstructor
 public class Usuario {
 
     @Getter
@@ -25,12 +27,12 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idUsuario;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Documento documento;
 
     private String nombreDeUsuario;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Persona colaborador;
     private String contrasenia;//la contraseña se debe guardar hasheada, pero bueno
     private LocalDateTime fechaExpiracionContrasenia;
