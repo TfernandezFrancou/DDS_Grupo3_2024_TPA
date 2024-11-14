@@ -18,29 +18,29 @@
     <nav>
         <ul>
             <li><a href="../colaboraciones/mis-colaboraciones.html">Mis colaboraciones</a></li>
-            <li><a href="../registrar-heladera.html">Registrar heladera</a></li>
-            <li><a href="/visualizar" class="menu-select">Heladeras</a></li>
+            <li><a href="/heladeras/registrar">Registrar heladera</a></li>
+            <li><a href="/heladeras" class="menu-select">Heladeras</a></li>
             <li><a href="../colaboraciones/puntos.html">Puntos</a></li>
             <li><a href="../colaboraciones/donar-vianda.html">Donar viandas</a></li>
             <li><a href="../reportes/reportes.html">Reportes</a></li>
-            <li><a href="../colaboraciones/registro-persona-vulnerable.html">Registrar persona</a></li>
+            <li><a href="/usuarios/registrarse">Registrar persona</a></li>
         </ul>
     </nav>
 </header>
 <div class="container">
     <div class="alerta-header">
         <h1>Alertas</h1>
-        <a href="/caracteristicas/{{nombre}}" class="btn btn-link back-Button">&lt; Volver</a>
+        <a href="/heladeras/{{idHeladera}}" class="btn btn-link back-Button">&lt; Volver</a>
     </div>
     <div class="container mt-4">
-        {{#listaAlertas}}
-        <div class="row">
-            <div class="alerta-caja">
-                <span class="alerta-titulo">Tipo: <strong>{{tipoDeAlerta}}</strong></span>
-                <span class="alerta-fecha">Fecha: <strong>{{fechaDeEmision}}</strong></span>
+        {{#alertas}}
+            <div class="row">
+                <div class="alerta-caja">
+                    <span class="alerta-titulo">Tipo: <strong>{{tipoDeIncidente}}</strong></span>
+                    <span class="alerta-fecha">Fecha: <strong>{{fechaDeEmision}}</strong></span>
+                </div>
             </div>
-        </div>
-        {{/listaAlertas}}
+        {{/alertas}}
     </div>
 </div>
 </body>

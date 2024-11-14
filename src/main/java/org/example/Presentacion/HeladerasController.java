@@ -8,13 +8,16 @@ import io.javalin.http.Context;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
+import org.example.incidentes.FallaTecnica;
+import org.example.incidentes.Incidente;
 import org.example.repositorios.RepoHeladeras;
+import org.example.repositorios.RepoIncidente;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class HeladerasController {
 
@@ -92,5 +95,70 @@ public class HeladerasController {
         }
 
         context.redirect("/heladeras/visualizar");
+    }
+
+    public static void getReporte(@NotNull Context context) throws Exception {
+        Map<String, Object> model = new HashMap<>();
+        List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
+        model.put("heladeras", heladeras);
+        context.render("views/heladeras/reporte.mustache", model);
+    }
+
+    public static void postReporte(@NotNull Context context) throws Exception {
+       String idHeladeraStr = context.formParam("idHeladera");
+       Heladera heladera = null;
+        try {
+            assert idHeladeraStr != null;
+            Integer idHeladera = Integer.parseInt(idHeladeraStr);
+            heladera = RepoHeladeras.getInstancia().buscarPorId(idHeladera).get();
+        } catch (Exception e) {
+            System.err.println("Error al buscar la heladera:" + e);
+            context.status(400);
+            return;
+        }
+        LocalDateTime fechaParseada = null;
+        try {
+            String fechaFalla = context.formParam("fechaFalla");
+            assert fechaFalla != null;
+            fechaParseada = LocalDate.parse(fechaFalla).atTime(0, 0, 0);
+        } catch (Exception e) {
+            System.err.println("Error al parsear la fecha:" + e);
+            context.status(400);
+            return;
+        }
+
+        String fotoUrl = context.formParam("foto");
+        String tipoFalla = context.formParam("tipoFalla");
+        String descripcion = context.formParam("descripcion");
+
+        FallaTecnica ft = new FallaTecnica(null, descripcion, fotoUrl, heladera, tipoFalla, fechaParseada);
+        RepoIncidente.getInstancia().agregarFalla(ft);
+
+        context.redirect("/heladeras");
+    }
+
+    public static void getAlertas(@NotNull Context context) throws Exception {
+        List<Incidente> resultados = null;
+
+        Map<String, Object> model = new HashMap<>();
+        try {
+            Integer idHeladera = context.pathParamAsClass("id", Integer.class).get();
+            model.put("idHeladera", idHeladera);
+            resultados = RepoIncidente.getInstancia().buscarPorHeladera(idHeladera);
+        } catch (Exception e) {
+            System.err.println("Error al buscar los incidentes: " + e);
+        }
+
+        // Este mapeo lo hago para formatear la fecha
+        model.put("alertas", resultados.stream().map((alerta) -> {
+            Map<String, String> mapped = new HashMap<>();
+            mapped.put("tipoDeIncidente", alerta.getTipoDeIncidente());
+            LocalDateTime fecha = alerta.getFechaDeEmision();
+            String formatted = fecha.getDayOfMonth() + "/" + fecha.getMonthValue() + "/" + fecha.getYear();
+            mapped.put("fechaDeEmision", formatted);
+            return mapped;
+        }).toList());
+
+        context.render("views/heladeras/alertas.mustache", model);
     }
 }

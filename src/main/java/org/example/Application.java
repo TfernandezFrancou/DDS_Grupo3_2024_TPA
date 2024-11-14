@@ -36,14 +36,17 @@ public class Application {
             path("heladeras", () -> {
                 get("registrar", HeladerasController::getRegistrar);
                 post("registrar", HeladerasController::postRegistrar);
+                get("reporte", HeladerasController::getReporte);
+                post("reporte", HeladerasController::postReporte);
                 get("", HeladerasController::getVisualizar);
                 get("{id}", HeladerasController::getCaracteristicas);
+                get("{id}/alertas", HeladerasController::getAlertas);
             });
 
             path("usuarios", () -> {
                 post("inicio-session", UsuarioController::postInicioSeccion);
                 post("registrarse", UsuarioController::postRegistrarse);
-                get("Registrarse", UsuarioController::getRegistrarUsuario);
+                get("registrarse", UsuarioController::getRegistrarUsuario);
             });
 
         });
