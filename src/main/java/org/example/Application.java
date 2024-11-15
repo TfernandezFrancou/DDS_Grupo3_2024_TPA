@@ -1,10 +1,7 @@
 package org.example;
 
 import io.javalin.Javalin;
-import org.example.Presentacion.AlertasHandler;
-import org.example.Presentacion.CargaCSVController;
-import org.example.Presentacion.HeladerasController;
-import org.example.Presentacion.GetLocalidadesHandler;
+import org.example.Presentacion.*;
 import org.example.Presentacion.UsuarioController;
 import org.example.utils.BDUtils;
 import static io.javalin.apibuilder.ApiBuilder.*;
@@ -53,6 +50,11 @@ public class Application {
             path("carga-csv", ()->{
                 post("upload", CargaCSVController::postUploadCSV);
                 get("", CargaCSVController::getUploadCSV);
+            });
+
+            path("donar-vianda",()->{
+                post("", DonarViandasController::postDonarVianda);
+                get("", DonarViandasController::getDonarVianda);
             });
 
         });

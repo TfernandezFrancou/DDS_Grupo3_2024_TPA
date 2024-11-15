@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donar una vianda</title>
+    <link rel="stylesheet" href="/styles/donar-viandas.css">
+    <link rel="stylesheet" href="/styles/navegacion.css">
+    <link rel="icon" type="image/x-icon" href="/views/imagenes/favicon.ico">
+</head>
+
+<body>
+<header>
+    <div class="logo-container">
+        <img src="/views/imagenes/logo.png" alt="Logo" class="logo">
+    </div>
+    <nav>
+        <ul>
+            <li><a href="./mis-colaboraciones.html">Mis colaboraciones</a></li>
+            <li><a href="../heladeras/registrar.mustache">Registrar heladera</a></li>
+            <li><a href="../heladeras/visualizar.mustache">Heladeras</a></li>
+            <li><a href="./puntos.html">Puntos</a></li>
+            <li><a href="./donar-viandas.html" class="menu-select">Donar viandas</a></li>
+            <li><a href="../reportes/reportes.html">Reportes</a></li>
+            <li><a href="./registro-persona-vulnerable.html">Registrar persona</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <h1>Donar una vianda</h1>
+
+    <form action="/donar-vianda" method="POST" class="donation-form">
+        <label for="tipo-comida">Que tipo de comida es? <span>*</span></label>
+        <input type="text" id="tipo-comida" name="tipo-comida" required>
+
+        <label for="fecha-caducidad">Fecha de caducidad <span>*</span></label>
+        <input type="date" id="fecha-caducidad" name="fecha-caducidad" placeholder="dd/mm/aaaa" required>
+
+        <label for="heladera">Heladera a donar <span>*</span></label>
+        <select id="heladera" name="heladera" required>
+            <option value="" disabled selected>Seleccione una heladera</option>
+            {{#heladeras}}
+                <option value={{idHeladera}}>{{nombre}}</option>
+            {{/heladeras}}
+        </select>
+
+        <label for="calorias">Calorías</label>
+        <input type="number" id="calorias" name="calorias" placeholder="Ingrese las calorias en kcal">
+
+        <label for="peso">Peso</label>
+        <input type="number" id="peso" name="peso" placeholder="Ingrese el peso en kg">
+
+        <button type="submit">Donar</button>
+        <p class="error">{{error}}</p>
+    </form>
+</main>
+</body>
+
+</html>
