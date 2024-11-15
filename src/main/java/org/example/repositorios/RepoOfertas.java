@@ -5,7 +5,7 @@ import org.example.colaboraciones.contribuciones.ofertas.Oferta;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepoOfertas {
+public class RepoOfertas { //TODO conectar con DB
     private List<Oferta> ofertas;
 
     private static RepoOfertas instancia = null;

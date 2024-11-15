@@ -16,6 +16,8 @@ public class Application {
                         cors.add(it -> it.anyHost());
                     }); // para poder hacer requests de un dominio a otro
                     //TODO algunas vistas hay que pasarlas a mustache o similar para mostrar datos reales
+                        // TODO vistas faltantes: registro-persona-vulnerable, reporte, reportes, puntos, ofrecer-producto, mis-colaboraciones
+                        // y arreglar la navegacion entre vistas
                     // javalinConfig.staticFiles.add("/"); //recursos estaticos (HTML, CSS, JS, IMG)
                     javalinConfig.staticFiles.add("/");
                     javalinConfig.routing.contextPath = "";

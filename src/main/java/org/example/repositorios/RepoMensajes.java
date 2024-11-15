@@ -5,7 +5,7 @@ import org.example.personas.contacto.Mensaje;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepoMensajes {
+public class RepoMensajes { //TODO conectar con DB
     private List<Mensaje> mensajes;
 
     private static RepoMensajes instancia = null;

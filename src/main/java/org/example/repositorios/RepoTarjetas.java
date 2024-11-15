@@ -7,7 +7,7 @@ import org.example.tarjetas.TarjetaHeladera;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepoTarjetas {
+public class RepoTarjetas { //TODO conectar con DB
     private List<Tarjeta> tarjetas;
 
     private static RepoTarjetas instancia = null;

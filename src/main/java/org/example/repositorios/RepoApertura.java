@@ -9,7 +9,7 @@ import org.example.tarjetas.TipoDeApertura;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepoApertura {
+public class RepoApertura {//TODO conectar con DB
 
     @Getter
     private List<Apertura> aperturas;

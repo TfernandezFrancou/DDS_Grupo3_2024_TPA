@@ -5,7 +5,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
-//TODO si no se usa esto borrarlo
+
 public class BDUtils {
     private static final EntityManagerFactory factory;
 

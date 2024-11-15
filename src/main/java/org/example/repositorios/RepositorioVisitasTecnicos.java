@@ -5,7 +5,7 @@ import org.example.colaboraciones.contribuciones.heladeras.VisitaHeladera;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepositorioVisitasTecnicos {
+public class RepositorioVisitasTecnicos { //TODO conectar con DB
     private List<VisitaHeladera> visitas;
 
     private static RepositorioVisitasTecnicos instancia = null;

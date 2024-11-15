@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class RepoPersona {
+public class RepoPersona { //TODO conectar con DB
     private List<Persona> personas;
 
     private static RepoPersona instancia = null;

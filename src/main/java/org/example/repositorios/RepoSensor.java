@@ -8,7 +8,7 @@ import org.example.colaboraciones.contribuciones.heladeras.SensorDeTemperatura;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepoSensor {
+public class RepoSensor { //TODO conectar con DB
 
     @Getter
     private List<Sensor> sensores;
