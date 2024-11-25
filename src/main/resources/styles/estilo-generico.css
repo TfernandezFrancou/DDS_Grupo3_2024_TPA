@@ -140,10 +140,7 @@ select {
     text-align: center;
     margin: 40px auto;
     max-width: 600px;
-    position: absolute;
     top: 5px;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 .points-container h2 {
@@ -181,16 +178,12 @@ select {
     max-width: 1200px;
     padding: 10px;
     margin: 0 auto;
-    margin-top: 250px;
     z-index: 1;
 }
 
 .card {
     background-color: #c2e9e9;
     border-radius: 10px;
-    width: 250px;
-    height: 450px;
-    padding: 20px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
@@ -209,7 +202,7 @@ select {
 .card h3 {
     color: #145e59;
     font-size: 20px;
-    margin: 15px 0;
+    margin: auto;
 }
 
 .card p {
@@ -228,6 +221,24 @@ select {
     font-weight: bold;
     transition: background-color 0.3s ease;
 }
+
+.card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.row-puntos {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col-puntos {
+    display: flex;
+    justify-content: center;
+}
+
 
 .error{
     color: red;
