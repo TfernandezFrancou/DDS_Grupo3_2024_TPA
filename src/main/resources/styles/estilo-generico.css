@@ -27,13 +27,19 @@ body {
 
 
 .form-container {
-    background-color: white;
-    padding: 30px;
-    border-radius: 15px;
-    min-width: 500px;
-    max-width: 500px;
-    margin: 0 auto;
-    z-index: 1;
+    max-width: 600px;
+        margin: 50px auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h1{
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #2a5549;
 }
 
 .form-group {
