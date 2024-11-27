@@ -1,6 +1,7 @@
 package org.example.colaboraciones.contribuciones;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -54,6 +56,7 @@ public class DistribucionDeViandas extends Contribucion {
         this.cantidad = viandas.size();
         this.viandas = viandas;
     }
+
 
     @Override
     public void ejecutarContribucion() throws Exception {

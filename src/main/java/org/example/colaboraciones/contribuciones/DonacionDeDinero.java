@@ -1,6 +1,7 @@
 package org.example.colaboraciones.contribuciones;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
@@ -10,6 +11,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import java.time.LocalDate;
 import java.util.Set;
 
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity

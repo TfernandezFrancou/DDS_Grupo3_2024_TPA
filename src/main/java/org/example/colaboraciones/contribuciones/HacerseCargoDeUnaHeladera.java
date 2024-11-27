@@ -1,6 +1,7 @@
 package org.example.colaboraciones.contribuciones;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
@@ -13,6 +14,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
 
 @Getter
 @Entity
