@@ -1,24 +1,17 @@
 package org.example.repositorios;
 
-import lombok.Getter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.tarjetas.Apertura;
 import org.example.tarjetas.Tarjeta;
 import org.example.tarjetas.TipoDeApertura;
+import org.example.utils.BDUtils;
 
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
 import java.util.List;
 
-public class RepoApertura {//TODO conectar con DB
-
-    @Getter
-    private List<Apertura> aperturas;
+public class RepoApertura {
 
     private static RepoApertura instancia = null;
-
-    private RepoApertura() {
-        this.aperturas = new ArrayList<>();
-    }
 
     public static RepoApertura getInstancia() {
         if (instancia == null) {
@@ -28,28 +21,48 @@ public class RepoApertura {//TODO conectar con DB
     }
 
     public void agregarApertura(Apertura apertura) {
-        this.aperturas.add(apertura);
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.persist(apertura);
+        em.getTransaction().commit();
     }
 
     public void quitarApertura(Apertura apertura) {
-        this.aperturas.remove(apertura);
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.createQuery("DELETE FROM Apertura a WHERE a.idApertura=:idApertura")
+                        .setParameter("idApertura", apertura.getIdApertura())
+                                .executeUpdate();
+        em.getTransaction().commit();
     }
 
     public void clean(){
-        this.aperturas.clear();
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.createQuery("DELETE FROM Apertura").executeUpdate();
+        em.getTransaction().commit();
     }
 
 
     public List<Apertura> obtenerAperturasFehacientes(){
-        return this.aperturas.stream()
-                .filter(apertura -> apertura.getTipoDeApertura().equals(TipoDeApertura.APERTURA_FEHACIENTE))
-                .toList();
+        EntityManager em = BDUtils.getEntityManager();
+
+        return em.createQuery(
+                        "SELECT a FROM Apertura a " +
+                                "  WHERE a.tipoDeApertura=:tipoDeApertura ", Apertura.class)
+                .setParameter("tipoDeApertura", TipoDeApertura.APERTURA_FEHACIENTE)
+                .getResultList();
     }
 
     public List<Apertura> obtenerSolicitudesDeAperturas(){
-        return this.aperturas.stream()
-                .filter(apertura -> apertura.getTipoDeApertura().equals(TipoDeApertura.SOLICITUD_APERTURA))
-                .toList();
+
+        EntityManager em = BDUtils.getEntityManager();
+
+        return em.createQuery(
+                        "SELECT a FROM Apertura a " +
+                                "  WHERE a.tipoDeApertura=:tipoDeApertura ", Apertura.class)
+                .setParameter("tipoDeApertura", TipoDeApertura.SOLICITUD_APERTURA)
+                .getResultList();
     }
     public Apertura buscarSolicitudDeApertura(Heladera heladera, Tarjeta tarjeta){
         return this.obtenerSolicitudesDeAperturas().stream()
@@ -59,7 +72,8 @@ public class RepoApertura {//TODO conectar con DB
 
     public List<Apertura> buscarSolicitudesDeAperturaDeTarjeta(Tarjeta tarjeta){
         return this.obtenerSolicitudesDeAperturas().stream()
-                .filter(solicitud -> solicitud.getTarjeta().equals(tarjeta))
+                .filter(solicitud -> solicitud.getTarjeta() !=null &&
+                            solicitud.getTarjeta().getIdTarjeta().equals(tarjeta.getIdTarjeta()))
                 .toList();
     }
 
@@ -67,9 +81,10 @@ public class RepoApertura {//TODO conectar con DB
 
         return this.obtenerSolicitudesDeAperturas().stream()
                 .anyMatch(
-                        (solicitudDeApertura ->
-                                solicitudDeApertura.getHeladera().equals(heladera) &&
-                                        solicitudDeApertura.getTarjeta().equals(tarjeta)
+                        (solicitudDeApertura -> solicitudDeApertura.getHeladera() !=null &&
+                                solicitudDeApertura.getTarjeta() != null &&
+                                solicitudDeApertura.getHeladera().getIdHeladera() == (heladera.getIdHeladera()) &&
+                                        solicitudDeApertura.getTarjeta().getIdTarjeta().equals(tarjeta.getIdTarjeta())
                         )
                 );
     }

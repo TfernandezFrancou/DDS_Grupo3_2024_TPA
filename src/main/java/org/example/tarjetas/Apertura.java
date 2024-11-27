@@ -31,4 +31,6 @@ public class Apertura {
         this.fechahoraCreacion = fechahoraCreacion;
         this.tipoDeApertura = tipoDeApertura;
     }
+
+    public Apertura(){}
 }

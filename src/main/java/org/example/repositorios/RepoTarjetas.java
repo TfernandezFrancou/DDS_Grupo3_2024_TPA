@@ -3,7 +3,9 @@ package org.example.repositorios;
 import org.example.tarjetas.Tarjeta;
 import org.example.tarjetas.TarjetaColaborador;
 import org.example.tarjetas.TarjetaHeladera;
+import org.example.utils.BDUtils;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +33,19 @@ public class RepoTarjetas { //TODO conectar con DB
     }
 
     public void agregar(Tarjeta tarjeta) {
-        this.tarjetas.add(tarjeta);
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.persist(tarjeta);
+        em.getTransaction().commit();
     }
+
+    public void clean() {
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.createQuery("DELETE FROM Tarjeta").executeUpdate();
+        em.getTransaction().commit();
+    }
+
 
     public Tarjeta buscarTarjetaPorId(String id) {
         return this.tarjetas.stream()

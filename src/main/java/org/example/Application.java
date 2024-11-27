@@ -2,7 +2,6 @@ package org.example;
 
 import io.javalin.Javalin;
 import org.example.Presentacion.*;
-import org.example.Presentacion.UsuarioController;
 import org.example.utils.BDUtils;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
