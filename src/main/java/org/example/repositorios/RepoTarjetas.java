@@ -42,7 +42,10 @@ public class RepoTarjetas { //TODO conectar con DB
     public void clean() {
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();
-        em.createQuery("DELETE FROM Tarjeta").executeUpdate();
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
+        em.createNativeQuery("DELETE FROM Uso").executeUpdate();
+        em.createNativeQuery("DELETE FROM Tarjeta").executeUpdate();
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
         em.getTransaction().commit();
     }
 

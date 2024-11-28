@@ -1,6 +1,7 @@
 package org.example.colaboraciones.contribuciones.viandas;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.personas.roles.Colaborador;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class Vianda {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +33,10 @@ public class Vianda {
 
     @OneToOne
     private Entrega entrega;
+
+    public Vianda(String descripcion, int calorias, float peso) {
+        this.descripcion = descripcion;
+        this.calorias = calorias;
+        this.peso = peso;
+    }
 }

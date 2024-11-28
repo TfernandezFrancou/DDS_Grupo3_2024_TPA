@@ -1,11 +1,15 @@
 package org.example.repositorios;
 
+import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.Ubicacion;
+import org.example.colaboraciones.contribuciones.*;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
+import org.example.excepciones.PersonaInexistenteException;
 import org.example.incidentes.FallaTecnica;
 import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
+import org.example.personas.PersonaJuridica;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.roles.PersonaEnSituacionVulnerable;
 import org.example.personas.roles.Rol;
@@ -13,20 +17,18 @@ import org.example.personas.roles.Tecnico;
 import org.example.recomendacion.Zona;
 import org.example.reportes.itemsReportes.ItemReporte;
 import org.example.reportes.itemsReportes.ItemReporteViandasDistribuidasPorColaborador;
+import org.example.utils.BDUtils;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class RepoPersona { //TODO conectar con DB
-    private List<Persona> personas;
+public class RepoPersona {
 
     private static RepoPersona instancia = null;
-    private RepoPersona() {
-        this.personas = new ArrayList<>();
-    }
 
     public static RepoPersona getInstancia() {
         if (instancia == null) {
@@ -36,15 +38,40 @@ public class RepoPersona { //TODO conectar con DB
     }
 
     public void agregarTodas(List<Persona> personas) {
-        this.personas.addAll(personas);
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        for (Persona persona: personas) {
+            em.persist(persona);
+        }
+        em.getTransaction().commit();;
     }
 
     public void agregar(Persona persona) {
-        this.personas.add(persona);
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.persist(persona);
+        em.getTransaction().commit();
     }
 
     public void eliminar(Persona persona) {
-        this.personas.remove(persona);
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        int idPersona =persona.getIdPersona();
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
+
+        PersonaHumana ph = em.find(PersonaHumana.class, idPersona);
+        if(ph != null)
+            em.remove(ph);
+
+        PersonaJuridica pj = em.find(PersonaJuridica.class, idPersona);
+        if(pj != null)
+            em.remove(pj);
+
+        Persona p = em.find(Persona.class, idPersona);
+        if(p != null)
+            em.remove(p);
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
+        em.getTransaction().commit();
     }
 
 
@@ -69,34 +96,58 @@ public class RepoPersona { //TODO conectar con DB
     }
 
     public void clean(){
-        this.personas.clear();
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
+        em.createNativeQuery("DELETE FROM Tecnico").executeUpdate();
+        em.createNativeQuery("DELETE FROM Colaborador").executeUpdate();
+        em.createNativeQuery("DELETE FROM PersonaEnSituacionVulnerable").executeUpdate();
+        em.createNativeQuery("DELETE FROM Documento").executeUpdate();
+        em.createNativeQuery("DELETE FROM MedioDeContacto").executeUpdate();
+        em.createNativeQuery("DELETE FROM PersonaHumana").executeUpdate();
+        em.createNativeQuery("DELETE FROM PersonaJuridica").executeUpdate();
+        em.createNativeQuery("DELETE FROM Persona").executeUpdate();
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
+        em.getTransaction().commit();
     }
 
     public Persona buscarPorNombre(String nombre) {
-        return this.personas.stream()
-                .filter(persona -> persona.getNombre().equals(nombre))
-                .findFirst()
-                .orElseThrow();
+
+        EntityManager em = BDUtils.getEntityManager();
+        PersonaHumana persona =
+                em.createQuery("SELECT p FROM PersonaHumana p WHERE p.nombre=:nombre", PersonaHumana.class)
+                        .setParameter("nombre", nombre)
+                        .getSingleResult();
+        if(persona == null)
+            throw new PersonaInexistenteException("No existe la persona con nombre "+nombre);
+
+        return persona;
     }
 
-    public Persona buscarPorNombreYRol(String nombre, Class<?> rol) {
-        return this.personas.stream()
-            .filter(persona -> persona.getNombre().equals(nombre) && persona.getRol().getClass().equals(rol))
-            .findFirst()
-            .orElseThrow();
-    }
 
     public List<Persona> buscarPersonasConRol(Class<?> rol) {
-        return this.personas.stream()
-                .filter(persona -> persona.getRol().getClass().equals(rol))
-                .toList();
+        EntityManager em = BDUtils.getEntityManager();
+        if(rol.equals(Colaborador.class)){
+            return  em.createQuery("SELECT p FROM Persona p JOIN Colaborador c ON p.rol.idrol=c.idrol", Persona.class)
+                    .getResultList();
+        } else if(rol.equals(Tecnico.class)){
+            return  em.createQuery("SELECT p FROM Persona p JOIN Tecnico t ON p.rol.idrol=t.idrol", Persona.class)
+                    .getResultList();
+        }else if(rol.equals(PersonaEnSituacionVulnerable.class)){
+            return  em.createQuery("SELECT p FROM Persona p JOIN PersonaEnSituacionVulnerable psv ON p.rol.idrol=psv.idrol", Persona.class)
+                    .getResultList();
+        }else return null;
     }
 
     public Persona buscarPersonaAsociadaAlRol(Rol rol) {
-        return this.personas.stream()
-                .filter(persona -> persona.getRol().equals(rol))
-                .findFirst()
-                .orElseThrow();
+        EntityManager em = BDUtils.getEntityManager();
+        Persona persona = em.createQuery("SELECT p FROM Persona p WHERE p.rol.idrol=:idRol", Persona.class)
+                .setParameter("idRol", rol.getIdrol())
+                .getSingleResult();
+        if(persona == null){
+            throw new PersonaInexistenteException("No existe la persona que tiene el rol con id="+rol.getIdrol());
+        }
+        return persona;
     }
 
     public List<ItemReporte> obtenerCantidadDeViandasDistribuidasPorColaborador(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual) {
@@ -116,10 +167,24 @@ public class RepoPersona { //TODO conectar con DB
     }
 
     public List<PersonaHumana> obtenerPersonasEnSituacionVulnerable(){
-        return this.personas.stream()
-                .filter(persona-> persona instanceof PersonaHumana)
-                .filter(personaHumana -> personaHumana.getRol() instanceof PersonaEnSituacionVulnerable)
-                .map(PersonaHumana.class::cast)           // Hago el cast a la clase PersonaHumana
-                .collect(Collectors.toList());
+        EntityManager em = BDUtils.getEntityManager();
+        List<Rol> rolesDepersonasEnSituacionVulnerable =
+                em.createQuery("SELECT p FROM PersonaEnSituacionVulnerable p", Rol.class)
+                .getResultList();
+        List<PersonaHumana> personasHumanas = new ArrayList<>();
+        for (Rol rol:rolesDepersonasEnSituacionVulnerable) {
+            int idRol = rol.getIdrol();
+            List<Persona> persona_n=
+                    em.createQuery("SELECT p FROM Persona p WHERE p.rol.idrol=:idRol", Persona.class)
+                    .setParameter("idRol", idRol)
+                    .getResultList();
+            if(persona_n.size() == 1){
+                PersonaHumana ph = em.find(PersonaHumana.class, persona_n.get(0).getIdPersona());
+                if(ph != null)
+                    personasHumanas.add(ph);
+            }
+        }
+
+        return personasHumanas;
     }
 }

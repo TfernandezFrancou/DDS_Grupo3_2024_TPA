@@ -15,10 +15,7 @@ import org.example.tarjetas.Apertura;
 import org.example.tarjetas.TipoDeApertura;
 import org.example.validadores.VerificadorAperturaHeladera;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,7 +30,7 @@ import java.util.Set;
 public class DonacionDeViandas extends Contribucion {
     @ManyToOne
     private Heladera heladera;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<Vianda> viandas;
 
     private Integer cantidadDeViandas = 0;

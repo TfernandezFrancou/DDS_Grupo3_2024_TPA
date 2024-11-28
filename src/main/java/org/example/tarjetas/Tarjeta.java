@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.Uso;
 import org.example.personas.roles.Rol;
+import org.example.repositorios.RepoTarjetas;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,7 +20,7 @@ public abstract class Tarjeta {
     @Id
     private String idTarjeta;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "idTarjeta")
     private List<Uso> usos;
 

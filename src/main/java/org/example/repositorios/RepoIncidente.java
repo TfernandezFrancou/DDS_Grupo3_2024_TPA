@@ -123,8 +123,10 @@ public class RepoIncidente {
 
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
         em.createQuery("delete from Incidente").executeUpdate();
         em.createQuery("delete from Heladera").executeUpdate();
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//deshabilito el check de FKs
         em.getTransaction().commit();
     }
 }

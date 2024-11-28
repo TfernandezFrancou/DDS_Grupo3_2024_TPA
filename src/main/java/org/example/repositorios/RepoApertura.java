@@ -66,7 +66,8 @@ public class RepoApertura {
     }
     public Apertura buscarSolicitudDeApertura(Heladera heladera, Tarjeta tarjeta){
         return this.obtenerSolicitudesDeAperturas().stream()
-                .filter(solicitud -> solicitud.getHeladera().equals(heladera) && solicitud.getTarjeta().equals(tarjeta))
+                .filter(solicitud -> solicitud.getHeladera().getIdHeladera() == (heladera.getIdHeladera())
+                        && solicitud.getTarjeta().getIdTarjeta().equals(tarjeta.getIdTarjeta()))
                 .findFirst().get();
     }
 

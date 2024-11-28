@@ -70,12 +70,15 @@ public class RepoContribucion {
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();//deshabilito el check de FKs
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();
-        em.createNativeQuery("TRUNCATE TABLE DonacionDeViandas").executeUpdate();
-        em.createNativeQuery("TRUNCATE TABLE DonacionDeDinero").executeUpdate();
-        em.createNativeQuery("TRUNCATE TABLE HacerseCargoDeUnaHeladera").executeUpdate();
-        em.createNativeQuery("TRUNCATE TABLE OfrecerProductos").executeUpdate();
-        em.createNativeQuery("TRUNCATE TABLE RegistrarPersonasEnSituacionVulnerable").executeUpdate();
-        em.createNativeQuery("TRUNCATE TABLE Contribucion").executeUpdate();
+        em.createNativeQuery("DELETE FROM DistribucionDeViandas_Vianda").executeUpdate();
+        em.createNativeQuery("DELETE FROM DistribucionDeViandas").executeUpdate();
+        em.createNativeQuery("DELETE FROM DonacionDeViandas_Vianda").executeUpdate();
+        em.createNativeQuery("DELETE FROM DonacionDeViandas").executeUpdate();
+        em.createNativeQuery("DELETE FROM DonacionDeDinero").executeUpdate();
+        em.createNativeQuery("DELETE FROM HacerseCargoDeUnaHeladera").executeUpdate();
+        em.createNativeQuery("DELETE FROM OfrecerProductos").executeUpdate();
+        em.createNativeQuery("DELETE FROM RegistrarPersonasEnSituacionVulnerable").executeUpdate();
+        em.createNativeQuery("DELETE FROM Contribucion").executeUpdate();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
         em.getTransaction().commit();
     }

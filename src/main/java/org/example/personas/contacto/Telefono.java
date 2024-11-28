@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.config.Configuracion;
 
@@ -12,6 +13,7 @@ import javax.persistence.Entity;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class Telefono extends MedioDeContacto {
     @JsonIgnore
     private static final String ACCOUNT_SID = Configuracion.obtenerProperties("twilio.account-sid");

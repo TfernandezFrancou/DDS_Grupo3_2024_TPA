@@ -16,10 +16,7 @@ import org.example.tarjetas.TipoDeApertura;
 import org.example.validadores.VerificadorAperturaHeladera;
 
 import javax.mail.MessagingException;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,7 +37,7 @@ public class DistribucionDeViandas extends Contribucion {
     private Integer cantidad;
     private String motivo;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List<Vianda> viandas;
 
     public DistribucionDeViandas(LocalDate fecha, Integer cantidad) {

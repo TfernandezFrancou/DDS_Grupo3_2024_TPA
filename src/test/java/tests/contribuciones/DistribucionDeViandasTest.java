@@ -1,12 +1,13 @@
 package tests.contribuciones;
 
 import org.example.colaboraciones.contribuciones.DistribucionDeViandas;
+import org.example.colaboraciones.contribuciones.heladeras.EstadoHeladera;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.excepciones.SolicitudInexistente;
 import org.example.personas.PersonaHumana;
 import org.example.personas.roles.Colaborador;
-import org.example.repositorios.RepoApertura;
+import org.example.repositorios.*;
 import org.example.tarjetas.Apertura;
 import org.example.tarjetas.TarjetaColaborador;
 import org.example.tarjetas.TipoDeApertura;
@@ -32,76 +33,112 @@ public class DistribucionDeViandasTest {
     @Mock
     private Vianda vianda2;
 
-    @Mock
     private Colaborador colaboradorMock;
 
-    @Mock
+
     private Heladera heladeraMockOrigen;
-    @Mock
+
     private Heladera heladeraMockDestino;
 
-    @Mock
     private Vianda viandaMock;
 
-    @Mock
+
     private TarjetaColaborador tarjetaColaboradorMock;
 
-    @Mock
+
     private PersonaHumana personaHumanaMock;
+
+
+    private Heladera heladeraMockOrigenSpy;
+    private Heladera heladeraMockDestinoSpy ;
 
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);//crea los mocks
         RepoApertura.getInstancia().clean();
+        RepoContribucion.getInstancia().clean();
+        RepoPersona repoPersona = RepoPersona.getInstancia();
+        RepoTarjetas repoTarjetas = RepoTarjetas.getInstancia();
+        RepoHeladeras repoHeladeras = RepoHeladeras.getInstancia();
+        repoPersona.clean();
+        repoTarjetas.clean();
+        repoHeladeras.clean();
+        tarjetaColaboradorMock = new TarjetaColaborador();
+
+        colaboradorMock = new Colaborador();
+        colaboradorMock.setTarjetaColaborador(tarjetaColaboradorMock);
+
+        personaHumanaMock = new PersonaHumana();
+        personaHumanaMock.setNombre("Franco");
+        personaHumanaMock.setApellido("Callero");
+        personaHumanaMock.setRol(colaboradorMock);
+        repoTarjetas.agregar(tarjetaColaboradorMock);
+        repoPersona.agregar(personaHumanaMock);
+
+        heladeraMockOrigen = new Heladera();
+        heladeraMockOrigen.setNombre("heladera medrano buffet");
+        heladeraMockOrigen.autorizarColaborador(personaHumanaMock);
+        heladeraMockOrigen.setEstadoHeladeraActual(new EstadoHeladera(true));
+
+        heladeraMockDestino = new Heladera();
+        heladeraMockDestino.setNombre("heladera lugano buffet");
+        heladeraMockDestino.autorizarColaborador(personaHumanaMock);
+        heladeraMockDestino.setEstadoHeladeraActual(new EstadoHeladera(true));
+        repoHeladeras.agregarTodas(List.of(heladeraMockOrigen, heladeraMockDestino));
+
+        heladeraMockOrigenSpy = Mockito.spy(heladeraMockOrigen);
+         heladeraMockDestinoSpy = Mockito.spy(heladeraMockDestino);
+
+        viandaMock = new Vianda();
+        viandaMock.setPeso(15);
+        viandaMock.setCalorias(10);
+        viandaMock.setDescripcion("ensalada cesar");
+
+        vianda2 = new Vianda();
+        vianda2.setPeso(20);
+        vianda2.setCalorias(300);
+        vianda2.setDescripcion("Pancho");
     }
 
     private DistribucionDeViandas crearDristribucionDeViandas(){
         DistribucionDeViandas distribucionDeViandasMock = new DistribucionDeViandas(
                 LocalDate.now(),
-                List.of(viandaMock, viandaMock)
+                List.of(viandaMock, vianda2)
         );
         distribucionDeViandasMock.setColaborador(colaboradorMock);
-        distribucionDeViandasMock.setOrigen(heladeraMockOrigen);
-        distribucionDeViandasMock.setDestino(heladeraMockDestino);
-
-        when(heladeraMockOrigen.estaActiva()).thenReturn(true);
-        when(heladeraMockOrigen.puedeAbrirHeladera(personaHumanaMock)).thenReturn(true);
-
-        when(heladeraMockDestino.estaActiva()).thenReturn(true);
-        when(heladeraMockDestino.puedeAbrirHeladera(personaHumanaMock)).thenReturn(true);
-
-        when(colaboradorMock.getTarjetaColaborador()).thenReturn(tarjetaColaboradorMock);
-        when(colaboradorMock.getPersona()).thenReturn(personaHumanaMock);
+        distribucionDeViandasMock.setOrigen(heladeraMockOrigenSpy);
+        distribucionDeViandasMock.setDestino(heladeraMockDestinoSpy);
 
         return distribucionDeViandasMock;
     }
 
     @Test
     public void testPuedeDistribuirViandas() throws Exception {
+
         DistribucionDeViandas distribucionDeViandasMock = this.crearDristribucionDeViandas();
 
         RepoApertura repo = RepoApertura.getInstancia();
 
-        repo.agregarApertura(new Apertura(tarjetaColaboradorMock, heladeraMockOrigen, LocalDateTime.now(), TipoDeApertura.SOLICITUD_APERTURA));
-        repo.agregarApertura(new Apertura(tarjetaColaboradorMock, heladeraMockDestino, LocalDateTime.now(),TipoDeApertura.SOLICITUD_APERTURA));
+        repo.agregarApertura(new Apertura(tarjetaColaboradorMock, heladeraMockOrigenSpy, LocalDateTime.now(), TipoDeApertura.SOLICITUD_APERTURA));
+        repo.agregarApertura(new Apertura(tarjetaColaboradorMock, heladeraMockDestinoSpy, LocalDateTime.now(),TipoDeApertura.SOLICITUD_APERTURA));
 
         // no debe tirar error al ejecutar la donacion
         Assertions.assertDoesNotThrow(distribucionDeViandasMock::ejecutarContribucion);
 
         //verifico que se notifiquen el cambio de viandas a las heladeras correspondientes
-        Mockito.verify(heladeraMockOrigen, Mockito.times(1)).notificarCambioViandas(List.of(), List.of(viandaMock, viandaMock));
-        Mockito.verify(heladeraMockDestino, Mockito.times(1)).notificarCambioViandas(List.of(viandaMock, viandaMock),List.of());
+        Mockito.verify(heladeraMockOrigenSpy, Mockito.times(1)).notificarCambioViandas(List.of(), List.of(viandaMock, vianda2));
+        Mockito.verify(heladeraMockDestinoSpy, Mockito.times(1)).notificarCambioViandas(List.of(viandaMock, vianda2),List.of());
 
         // debe registrarse la apertura fehaciente de la heladera
         RepoApertura repoApretura = RepoApertura.getInstancia();
 
         Assertions.assertEquals(2,repoApretura.obtenerAperturasFehacientes().size());
 
-        Assertions.assertEquals(heladeraMockOrigen,repoApretura.obtenerAperturasFehacientes().get(0).getHeladera());
-        Assertions.assertEquals(tarjetaColaboradorMock,repoApretura.obtenerAperturasFehacientes().get(0).getTarjeta());
+        Assertions.assertEquals(heladeraMockOrigen.getIdHeladera(),repoApretura.obtenerAperturasFehacientes().get(0).getHeladera().getIdHeladera());
+        Assertions.assertEquals(tarjetaColaboradorMock.getIdTarjeta(),repoApretura.obtenerAperturasFehacientes().get(0).getTarjeta().getIdTarjeta());
 
-        Assertions.assertEquals(heladeraMockDestino,repoApretura.obtenerAperturasFehacientes().get(1).getHeladera());
-        Assertions.assertEquals(tarjetaColaboradorMock,repoApretura.obtenerAperturasFehacientes().get(1).getTarjeta());
+        Assertions.assertEquals(heladeraMockDestino.getIdHeladera(),repoApretura.obtenerAperturasFehacientes().get(1).getHeladera().getIdHeladera());
+        Assertions.assertEquals(tarjetaColaboradorMock.getIdTarjeta(),repoApretura.obtenerAperturasFehacientes().get(1).getTarjeta().getIdTarjeta());
     }
 
     @Test

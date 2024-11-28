@@ -13,6 +13,7 @@ import org.example.personas.roles.Tecnico;
 import org.example.recomendacion.Zona;
 import org.example.reportes.itemsReportes.ItemReporte;
 import org.example.reportes.itemsReportes.ItemReporteViandasDistribuidasPorColaborador;
+import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoPersona;
 
 import org.junit.jupiter.api.Assertions;
@@ -57,6 +58,8 @@ public class RepoPersonaTests {
         Colaborador rolColaborador1 = (Colaborador) colaborador1.getRol();
         Heladera heladeraRandom = new Heladera();
 
+        RepoHeladeras.getInstancia().agregar(heladeraRandom);
+
         rolColaborador1.agregarContribucion(new DonacionDeViandas(heladeraRandom, rolColaborador1, List.of(new Vianda(), new Vianda(), new Vianda()), inicioSemana.plusDays(2).toLocalDate())); // miercoles
         rolColaborador1.agregarContribucion(new DonacionDeViandas(heladeraRandom, rolColaborador1, List.of(new Vianda(), new Vianda()),inicioSemana.plusDays(3).toLocalDate())); // jueves
         rolColaborador1.agregarContribucion(new DonacionDeViandas(heladeraRandom, rolColaborador1, List.of(new Vianda(), new Vianda()), inicioSemana.minusDays(1).toLocalDate())); // domingo de la anterior semana
@@ -75,14 +78,15 @@ public class RepoPersonaTests {
 
         for (ItemReporte item : reporte) {
             ItemReporteViandasDistribuidasPorColaborador itemReporteViandasDistribuidasPorColaborador = (ItemReporteViandasDistribuidasPorColaborador) item;
-            if (itemReporteViandasDistribuidasPorColaborador.getColaborador().equals(colaborador1)) {
+            if (itemReporteViandasDistribuidasPorColaborador.getColaborador().getIdPersona() == (colaborador1.getIdPersona())) {
                 Assertions.assertEquals(5, itemReporteViandasDistribuidasPorColaborador.getViandasDistribuidas().size(), "Colaborador 1 debe tener 5 viandas donadas en la semana");
-            } else if (itemReporteViandasDistribuidasPorColaborador.getColaborador().equals(colaborador2)) {
+            } else if (itemReporteViandasDistribuidasPorColaborador.getColaborador().getIdPersona() == (colaborador2.getIdPersona())) {
                 Assertions.assertEquals(7, itemReporteViandasDistribuidasPorColaborador.getViandasDistribuidas().size(), "Colaborador 2 debe tener 7 viandas donadas en la semana");
             } else {
                 Assertions.fail("Colaborador no esperado en el reporte");
             }
         }
+
 
     }
 
@@ -117,7 +121,7 @@ public class RepoPersonaTests {
         //llamo al metodo para probarlo
         Optional<Persona> tecnicoMasCercanoOp = repoPersona.tecnicoMasCercanoAHeladera(heladeraEnBuenosAires);
 
-       Assertions.assertEquals(tecnico1, tecnicoMasCercanoOp.get());
+       Assertions.assertEquals(tecnico1.getIdPersona(), tecnicoMasCercanoOp.get().getIdPersona());
     }
     @Test
     public void testSiNingunTecnicoCubreLaZonaDevuelveNull(){
@@ -182,8 +186,22 @@ public class RepoPersonaTests {
         List<PersonaHumana> personas = repoPersona.obtenerPersonasEnSituacionVulnerable();
 
         Assertions.assertEquals(2, personas.size());
-        Assertions.assertTrue(personas.contains(persona1));
-        Assertions.assertTrue(personas.contains(persona2));
+        Assertions.assertTrue(personas.stream().anyMatch(personaHumana -> personaHumana.getIdPersona() == persona1.getIdPersona()));
+        Assertions.assertTrue(personas.stream().anyMatch(personaHumana -> personaHumana.getIdPersona() == persona2.getIdPersona()));
+    }
+
+    @Test
+    public void testBuscarPersonasConRol(){
+        repoPersona.clean();
+        PersonaHumana p = new PersonaHumana();
+        p.setNombre("Franco");
+        p.setApellido("Callero");
+        Colaborador rol = new Colaborador();
+        rol.setPuntuaje(100);
+        p.setRol(rol);
+        repoPersona.agregar(p);
+        List<Persona> personas = repoPersona.buscarPersonasConRol(Colaborador.class);
+        Assertions.assertEquals(1, personas.size());
     }
 
 }

@@ -8,6 +8,7 @@ import org.example.recomendacion.Zona;
 import org.example.repositorios.RepositorioVisitasTecnicos;
 
 import javax.mail.MessagingException;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -21,7 +22,7 @@ import java.util.List;
 public class Tecnico extends Rol {
     private String apellido;
     private String cuil;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name="id_rol_tecnico")
     private List<Zona> areasDeCobertura;
 

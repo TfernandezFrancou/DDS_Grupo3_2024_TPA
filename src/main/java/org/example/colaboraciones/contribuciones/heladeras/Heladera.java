@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -79,7 +80,6 @@ public class Heladera {
         this.publisherDesperfecto = new PublisherDesperfecto();
         this.publisherViandasFaltantes = new PublisherViandasFaltantes();
         this.publisherViandasDisponibles = new PublisherViandasDisponibles();
-        this.colaboradoresAutorizados = new ArrayList<>();
     }
 
     public Heladera(String nombre, Ubicacion ubicacion, Direccion direccion, Integer capacidadEnViandas) {
@@ -162,6 +162,6 @@ public class Heladera {
 
     public boolean puedeAbrirHeladera(Persona personaColaborador){
         return this.colaboradoresAutorizados.stream()
-                .anyMatch(persona -> persona.equals(personaColaborador));
+                .anyMatch(persona -> persona.getIdPersona()==(personaColaborador.getIdPersona()));
     }
 }

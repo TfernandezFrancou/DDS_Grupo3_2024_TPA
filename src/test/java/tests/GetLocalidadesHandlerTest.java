@@ -8,7 +8,9 @@ import org.example.colaboraciones.contribuciones.heladeras.Uso;
 import org.example.personas.PersonaHumana;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.personas.roles.PersonaEnSituacionVulnerable;
+import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoPersona;
+import org.example.repositorios.RepoTarjetas;
 import org.example.tarjetas.TarjetaHeladera;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +36,8 @@ public class GetLocalidadesHandlerTest {
         MockitoAnnotations.openMocks(this);
         this.repoPersona  = RepoPersona.getInstancia();
         repoPersona.clean();
+        RepoTarjetas.getInstancia().clean();
+        RepoHeladeras.getInstancia().clean();
     }
 
     @Test
@@ -52,10 +56,13 @@ public class GetLocalidadesHandlerTest {
         Heladera heladeraMock2 = new Heladera();
         heladeraMock2.setDireccion(new Direccion("Medrano", "123","San Telmo"));
 
+        RepoHeladeras.getInstancia().agregarTodas(List.of(heladeraMock, heladeraMock2));
+
         Uso uso1 = new Uso(LocalDateTime.now(), heladeraMock);
         Uso uso2 = new Uso(LocalDateTime.now().minusDays(1), heladeraMock2);
         Uso uso3 = new Uso(LocalDateTime.now(), heladeraMock);
         tarjetaHeladera.setUsos(List.of(uso1, uso2, uso3));
+        RepoTarjetas.getInstancia().agregar(tarjetaHeladera);
         rolPersonaEnSituacionVulnerable.setTarjetaHeladera(tarjetaHeladera);
 
         persona1.setRol(rolPersonaEnSituacionVulnerable);

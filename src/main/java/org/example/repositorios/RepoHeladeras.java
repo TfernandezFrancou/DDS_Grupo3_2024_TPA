@@ -41,14 +41,20 @@ public class RepoHeladeras {
     }
 
     public void clean(){
+
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();
-        em.createQuery("delete from MovimientoViandas").executeUpdate();
-        em.createQuery("delete from Incidente").executeUpdate();
-        em.createQuery("delete from Heladera").executeUpdate();
-        //em.createQuery("delete from Ubicacion").executeUpdate();
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
+        em.createNativeQuery("DELETE FROM MovimientoViandasXVianda_sacadas").executeUpdate();
+        em.createNativeQuery("DELETE FROM MovimientoViandasXVianda_introducidas").executeUpdate();
+        em.createNativeQuery("DELETE FROM Vianda").executeUpdate();
+        em.createNativeQuery("DELETE FROM MovimientoViandas").executeUpdate();
+        em.createNativeQuery("DELETE FROM Incidente").executeUpdate();
+        em.createNativeQuery("DELETE FROM Heladera").executeUpdate();
+        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
         em.getTransaction().commit();
-        //this.heladeras.clear();
+
+
     }
 
     public void agregarTodas(List<Heladera> heladeras) {
@@ -121,8 +127,9 @@ public class RepoHeladeras {
 
         EntityManager em = BDUtils.getEntityManager();
 
-        List<Heladera> heladeras1 = em.createQuery("FROM Heladera WHERE nombre=:nombre", Heladera.class)
-                    .setParameter("nombre", heladeraAEncontrar.getNombre()).getResultList();
+        List<Heladera> heladeras1 = em.createQuery("FROM Heladera WHERE idHeladera=:idHeladera", Heladera.class)
+                    .setParameter("idHeladera", heladeraAEncontrar.getIdHeladera())
+                .getResultList();
 
         return heladeras1.stream().findFirst().get();
     }

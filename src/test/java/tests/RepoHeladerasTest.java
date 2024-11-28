@@ -46,7 +46,6 @@ public class RepoHeladerasTest {
 
         // crear historial de movimientos de cada heladera
 
-
         heladera1.setHistorialMovimientos(List.of(
                 new MovimientoViandas(List.of(new Vianda(), new Vianda(), new Vianda()),List.of(),inicioSemana.plusDays(1)),// Martes
                 new MovimientoViandas(List.of(new Vianda(), new Vianda()),List.of(new Vianda(), new Vianda(), new Vianda()),inicioSemana.plusDays(2)),// Miércoles
@@ -81,12 +80,14 @@ public class RepoHeladerasTest {
 
     @Test
     public void testObtenerCantidadDeViandasRetiradasPorHeladeraDeLaSemana(){
+        //repoHeladeras.clean();
         // crear historial de movimientos de cada heladera
 
         heladera1.setHistorialMovimientos(List.of(
                 new MovimientoViandas(List.of(new Vianda(), new Vianda(), new Vianda()),List.of(),inicioSemana.plusDays(1)),// Martes
-                new MovimientoViandas(List.of(new Vianda(), new Vianda()),List.of(new Vianda(), new Vianda(), new Vianda()),inicioSemana.plusDays(2)),// Miércoles
-                new MovimientoViandas(List.of(new Vianda()),List.of(new Vianda()),inicioSemana.minusDays(1))// Domingo anterior
+                new MovimientoViandas(List.of(new Vianda(), new Vianda()),List.of(new Vianda("vianda 1 retirada",12,33),
+                        new Vianda("vianda 2 retirada",21,66), new Vianda("vianda 3 retirada",41,55)),inicioSemana.plusDays(2)),// Miércoles
+                new MovimientoViandas(List.of(new Vianda()),List.of(new Vianda("vianda x retirada", 55, 100)),inicioSemana.minusDays(1))// Domingo anterior
         ));
 
         heladera2.setHistorialMovimientos(List.of(
@@ -116,6 +117,7 @@ public class RepoHeladerasTest {
 
     @Test
     public void testBuscarHeladerasCercanasA(){
+       // repoHeladeras.clean();
 
         //creo heladeras cernacas a 10 km y heladeras no cercanas para el test
         Heladera heladera1 = new Heladera();
@@ -151,7 +153,7 @@ public class RepoHeladerasTest {
 
     @Test
     public void testSiLaDistanciaMaxiaEntreHeladerasEsCeroNoVaAVerNingunaHeladeraCercana(){
-
+       // repoHeladeras.clean();
         //creo heladeras cernacas a 10 km y heladeras no cercanas para el test
         Heladera heladera1 = new Heladera();
         heladera1.setUbicacion(new Ubicacion(-34.609722F, -58.382592F) );// Cerca de Buenos Aires

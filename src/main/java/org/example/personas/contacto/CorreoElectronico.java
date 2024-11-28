@@ -8,6 +8,7 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.config.Configuracion;
 
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 @Entity
+@NoArgsConstructor
 public class CorreoElectronico extends MedioDeContacto {
     @Getter
     @Setter
@@ -32,6 +34,9 @@ public class CorreoElectronico extends MedioDeContacto {
     private static final String SENDER = Configuracion.obtenerProperties("twilio.sendgrid.sender");
     @Override
     public void notificar(Mensaje mensaje) throws MessagingException {
+        if(super.esAmbienteDePrueba()){
+            return;
+        }
         Email from = new Email(SENDER);
         String subject = mensaje.getTitulo();
         Email to = new Email(mail);

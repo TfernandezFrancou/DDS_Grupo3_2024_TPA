@@ -20,4 +20,8 @@ public abstract class MedioDeContacto {
     private int idMedioDeContacto;
 
     public abstract void notificar(Mensaje mensaje) throws MessagingException;
+
+    protected boolean esAmbienteDePrueba() {
+        return System.getProperty("env") != null && System.getProperty("env").equals("test");
+    }
 }

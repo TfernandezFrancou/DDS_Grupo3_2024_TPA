@@ -1,6 +1,7 @@
 package org.example.personas.contacto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.autenticacion.Usuario;
 import org.example.personas.Persona;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class Mensaje {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
