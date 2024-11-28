@@ -5,12 +5,14 @@ import lombok.NoArgsConstructor;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
+import org.example.personas.roles.Colaborador;
 import org.example.repositorios.RepoHeladeras;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +29,15 @@ public class HacerseCargoDeUnaHeladera extends Contribucion {
 
     public HacerseCargoDeUnaHeladera(){
         this.tiposDePersona = Set.of(TipoDePersona.JURIDICA, TipoDePersona.HUMANA);
+        this.setFecha(LocalDate.now());
         this.heladerasColocadas = new ArrayList<>();
+    }
+
+    public HacerseCargoDeUnaHeladera(Colaborador colaborador, List<Heladera> heladerasColocadas){
+        this.colaborador = colaborador;
+        this.tiposDePersona = Set.of(TipoDePersona.JURIDICA, TipoDePersona.HUMANA);
+        this.setFecha(LocalDate.now());
+        this.heladerasColocadas = heladerasColocadas;
     }
 
     @Override

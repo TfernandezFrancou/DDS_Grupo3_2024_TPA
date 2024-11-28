@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
+import org.example.personas.roles.Colaborador;
 
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -23,6 +24,13 @@ public class DonacionDeDinero extends Contribucion {
     public DonacionDeDinero(LocalDate fecha, Integer cantidad) {
         this.tiposDePersona = Set.of(TipoDePersona.HUMANA, TipoDePersona.JURIDICA);
         this.setFecha(fecha);
+        this.monto = cantidad;
+    }
+
+    public DonacionDeDinero(Colaborador colaborador, LocalDate fecha, Integer cantidad) {
+        this.tiposDePersona = Set.of(TipoDePersona.HUMANA, TipoDePersona.JURIDICA);
+        this.setFecha(fecha);
+        this.colaborador = colaborador;
         this.monto = cantidad;
     }
 

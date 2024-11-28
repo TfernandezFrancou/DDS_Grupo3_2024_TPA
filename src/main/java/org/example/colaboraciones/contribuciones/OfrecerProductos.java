@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +25,7 @@ public class OfrecerProductos extends Contribucion {
 
     public OfrecerProductos(){
         this.tiposDePersona = Set.of(TipoDePersona.JURIDICA);
+        this.setFecha(LocalDate.now());
         this.ofertas = new ArrayList<>();
     }
 

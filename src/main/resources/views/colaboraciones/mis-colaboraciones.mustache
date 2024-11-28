@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/mis-colaboraciones.css">
+    <link rel="stylesheet" href="/styles/navegacion.css">
+    <link rel="icon" type="image/x-icon" href="/views/imagenes/favicon.ico">
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo-container">
+            <img src="/views/imagenes/logo.png" alt="Logo" class="logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/colaboraciones" class="menu-select">Mis colaboraciones</a></li>
+                <li><a href="/heladeras/registrar">Registrar heladera</a></li>
+                <li><a href="/heladeras">Heladeras</a></li>
+                <li><a href="/puntos">Puntos</a></li>
+                <li><a href="/donar-vianda">Donar viandas</a></li>
+                <li><a href="/reportes">Reportes</a></li>
+                <li><a href="/registrar-persona-vulnerable">Registrar persona</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="actions">
+            <a href="/carga-csv">Cargar CSV</a>
+            <button>Colaborar</button>
+        </section>
+
+        <div class="container row mt-4">
+            {{#colaboraciones}}
+                {{#DonacionDeDinero}}
+                    <div class="col-md-4">
+                        <div class="card mb-4 rounded-3 shadow-sm">
+                            <div class="card-body">
+                                <div class="icon">💰</div>
+                                <h3>Donar Dinero</h3>
+                                <p>Fecha: {{fechaFormateada}}</p>
+                                <p>Monto: ${{monto}}</p>
+                                <p>Frecuencia: {{frecuencia}}</p>
+                            </div>
+                        </div>
+                    </div>
+                {{/DonacionDeDinero}}
+                {{#DonacionDeViandas}}
+                    <div class="col-md-4">
+                        <div class="card mb-4 rounded-3 shadow-sm">
+                            <div class="card-body">
+                                <div class="icon">🍽️</div>
+                                <h3>Donar Viandas</h3>
+                                <p>Fecha: {{fechaFormateada}}</p>
+                                <!-- <p>Tipo: ...</p> -->
+                                <!-- <p>Calorías: -</p> -->
+                                <p>Cantidad: {{cantidadDeViandas}}</p>
+                                <p>Heladera: {{heladera.nombre}}</p>
+                                <!-- <p>Estado: Entregada</p> -->
+                            </div>
+                        </div>
+                    </div>
+                {{/DonacionDeViandas}}
+                {{#DistribucionDeViandas}}
+                    <div class="col-md-4">
+                        <div class="card mb-4 rounded-3 shadow-sm">
+                            <div class="card-body">
+                                <div class="icon">📦</div>
+                                <h3>Distribuir Vianda</h3>
+                                <p>Fecha: {{fechaFormateada}}</p>
+                                <p>Origen: {{origen.nombre}}</p>
+                                <p>Destino: {{destino.nombre}}</p>
+                                <p>Cantidad: {{cantidad}}</p>
+                                <p>Motivo: {{motivo}}</p>
+                            </div>
+                        </div>
+                    </div>
+                {{/DistribucionDeViandas}}
+                {{#HacerseCargoDeUnaHeladera}}
+                    <div class="col-md-4">
+                        <div class="card mb-4 rounded-3 shadow-sm">
+                            <div class="card-body">
+                                <div class="icon">🧊</div>
+                                <h3>Hacerse Cargo De Una Heladera</h3>
+                                <p>Fecha: {{fechaFormateada}}</p>
+                                <p>Heladeras:</p>
+                                {{#heladerasColocadas}}
+                                    <span>{{nombre}}</span>
+                                {{/heladerasColocadas}}
+                            </div>
+                        </div>
+                    </div>
+                {{/HacerseCargoDeUnaHeladera}}
+                {{#OfrecerProductos}}
+                {{/OfrecerProductos}}
+                {{#RegistrarPersonasEnSituacionVulnerable}}
+                {{/RegistrarPersonasEnSituacionVulnerable}}
+            {{/colaboraciones}}
+        </div>
+    </div>
+</div>
+</body>
+</html>

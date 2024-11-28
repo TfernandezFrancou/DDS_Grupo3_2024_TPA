@@ -46,6 +46,7 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
         this.personasRegistradas = new ArrayList<>();
         this.tarjetasAEntregar = tarjetasAEntregar;
         this.tiposDePersona = Set.of(TipoDePersona.HUMANA);
+        this.setFecha(LocalDate.now());
         this.enviarTarjetasViaMail();
     }
 
@@ -53,6 +54,7 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
         this.personasRegistradas = new ArrayList<>();
         this.tarjetasAEntregar = new ArrayList<>();
         this.tiposDePersona = Set.of(TipoDePersona.HUMANA);
+        this.setFecha(LocalDate.now());
     }
 
     @Override

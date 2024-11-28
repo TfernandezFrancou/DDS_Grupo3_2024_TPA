@@ -10,6 +10,7 @@ import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.config.Configuracion;
 import org.example.excepciones.LimiteDeTiempoSuperado;
 import org.example.excepciones.SolicitudInexistente;
+import org.example.personas.roles.Colaborador;
 import org.example.repositorios.RepoApertura;
 import org.example.tarjetas.Apertura;
 import org.example.tarjetas.TipoDeApertura;
@@ -54,6 +55,16 @@ public class DistribucionDeViandas extends Contribucion {
         this.viandas = viandas;
     }
 
+    public DistribucionDeViandas(Colaborador colaborador, Heladera origen, Heladera destino, List<Vianda> viandas, String motivo) {
+        this.tiposDePersona = Set.of(TipoDePersona.HUMANA);
+        this.setFecha(LocalDate.now());
+        this.colaborador = colaborador;
+        this.origen = origen;
+        this.destino = destino;
+        this.motivo = motivo;
+        this.viandas = viandas;
+        this.cantidad = viandas.size();
+    }
 
     @Override
     public void ejecutarContribucion() throws Exception {
