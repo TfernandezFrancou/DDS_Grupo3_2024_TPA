@@ -58,6 +58,11 @@ public class Application {
                 get("", DonarViandasController::getDonarVianda);
             });
 
+            path("registrar-persona-vulnerable",()->{
+                post("", RegistrarPersonaVulnerableController::postRegistrarPersonaVulnerable);
+                get("", RegistrarPersonaVulnerableController::getRegistrarPersonaVulnerable);
+            });
+
         });
 
         EntityManager em = BDUtils.getEntityManager();
