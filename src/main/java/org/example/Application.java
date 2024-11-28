@@ -3,6 +3,8 @@ package org.example;
 import io.javalin.Javalin;
 import org.example.Presentacion.*;
 import org.example.autenticacion.SessionManager;
+import org.example.colaboraciones.contribuciones.ofertas.Oferta;
+import org.example.repositorios.RepoOfertas;
 import org.example.utils.BDUtils;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
@@ -42,6 +44,15 @@ public class Application {
 //        colaborador.agregarContribucion(new DistribucionDeViandas(colaborador, origen, destino, List.of(), "Motivo de distribucion"));
 //        colaborador.agregarContribucion(new HacerseCargoDeUnaHeladera(colaborador, List.of(origen)));
 //        colaborador.agregarContribucion(new DonacionDeDinero(colaborador, LocalDate.now(), 201));
+//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Bicicleta", 300, "/views/imagenes/bici.png"));
+//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Smart TV Marca XJSDJ", 300, "/views/imagenes/tv.ppng.webp"));
+//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Bicicleta", 300, "/views/imagenes/bici.png"));
+//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Bicicleta", 300, "/views/imagenes/bici.png"));
+//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Smart TV Marca XJSDJ", 300, "/views/imagenes/tv.ppng.webp"));
+//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Bicicleta", 300, "/views/imagenes/bici.png"));
+//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Bicicleta", 300, "/views/imagenes/bici.png"));
+//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Smart TV Marca XJSDJ", 300, "/views/imagenes/tv.ppng.webp"));
+//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Bicicleta", 300, "/views/imagenes/bici.png"));
 
         app.get("/api/localidades", new GetLocalidadesHandler());
         app.get("/alertas/{nombre}", new AlertasHandler());
@@ -81,6 +92,14 @@ public class Application {
 
             path("colaboraciones", () -> {
                 get("", ColaboracionesController::getColaboraciones);
+            });
+
+            path("puntos", () -> {
+                get("", OfertasController::getOfertas);
+            });
+
+            path("ofrecer-producto", () -> {
+                get("", OfertasController::getOfrecerProducto);
             });
         });
 

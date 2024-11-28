@@ -112,18 +112,28 @@ public class RepoPersona {
     }
 
     public Persona buscarPorNombre(String nombre) {
-
         EntityManager em = BDUtils.getEntityManager();
         PersonaHumana persona =
                 em.createQuery("SELECT p FROM PersonaHumana p WHERE p.nombre=:nombre", PersonaHumana.class)
                         .setParameter("nombre", nombre)
                         .getSingleResult();
-        if(persona == null)
-            throw new PersonaInexistenteException("No existe la persona con nombre "+nombre);
-
+        if (persona == null) {
+            throw new PersonaInexistenteException("No existe la persona con nombre " + nombre);
+        }
         return persona;
     }
 
+    public Persona buscarPorId(int idPersona) {
+        EntityManager em = BDUtils.getEntityManager();
+        PersonaHumana persona =
+                em.createQuery("SELECT p FROM PersonaHumana p WHERE p.idPersona=:id", PersonaHumana.class)
+                        .setParameter("id", idPersona)
+                        .getSingleResult();
+        if(persona == null) {
+            throw new PersonaInexistenteException("No existe la persona con id " + idPersona);
+        }
+        return persona;
+    }
 
     public List<Persona> buscarPersonasConRol(Class<?> rol) {
         EntityManager em = BDUtils.getEntityManager();

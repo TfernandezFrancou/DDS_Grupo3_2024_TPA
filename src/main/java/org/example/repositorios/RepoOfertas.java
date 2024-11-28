@@ -1,7 +1,10 @@
 package org.example.repositorios;
 
+import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
+import org.example.utils.BDUtils;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +25,10 @@ public class RepoOfertas { //TODO conectar con DB
     }
 
     public void agregarOferta(Oferta oferta) {
-        this.ofertas.add(oferta);
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.persist(oferta);
+        em.getTransaction().commit();
     }
 
     public void agregarTodas(List<Oferta> ofertas) {
@@ -31,5 +37,12 @@ public class RepoOfertas { //TODO conectar con DB
 
     public void eliminarOferta(Oferta oferta) {
         this.ofertas.remove(oferta);
+    }
+
+    public List<Oferta> obtenerTodas() {
+        return BDUtils
+                .getEntityManager()
+                .createQuery("from Oferta", Oferta.class)
+                .getResultList();
     }
 }

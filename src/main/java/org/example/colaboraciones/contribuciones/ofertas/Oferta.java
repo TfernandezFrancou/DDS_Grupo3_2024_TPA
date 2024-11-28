@@ -19,4 +19,12 @@ public class Oferta {
 
     @Column(columnDefinition = "TEXT")//ya que puede ser valores muy largos que en un varchar no entra
     private String imagenURL;
+
+    public Oferta() {}
+
+    public Oferta(String nombre, Integer puntosNecesarios, String imagenURL) {
+        this.nombre = nombre;
+        this.puntosNecesarios = puntosNecesarios;
+        this.imagenURL = imagenURL;
+    }
 }
