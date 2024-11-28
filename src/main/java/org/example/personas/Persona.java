@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.autenticacion.Usuario;
 import org.example.excepciones.UserException;
+import org.example.migracion.TipoColaboracion;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.personas.contacto.MedioDeContacto;
@@ -27,7 +28,7 @@ public abstract class Persona {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idPersona;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     protected Direccion direccion;
     @OneToOne(cascade = CascadeType.PERSIST)
     protected Rol rol;
@@ -37,8 +38,17 @@ public abstract class Persona {
     @JoinColumn(name ="id_persona")
     protected List<MedioDeContacto> mediosDeContacto;
 
+    @Enumerated(value = EnumType.STRING)
+    @ElementCollection(targetClass = TipoContribucion.class)
+    @CollectionTable(
+            name = "persona_tipo_contribucion",
+            joinColumns = @JoinColumn(name = "idPersona")
+    )
+    protected List<TipoContribucion> contribucionesQuePuedeHacer;
+
     public Persona(){
         this.mediosDeContacto = new ArrayList<>();
+        this.contribucionesQuePuedeHacer = new ArrayList<>();
     }
 
     public void addMedioDeContacto(MedioDeContacto medioDeContacto){
@@ -46,6 +56,10 @@ public abstract class Persona {
     }
 
     abstract public String getNombre();
+
+    public void addContribucionesQuePuedeHacer(TipoContribucion contribucion){
+        this.contribucionesQuePuedeHacer.add(contribucion);
+    }
 
     public CorreoElectronico getEmail() {
         for (MedioDeContacto medioDeContacto: this.mediosDeContacto) {

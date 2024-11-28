@@ -46,7 +46,7 @@ public class RepoUsuariosTest {
 
         repoUsuario.agregarUsuarios(usuario);
 
-        Usuario user = repoUsuario.obtenerUsuarioPorNombreDeUsuarioYContrasenia("franco","1234");
+        Usuario user = repoUsuario.obtenerUsuarioPorNombreDeUsuario("franco");
         Assertions.assertEquals(usuario.getIdUsuario(),user.getIdUsuario());
     }
 

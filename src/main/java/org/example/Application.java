@@ -2,28 +2,11 @@ package org.example;
 
 import io.javalin.Javalin;
 import org.example.Presentacion.*;
-import org.example.colaboraciones.Ubicacion;
-import org.example.colaboraciones.contribuciones.DistribucionDeViandas;
-import org.example.colaboraciones.contribuciones.DonacionDeDinero;
-import org.example.colaboraciones.contribuciones.DonacionDeViandas;
-import org.example.colaboraciones.contribuciones.HacerseCargoDeUnaHeladera;
-import org.example.colaboraciones.contribuciones.heladeras.Direccion;
-import org.example.colaboraciones.contribuciones.heladeras.Heladera;
-import org.example.personas.PersonaHumana;
-import org.example.personas.contacto.CorreoElectronico;
-import org.example.personas.contacto.MedioDeContacto;
-import org.example.personas.documentos.Documento;
-import org.example.personas.documentos.TipoDocumento;
-import org.example.personas.roles.Colaborador;
-import org.example.personas.roles.Rol;
-import org.example.repositorios.RepoHeladeras;
-import org.example.repositorios.RepoPersona;
+import org.example.autenticacion.SessionManager;
 import org.example.utils.BDUtils;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class Application {
@@ -78,6 +61,7 @@ public class Application {
                 post("inicio-session", UsuarioController::postInicioSeccion);
                 post("registrarse", UsuarioController::postRegistrarse);
                 get("registrarse", UsuarioController::getRegistrarUsuario);
+                get("InicioSession", UsuarioController::getInicioSession);
             });
 
             path("carga-csv", () -> {
@@ -100,6 +84,16 @@ public class Application {
             });
         });
 
+        List<String> rutasSinSesion = List.of("/usuarios", "/api/localidades", "/views/imagenes", "/styles");
+        app.before(ctx -> {
+            for(String ruta: rutasSinSesion){
+                if(ctx.path().startsWith(ruta)) return;
+            }
+           if (SessionManager.getInstancia().obtenerAtributo("usuario") == null) {//si no inicio sección
+             //TODO comento esto para que no tengan que iniciar seccion mientras hacen las vistas
+               // ctx.redirect("/usuarios/InicioSession"); // Redirigir al login si es necesario
+           }
+        });
         EntityManager em = BDUtils.getEntityManager();
     }
 }

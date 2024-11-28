@@ -14,10 +14,8 @@ import java.util.Optional;
 
 public class RepoUsuario {
   private static RepoUsuario instancia = null;
-  private List<Usuario> usuarios;
 
   private RepoUsuario() {
-    this.usuarios = new ArrayList<>();
   }
 
   public static RepoUsuario getInstancia() {
@@ -30,8 +28,6 @@ public class RepoUsuario {
   public void agregarUsuarios(Usuario usuarioNuevo) {
     EntityManager em = BDUtils.getEntityManager();
     em.getTransaction().begin();
-
-
     em.persist(usuarioNuevo);
     em.getTransaction().commit();
   }
@@ -47,33 +43,39 @@ public class RepoUsuario {
 
   public Usuario obtenerUsuarioPorDocumento(Documento documento) throws  UserException{
     EntityManager em = BDUtils.getEntityManager();
+    try{
+      List<Usuario> usuarios1 = em.createQuery(
+                      "SELECT u FROM Usuario u JOIN u.documento d WHERE d.numeroDocumento = :numeroDocumento", Usuario.class)
+              .setParameter("numeroDocumento", documento.getNumeroDocumento())
+              .getResultList();
 
-    List<Usuario> usuarios1 = em.createQuery(
-                    "SELECT u FROM Usuario u JOIN u.documento d WHERE d.numeroDocumento = :numeroDocumento", Usuario.class)
-            .setParameter("numeroDocumento", documento.getNumeroDocumento())
-            .getResultList();
+      if(usuarios1.isEmpty()){
+        throw new UserException(Configuracion.obtenerProperties("mensaje.repositorio.Usuarios.no-encontrado-documento")
+                .replace("{documento}", documento.getNumeroDocumento()));
+      }
 
-    if(usuarios1.isEmpty()){
-      throw new UserException(Configuracion.obtenerProperties("mensaje.repositorio.Usuarios.no-encontrado"));
+      return usuarios1.get(0);
+    } catch ( Exception ex){
+      throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-seccion.error-documento")
+              .replace("{doc}", documento.getNumeroDocumento()));
     }
-
-    return usuarios1.get(0);
   }
 
-  public Usuario obtenerUsuarioPorNombreDeUsuarioYContrasenia(String nombreUsuario, String contrasenia){
+  public Usuario obtenerUsuarioPorNombreDeUsuario(String nombreUsuario){
     EntityManager em = BDUtils.getEntityManager();
-
-    List<Usuario> usuarios1 = em.createQuery(
-                    "SELECT u FROM Usuario u WHERE u.nombreDeUsuario=:nombreDeUsuario AND u.contrasenia=:contrasenia ", Usuario.class)
-            .setParameter("nombreDeUsuario", nombreUsuario)
-            .setParameter("contrasenia", contrasenia)
-            .getResultList();
-
-    if(usuarios1.isEmpty()){
-      throw new UserException(Configuracion.obtenerProperties("mensaje.repositorio.Usuarios.no-encontrado"));
+    try{
+      List<Usuario> usuarios1 = em.createQuery(
+                      "SELECT u FROM Usuario u WHERE u.nombreDeUsuario=:nombreDeUsuario", Usuario.class)
+              .setParameter("nombreDeUsuario", nombreUsuario)
+              .getResultList();
+      if(usuarios1.isEmpty()){
+        throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-seccion.nombre-usuario-incorrecto"));
+      }
+      return usuarios1.get(0);
+    }catch (Exception exception){
+      throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-seccion.error")
+              .replace("{username}", nombreUsuario));
     }
-
-    return usuarios1.get(0);
   }
 
   public void clean(){

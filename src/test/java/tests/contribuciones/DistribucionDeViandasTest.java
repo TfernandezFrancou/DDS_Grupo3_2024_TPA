@@ -27,10 +27,6 @@ import static org.mockito.Mockito.when;
 public class DistribucionDeViandasTest {
 
 
-    @Mock
-    private Vianda vianda1;
-
-    @Mock
     private Vianda vianda2;
 
     private Colaborador colaboradorMock;
@@ -54,7 +50,6 @@ public class DistribucionDeViandasTest {
 
     @BeforeEach
     public void setUp(){
-        MockitoAnnotations.openMocks(this);//crea los mocks
         RepoApertura.getInstancia().clean();
         RepoContribucion.getInstancia().clean();
         RepoPersona repoPersona = RepoPersona.getInstancia();
