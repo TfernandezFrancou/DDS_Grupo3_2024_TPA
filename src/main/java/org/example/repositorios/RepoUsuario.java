@@ -14,10 +14,8 @@ import java.util.Optional;
 
 public class RepoUsuario {
   private static RepoUsuario instancia = null;
-  private List<Usuario> usuarios;
 
   private RepoUsuario() {
-    this.usuarios = new ArrayList<>();
   }
 
   public static RepoUsuario getInstancia() {
@@ -30,8 +28,6 @@ public class RepoUsuario {
   public void agregarUsuarios(Usuario usuarioNuevo) {
     EntityManager em = BDUtils.getEntityManager();
     em.getTransaction().begin();
-
-
     em.persist(usuarioNuevo);
     em.getTransaction().commit();
   }

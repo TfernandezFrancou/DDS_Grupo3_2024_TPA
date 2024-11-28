@@ -129,23 +129,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const tipoContacto = document.getElementById("tipoContacto");
     const contactoInput = document.getElementById("contacto");
 
-    tipoContacto.addEventListener("change", function () {
-        const selectedValue = tipoContacto.value;
+    function actualizarPlaceHolderContactoSegun(tipoContacto, contactoInput) {
+        return function(){
+            const selectedValue = tipoContacto.value;
 
-        switch (selectedValue) {
-            case "email":
-                contactoInput.placeholder = "ejemplo@correo.com";
-                break;
-            case "telefono":
-                contactoInput.placeholder = "123-456-7890";
-                break;
-            case "whatsapp":
-                contactoInput.placeholder = "+12 345 678 910";
-                break;
-            default:
-                contactoInput.placeholder = "Introduce tu contacto";
+            switch (selectedValue) {
+                case "email":
+                    contactoInput.placeholder = "ejemplo@correo.com";
+                    break;
+                case "telefono":
+                    contactoInput.placeholder = "123-456-7890";
+                    break;
+                case "whatsapp":
+                    contactoInput.placeholder = "+12 345 678 910";
+                    break;
+                default:
+                    contactoInput.placeholder = "Introduce tu contacto";
+            }
         }
-    });
+    }
+
+    tipoContacto.addEventListener("change", actualizarPlaceHolderContactoSegun(tipoContacto, contactoInput));
 
     // agregar medios de contacto 
 
@@ -177,6 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const nuevoSelect = document.createElement("select");
         nuevoSelect.classList.add("form-select");
         nuevoSelect.setAttribute("id", "tipoContacto" + counter);
+        nuevoSelect.setAttribute("name", "tipoContacto" /*+ counter*/);
         nuevoSelect.innerHTML = `
             <option value="" disabled selected>Seleccionar</option>
             <option value="email">Email</option>
@@ -189,27 +194,10 @@ document.addEventListener("DOMContentLoaded", function () {
         nuevoInput.type = "text";
         nuevoInput.classList.add("form-control", "rounded-pill");
         nuevoInput.placeholder = "Introduce tu contacto";
+        nuevoInput.setAttribute("name","contacto"/*+ counter*/);
 
         // Agregar el evento 'change' para actualizar el placeholder
-        nuevoSelect.addEventListener("change", function () {
-            const selectedValue = nuevoSelect.value;
-
-            switch (selectedValue) {
-                case "email":
-                    nuevoInput.placeholder = "ejemplo@correo.com";
-                    break;
-                case "telefono":
-                    nuevoInput.placeholder = "123-456-7890";
-                    break;
-                case "whatsapp":
-                    nuevoInput.placeholder = "+12 345 678 910";
-                    break;
-                default:
-                    nuevoInput.placeholder = "Introduce tu contacto";
-            }
-        });
-
-
+        nuevoSelect.addEventListener("change", actualizarPlaceHolderContactoSegun(nuevoSelect,nuevoInput ));
 
         // Agregar los elementos creados al contenedor
         nuevoContactoDiv.appendChild(nuevoSelect);

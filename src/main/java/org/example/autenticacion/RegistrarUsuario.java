@@ -3,6 +3,7 @@ package org.example.autenticacion;
 import org.example.config.Configuracion;
 import org.example.excepciones.EmailYaRegistrado;
 import org.example.excepciones.PasswordException;
+import org.example.excepciones.UserException;
 import org.example.repositorios.RepoUsuario;
 import org.example.validaciones.*;
 
@@ -23,7 +24,10 @@ public class RegistrarUsuario {
     //Le sumo 90 días a la fecha que se registró el usuario
     usuarioNuevo.setFechaExpiracionContrasenia(LocalDateTime.now().plusDays(90));
 
-    this.repoUsuario.agregarUsuarios(usuarioNuevo); // guardamos al usuario en una lista a modo de ejemplo
+    if(this.repoUsuario.existeNombreUsuarioRegistrado(usuario)){
+      throw new UserException(Configuracion.obtenerProperties("mensaje.registrar-usuario.usuario-existente")
+              .replace("{username}", usuario));
+    }
     System.out.println(Configuracion.obtenerProperties("mensaje.registrar-usuario.registro-correcto"));
 
     return usuarioNuevo;

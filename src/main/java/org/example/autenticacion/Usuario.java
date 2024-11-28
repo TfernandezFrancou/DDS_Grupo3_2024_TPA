@@ -27,7 +27,7 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idUsuario;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne
     private Documento documento;
 
     private String nombreDeUsuario;
@@ -49,7 +49,7 @@ public class Usuario {
 
     public Usuario(String nombreDeUsuario, String contrasenia, LocalDateTime fechaExpiracionContrasenia) {
         this.nombreDeUsuario = nombreDeUsuario;
-        this.contrasenia = contrasenia;
+        this.contrasenia = contrasenia;//si es necesario aca se debe hashear la contraseña para mas seguridad
         this.fechaExpiracionContrasenia = fechaExpiracionContrasenia;
     }
 
