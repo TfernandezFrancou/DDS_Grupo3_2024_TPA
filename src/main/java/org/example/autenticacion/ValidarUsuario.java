@@ -1,6 +1,8 @@
 package org.example.autenticacion;
 
 
+import org.example.config.Configuracion;
+import org.example.excepciones.UserException;
 import org.example.repositorios.RepoUsuario;
 
 public class ValidarUsuario {
@@ -21,7 +23,13 @@ public class ValidarUsuario {
     // busca a usuario por usuario y contrasena en la db
     //  en caso de que no este thow exeption
     //  si lo encuentro el usuario en la lista retorno el usuario
-    return RepoUsuario.getInstancia().obtenerUsuarioPorNombreDeUsuarioYContrasenia(nombreDeUsuario, contrasenia);
+    Usuario user = RepoUsuario.getInstancia().obtenerUsuarioPorNombreDeUsuario(nombreDeUsuario);
+
+    if(user.getContrasenia().equals(contrasenia)){
+      return user;
+    } else {
+      return null;
+    }
   }
 
 }

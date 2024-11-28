@@ -5,6 +5,7 @@ import org.example.autenticacion.IniciarSesion;
 import org.example.autenticacion.RegistrarUsuario;
 import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
+import org.example.excepciones.UserException;
 import org.example.personas.*;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.personas.contacto.MedioDeContacto;
@@ -12,7 +13,6 @@ import org.example.personas.contacto.Telefono;
 import org.example.personas.contacto.Whatsapp;
 import org.example.personas.documentos.Documento;
 import org.example.personas.documentos.TipoDocumento;
-import org.example.repositorios.RepoPersona;
 import org.example.repositorios.RepoUsuario;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,10 +26,14 @@ public class UsuarioController  {
         String contraseniaUsuario = context.formParam("password");
 
         IniciarSesion iniciarSesion = new IniciarSesion();
-        if(iniciarSesion.iniciarSesion(nombreDeUsuario, contraseniaUsuario)){
-            context.redirect("/heladeras");
-        }else {
-            context.redirect("/views/usuarios/InicioSesion.html");
+        try{
+            if(iniciarSesion.iniciarSesion(nombreDeUsuario, contraseniaUsuario)){
+                context.redirect("/heladeras");
+            }
+        } catch(UserException e){
+            Map<String, Object> model = new HashMap<>();
+            model.put("error", e.getMessage());
+            context.render("/views/usuarios/InicioSession.mustache",model);
         }
     }
 
@@ -46,7 +50,7 @@ public class UsuarioController  {
             usuario.setDocumento(persona.getDocumento());
 
             RepoUsuario.getInstancia().agregarUsuarios(usuario); // guarda tanto al usuario como a la persona
-            context.redirect("/views/usuarios/InicioSesion.html");
+            context.redirect("/usuarios/InicioSession");
         }catch (Exception exception){
             Map<String, Object> model = new HashMap<>();
             model.put("error", exception.getMessage());
@@ -170,9 +174,12 @@ public class UsuarioController  {
         if(distribuirViandas) persona.addContribucionesQuePuedeHacer(TipoContribucion.REDISTRIBUCION_VIANDAS);
         if(registrarPersonaEnSituacionVulnerable) persona.addContribucionesQuePuedeHacer(TipoContribucion.ENTREGA_TARJETAS);
         if(ofrecerProductos) persona.addContribucionesQuePuedeHacer(TipoContribucion.OFRECER_PRODUCTO);
-
     }
     public static void getRegistrarUsuario(@NotNull Context context){
         context.render("/views/usuarios/Registrarse.mustache");
+    }
+
+    public static void getInicioSession(@NotNull Context context) {
+        context.render("/views/usuarios/InicioSession.mustache");
     }
 }

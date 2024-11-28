@@ -2,10 +2,12 @@ package org.example;
 
 import io.javalin.Javalin;
 import org.example.Presentacion.*;
+import org.example.autenticacion.SessionManager;
 import org.example.utils.BDUtils;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 public class Application {
 
@@ -46,6 +48,7 @@ public class Application {
                 post("inicio-session", UsuarioController::postInicioSeccion);
                 post("registrarse", UsuarioController::postRegistrarse);
                 get("registrarse", UsuarioController::getRegistrarUsuario);
+                get("InicioSession", UsuarioController::getInicioSession);
             });
 
             path("carga-csv", ()->{
@@ -65,6 +68,15 @@ public class Application {
 
         });
 
+        List<String> rutasSinSesion = List.of("/usuarios", "/api/localidades", "/views/imagenes", "/styles");
+        app.before(ctx -> {
+            for(String ruta: rutasSinSesion){
+                if(ctx.path().startsWith(ruta)) return;
+            }
+           if (SessionManager.getInstancia().obtenerAtributo("usuario") == null) {//si no inicio sección
+              ctx.redirect("/usuarios/InicioSession"); // Redirigir al login si es necesario
+           }
+        });
         EntityManager em = BDUtils.getEntityManager();
     }
 }
