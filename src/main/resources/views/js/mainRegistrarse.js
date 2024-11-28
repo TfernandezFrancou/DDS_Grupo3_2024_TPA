@@ -15,10 +15,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Colaboraciones
     const donarVianda = document.getElementById("donarVianda");
+    const donarViandaParent = document.getElementById("donarViandaParent");
     const distribuirViandas = document.getElementById("distribuirViandas");
-    const registrarPersonaEnSituaciónVulnerable = document.getElementById("registrarPersonasSituacionVulnerable");
+    const distribuirViandasParent = document.getElementById("distribuirViandasParent");
+    const registrarPersonasSituacionVulnerable = document.getElementById("registrarPersonasSituacionVulnerable");
+    const registrarPersonasSituacionVulnerableParent = document.getElementById("registrarPersonasSituacionVulnerableParent");
     const ofrecerProductos = document.getElementById("ofrecerProductos");
-
+    const ofrecerProductosParent = document.getElementById("ofrecerProductosParent");
     function resetElements(){
         if (personaToggle.checked) {
                 // Cambios para Persona Jurídica
@@ -58,18 +61,31 @@ document.addEventListener("DOMContentLoaded", function () {
                 donarVianda.style.display = "none";
                 donarVianda.setAttribute("disabled", true);
 
+                donarViandaParent.style.display = "none";
+                donarViandaParent.setAttribute("disabled", true);
+
                 distribuirViandas.removeAttribute("name");
                 distribuirViandas.style.display = "none";
                 distribuirViandas.setAttribute("disabled", true);
 
-                registrarPersonaEnSituaciónVulnerable.removeAttribute("name");
-                registrarPersonaEnSituaciónVulnerable.style.display = "none";
-                registrarPersonaEnSituaciónVulnerable.setAttribute("disabled", true);
+                distribuirViandasParent.style.display = "none";
+                distribuirViandasParent.setAttribute("disabled", true);
+
+                registrarPersonasSituacionVulnerable.removeAttribute("name");
+                registrarPersonasSituacionVulnerable.style.display = "none";
+                registrarPersonasSituacionVulnerable.setAttribute("disabled", true);
+
+                registrarPersonasSituacionVulnerableParent.style.display = "none";
+                registrarPersonasSituacionVulnerableParent.setAttribute("disabled", true);
 
                 // Mostrar "Ofrecer Productos"
                 ofrecerProductos.style.display = "block";
                 ofrecerProductos.setAttribute("name", "ofrecerProductos");
                 ofrecerProductos.removeAttribute("disabled");
+
+                ofrecerProductosParent.style.display = "block";
+                ofrecerProductosParent.removeAttribute("disabled");
+
             } else {
                 // Revertir a Persona Humana
                 nombreFieldParent.style.display = "block";
@@ -105,18 +121,30 @@ document.addEventListener("DOMContentLoaded", function () {
                 donarVianda.setAttribute("name", "donarVianda");
                 donarVianda.removeAttribute("disabled");
 
+                donarViandaParent.style.display="block";
+                donarViandaParent.removeAttribute("disabled");
+
                 distribuirViandas.style.display = "block";
                 distribuirViandas.setAttribute("name", "distribuirViandas");
                 distribuirViandas.removeAttribute("disabled");
 
-                registrarPersonaEnSituaciónVulnerable.style.display = "block";
-                registrarPersonaEnSituaciónVulnerable.setAttribute("name", "registrarPersonasSituacionVulnerable");
-                registrarPersonaEnSituaciónVulnerable.removeAttribute("disabled");
+                distribuirViandasParent.removeAttribute("disabled");
+                distribuirViandasParent.style.display="block";
+
+                registrarPersonasSituacionVulnerable.style.display = "block";
+                registrarPersonasSituacionVulnerable.setAttribute("name", "registrarPersonasSituacionVulnerable");
+                registrarPersonasSituacionVulnerable.removeAttribute("disabled");
+
+                registrarPersonasSituacionVulnerableParent.removeAttribute("disabled");
+                registrarPersonasSituacionVulnerableParent.style.display="block";
 
                 // Ocultar "Ofrecer Productos"
                 ofrecerProductos.removeAttribute("name");
                 ofrecerProductos.style.display = "none";
                 ofrecerProductos.setAttribute("disabled", true);
+
+                ofrecerProductosParent.style.display = "none";
+                ofrecerProductosParent.setAttribute("disabled", true);
             }
     }
 
