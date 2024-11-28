@@ -20,9 +20,9 @@ public class ValidarUsuario {
 
 
   public Usuario validarUsuarioIngresado(String nombreDeUsuario, String contrasenia) {
-    // busca a usuario por usuario y contrasena en la db
-    //  en caso de que no este thow exeption
-    //  si lo encuentro el usuario en la lista retorno el usuario
+    // busca a usuario por usuario en la db
+    //  en caso de que no este lanza un UserExeption
+    //  si lo encuentro el usuario retorno el usuario
     Usuario user = RepoUsuario.getInstancia().obtenerUsuarioPorNombreDeUsuario(nombreDeUsuario);
 
     if(user.getContrasenia().equals(contrasenia)){

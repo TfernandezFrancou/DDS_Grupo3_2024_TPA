@@ -74,7 +74,8 @@ public class Application {
                 if(ctx.path().startsWith(ruta)) return;
             }
            if (SessionManager.getInstancia().obtenerAtributo("usuario") == null) {//si no inicio sección
-              ctx.redirect("/usuarios/InicioSession"); // Redirigir al login si es necesario
+             //TODO comento esto para que no tengan que iniciar seccion mientras hacen las vistas
+               // ctx.redirect("/usuarios/InicioSession"); // Redirigir al login si es necesario
            }
         });
         EntityManager em = BDUtils.getEntityManager();
