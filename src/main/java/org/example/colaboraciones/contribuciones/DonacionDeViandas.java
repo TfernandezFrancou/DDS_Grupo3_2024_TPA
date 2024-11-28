@@ -40,7 +40,7 @@ public class DonacionDeViandas extends Contribucion {
         this.viandas= new ArrayList<>();
     }
 
-    public DonacionDeViandas(Colaborador colaborador, Heladera heladera, List<Vianda> viandas, LocalDate fecha){
+    public DonacionDeViandas(Heladera heladera, Colaborador colaborador, List<Vianda> viandas, LocalDate fecha){
         this.tiposDePersona = Set.of(TipoDePersona.HUMANA);
         this.viandas= viandas;
         this.cantidadDeViandas = viandas.size();
