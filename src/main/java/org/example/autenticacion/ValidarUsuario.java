@@ -25,7 +25,7 @@ public class ValidarUsuario {
     //  si lo encuentro el usuario retorno el usuario
     Usuario user = RepoUsuario.getInstancia().obtenerUsuarioPorNombreDeUsuario(nombreDeUsuario);
 
-    if(user.getContrasenia().equals(contrasenia)){
+    if(HashGenerator.verify(contrasenia,user.getContrasenia())){
       return user;
     } else {
       return null;

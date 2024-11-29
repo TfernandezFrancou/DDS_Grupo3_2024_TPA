@@ -12,8 +12,12 @@ import org.example.personas.documentos.Documento;
 import org.example.personas.roles.Colaborador;
 import org.example.validaciones.VerificadorContrasenia;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import javax.mail.MessagingException;
 import javax.persistence.*;
+import java.security.SecureRandom;
+import java.security.spec.KeySpec;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -49,7 +53,7 @@ public class Usuario {
 
     public Usuario(String nombreDeUsuario, String contrasenia, LocalDateTime fechaExpiracionContrasenia) {
         this.nombreDeUsuario = nombreDeUsuario;
-        this.contrasenia = contrasenia;//si es necesario aca se debe hashear la contraseña para mas seguridad
+        this.contrasenia = HashGenerator.hash(contrasenia);// aca se debe hashear la contraseña para mas seguridad
         this.fechaExpiracionContrasenia = fechaExpiracionContrasenia;
     }
 
@@ -57,13 +61,13 @@ public class Usuario {
         this.nombreDeUsuario = nombre;
         this.documento = documento;
         this.colaborador = colaborador;
-        this.contrasenia = generarContrasenia();
+        this.contrasenia = generarContrasenia();//no se hashea, se espera a que el usuario lo cambie
     }
 
     public void cambiarContrasenia(String nuevaContrasenia){
         try{
             VerificadorContrasenia.getInstancia().validarContrasenia(nuevaContrasenia);;
-            this.setContrasenia(nuevaContrasenia);
+            this.setContrasenia(HashGenerator.hash(nuevaContrasenia));
             this.setFechaExpiracionContrasenia(LocalDateTime.now());
         } catch (PasswordException pEx){
             System.out.println(pEx.getMessage());
@@ -118,6 +122,8 @@ public class Usuario {
                 .replace("{username}", nombreDeUsuario)
                 .replace("{password}", contrasenia);
         medioDeContacto.notificar(new Mensaje(asunto, mensajeDeBienvenida, colaborador));
+
+        this.contrasenia = HashGenerator.hash(contrasenia);//encripto contraseña para poder compararla
     }
 
     private String generarContrasenia(){

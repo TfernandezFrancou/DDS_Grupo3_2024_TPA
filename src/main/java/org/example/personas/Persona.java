@@ -75,8 +75,8 @@ public abstract class Persona {
             return RepoUsuario.getInstancia().obtenerUsuarioPorDocumento(documento);
         } catch (UserException userException) {
             Usuario usuario = new Usuario(this.getNombre(), documento, this);
-            RepoUsuario.getInstancia().agregarUsuarios(usuario);
             usuario.enviarCredenciales(this.getEmail());
+            RepoUsuario.getInstancia().agregarUsuarios(usuario);
             return usuario;
         }
     }
