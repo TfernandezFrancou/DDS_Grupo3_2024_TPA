@@ -72,10 +72,10 @@ public class Application {
             });
 
             path("usuarios", () -> {
-                post("inicio-session", UsuarioController::postInicioSeccion);
+                post("inicio-sesion", UsuarioController::postIniciosesion);
                 post("registrarse", UsuarioController::postRegistrarse);
                 get("registrarse", UsuarioController::getRegistrarUsuario);
-                get("InicioSession", UsuarioController::getInicioSession);
+                get("Iniciosesion", UsuarioController::getIniciosesion);
             });
 
             path("carga-csv", () -> {
@@ -112,8 +112,8 @@ public class Application {
                 if(ctx.path().startsWith(ruta)) return;
             }
            if (SessionManager.getInstancia().obtenerAtributo("usuario") == null) {//si no inicio sección
-             //TODO comento esto para que no tengan que iniciar seccion mientras hacen las vistas
-               // ctx.redirect("/usuarios/InicioSession"); // Redirigir al login si es necesario
+             //TODO comento esto para que no tengan que iniciar sesion mientras hacen las vistas
+               // ctx.redirect("/usuarios/Iniciosesion"); // Redirigir al login si es necesario
            }
         });
         EntityManager em = BDUtils.getEntityManager();

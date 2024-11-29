@@ -15,7 +15,7 @@ public class IniciarSesion {
     boolean pudoIniciarSesion = false; // por el momento devuelvo un boolean para identificar si se pudo iniciar sesión
     if (intentosRealizados == 3) {
       try {
-        System.out.println(Configuracion.obtenerProperties("mensaje.inicio-seccion.volver-a-intentar")); //Cambiar por un redirect
+        System.out.println(Configuracion.obtenerProperties("mensaje.inicio-sesion.volver-a-intentar")); //Cambiar por un redirect
 
         int segundos = 10 + agregarSegundos;
         while (segundos != 0) {
@@ -33,13 +33,13 @@ public class IniciarSesion {
     try {
       Usuario usuarioQueQuiereIngresar = ValidarUsuario.getInstancia().validarUsuarioIngresado(username, password); //válido que el usuario esté en una lista de usuarios registrados
       if(usuarioQueQuiereIngresar == null){
-        throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-seccion.contrasenia-incorrecta"));
+        throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-sesion.contrasenia-incorrecta"));
       }
       if (usuarioQueQuiereIngresar.getFechaExpiracionContrasenia().isAfter(LocalDateTime.now())) { // valido si la fecha de expiración es mayor a hoy
-        //throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-seccion.contrasenia-expirada"));
+        //throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-sesion.contrasenia-expirada"));
         //TODO lo ignoro por ahora, porque sino hay que crear otra vista para cambiar la contraseña expirada
       } else {
-        System.out.println(Configuracion.obtenerProperties("mensaje.inicio-seccion.inicio-seccion-correcto"));
+        System.out.println(Configuracion.obtenerProperties("mensaje.inicio-sesion.inicio-sesion-correcto"));
       }
       intentosRealizados = 0;
       pudoIniciarSesion = true;

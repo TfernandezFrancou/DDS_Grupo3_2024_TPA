@@ -56,7 +56,7 @@ public class RepoUsuario {
 
       return usuarios1.get(0);
     } catch ( Exception ex){
-      throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-seccion.error-documento")
+      throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-sesion.error-documento")
               .replace("{doc}", documento.getNumeroDocumento()));
     }
   }
@@ -69,11 +69,11 @@ public class RepoUsuario {
               .setParameter("nombreDeUsuario", nombreUsuario)
               .getResultList();
       if(usuarios1.isEmpty()){
-        throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-seccion.nombre-usuario-incorrecto"));
+        throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-sesion.nombre-usuario-incorrecto"));
       }
       return usuarios1.get(0);
     }catch (Exception exception){
-      throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-seccion.error")
+      throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-sesion.error")
               .replace("{username}", nombreUsuario));
     }
   }

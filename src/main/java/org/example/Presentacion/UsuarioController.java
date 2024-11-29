@@ -21,7 +21,7 @@ import java.util.*;
 
 public class UsuarioController  {
 
-    public static void postInicioSeccion(@NotNull Context context){
+    public static void postIniciosesion(@NotNull Context context){
         String nombreDeUsuario = context.formParam("username");
         String contraseniaUsuario = context.formParam("password");
 
@@ -33,7 +33,7 @@ public class UsuarioController  {
         } catch(UserException e){
             Map<String, Object> model = new HashMap<>();
             model.put("error", e.getMessage());
-            context.render("/views/usuarios/InicioSession.mustache",model);
+            context.render("/views/usuarios/Iniciosesion.mustache",model);
         }
     }
 
@@ -50,7 +50,7 @@ public class UsuarioController  {
             usuario.setDocumento(persona.getDocumento());
 
             RepoUsuario.getInstancia().agregarUsuarios(usuario); // guarda tanto al usuario como a la persona
-            context.redirect("/usuarios/InicioSession");
+            context.redirect("/usuarios/Iniciosesion");
         }catch (Exception exception){
             Map<String, Object> model = new HashMap<>();
             model.put("error", exception.getMessage());
@@ -179,7 +179,7 @@ public class UsuarioController  {
         context.render("/views/usuarios/Registrarse.mustache");
     }
 
-    public static void getInicioSession(@NotNull Context context) {
-        context.render("/views/usuarios/InicioSession.mustache");
+    public static void getIniciosesion(@NotNull Context context) {
+        context.render("/views/usuarios/Iniciosesion.mustache");
     }
 }

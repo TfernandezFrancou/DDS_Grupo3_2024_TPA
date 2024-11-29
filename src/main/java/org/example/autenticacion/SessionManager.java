@@ -40,7 +40,7 @@ public class SessionManager {
         return this.sesiones.remove(clave);
     }
 
-    public void cerrarSession() {
+    public void cerrarsesion() {
          this.sesiones.clear();
     }
 }

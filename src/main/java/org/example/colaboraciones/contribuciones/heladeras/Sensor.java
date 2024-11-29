@@ -22,16 +22,8 @@ public abstract class Sensor {
 
     @Getter
     @Setter
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Heladera heladera;
-
-    public void agregar(Heladera heladera) {
-        this.heladera = heladera;
-    }
-
-    public void quitar(Heladera heladera) {
-        this.heladera = null;
-    }
 
     public void notificar() throws MessagingException {
         heladera.actualizarEstadoHeladera(this.getEstadoHeladera());
