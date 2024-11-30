@@ -22,7 +22,7 @@ public abstract class Sensor {
 
     @Getter
     @Setter
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private Heladera heladera;
 
     public void notificar() throws MessagingException {

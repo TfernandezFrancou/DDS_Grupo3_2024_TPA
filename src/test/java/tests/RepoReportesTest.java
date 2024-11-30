@@ -27,20 +27,20 @@ public class RepoReportesTest {
     @Test
     public void testEliminarReporte(){
         repoReportes.eliminarReporte(reporte1);
-        Assertions.assertEquals(1, repoReportes.getReportes().size());
+        Assertions.assertEquals(1, repoReportes.obtenerReportes().size());
     }
 
     @Test
     public void testClean(){
         repoReportes.clean();
-        Assertions.assertEquals(0, repoReportes.getReportes().size());
+        Assertions.assertEquals(0, repoReportes.obtenerReportes().size());
     }
 
     @Test
     public void testAgregarReporte(){
         ReportesDeLaSemana reporte3 = new ReportesDeLaSemana();
         repoReportes.agregarReporte(reporte3);
-        Assertions.assertEquals(3, repoReportes.getReportes().size());
+        Assertions.assertEquals(3, repoReportes.obtenerReportes().size());
     }
 
     @Test

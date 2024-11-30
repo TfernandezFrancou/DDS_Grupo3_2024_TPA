@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 public class RepoSensorTest {
 
     private RepoSensor repoSensor;
+    private RepoHeladeras repoHeladeras;
     private Sensor sensorDeTemperatura;
 
     @BeforeEach
@@ -25,23 +26,29 @@ public class RepoSensorTest {
         this.repoSensor = RepoSensor.getInstancia();
         this.repoSensor.clean();
 
+        this.repoHeladeras = RepoHeladeras.getInstancia();
+        this.repoHeladeras.clean();
+
         sensorDeTemperatura = new SensorDeTemperatura();
         this.repoSensor.agregarSensor(sensorDeTemperatura);
     }
 
     @Test
     public void testAgregarSensor() {
+        Heladera heladera = new Heladera();
+        repoHeladeras.agregar(heladera);
         Sensor sensorDeTemperatura2 = new SensorDeTemperatura();
+        sensorDeTemperatura2.setHeladera(heladera);
         this.repoSensor.agregarSensor(sensorDeTemperatura2);
 
-        Assertions.assertEquals(2, repoSensor.getSensores().size());
+        Assertions.assertEquals(2, this.repoSensor.getSensoresDeTemperatura().size());
     }
 
     @Test
     public void testEliminarSensor(){
         this.repoSensor.eliminarSensor(sensorDeTemperatura);
 
-        Assertions.assertEquals(0, repoSensor.getSensores().size());
+        Assertions.assertEquals(0, this.repoSensor.getSensoresDeTemperatura().size());
     }
 
     @Test
@@ -59,8 +66,8 @@ public class RepoSensorTest {
 
     @Test
     public void testBuscarSensorDeTemperaturaDeHeladera(){
-
         Heladera heladera = new Heladera();
+        repoHeladeras.agregar(heladera);
         Sensor sensorDeTemperatura1 = new SensorDeTemperatura();
         sensorDeTemperatura1.setHeladera(heladera);
         this.repoSensor.agregarSensor(sensorDeTemperatura1);

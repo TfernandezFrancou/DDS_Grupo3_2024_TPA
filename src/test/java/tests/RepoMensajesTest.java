@@ -30,13 +30,6 @@ public class RepoMensajesTest {
         this.repoMensajes.agregarMensaje(mensaje);
     }
 
-    private void limpiarMensajes() {
-        List<Mensaje> mensajes = this.repoMensajes.obtenerMensajes();
-        for (Mensaje mensaje : mensajes) {
-            this.repoMensajes.quitarMensaje(mensaje);
-        }
-    }
-
     @Test
     public void testAgregarMensaje() {
         Mensaje mensaje = new Mensaje();
@@ -44,14 +37,14 @@ public class RepoMensajesTest {
         mensaje.setDestinatario(destinatario1);
         this.repoMensajes.agregarMensaje(mensaje);
 
-        Assertions.assertEquals(2, repoMensajes.getMensajes().size());
+        Assertions.assertEquals(2, repoMensajes.obtenerMensajes().size());
     }
 
     @Test
     void testQuitarMensaje() {
         this.repoMensajes.quitarMensaje(this.mensaje);
 
-        Assertions.assertEquals(0, this.repoMensajes.getMensajes().size());
+        Assertions.assertEquals(0, repoMensajes.obtenerMensajes().size());
     }
 
     @Test

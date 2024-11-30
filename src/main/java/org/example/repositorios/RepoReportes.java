@@ -10,12 +10,9 @@ import java.util.List;
 
 @Getter
 public class RepoReportes { //TODO conectar con DB
-    private List<ReportesDeLaSemana> reportes;
 
     private static RepoReportes instancia = null;
-    private RepoReportes() {
-        this.reportes = new ArrayList<>();
-    }
+    private RepoReportes() { }
 
     public static RepoReportes getInstancia() {
         if (instancia == null) {
@@ -23,12 +20,23 @@ public class RepoReportes { //TODO conectar con DB
         }
         return instancia;
     }
+
+    public List<ReportesDeLaSemana> obtenerReportes() {
+        EntityManager em = BDUtils.getEntityManager();
+        List<ReportesDeLaSemana> reportes = new ArrayList<>();
+        try {
+            reportes = em.createQuery("SELECT r FROM ReportesDeLaSemana r", ReportesDeLaSemana.class).getResultList();
+        } finally {
+            em.close();
+        }
+        return reportes;
+    }
+
     public void agregarReporte(ReportesDeLaSemana nuevoReporte) {
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();
         em.persist(nuevoReporte);
         em.getTransaction().commit();
-        reportes.add(nuevoReporte);
     }
 
     public void eliminarReporte(ReportesDeLaSemana reporte){
@@ -40,7 +48,6 @@ public class RepoReportes { //TODO conectar con DB
         ReportesDeLaSemana reporte1 = em.find(ReportesDeLaSemana.class, idReporte);
         if(reporte1 != null) {
             em.remove(reporte1);
-            reportes.remove(reporte); // También remover de la lista local
         }
 
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
@@ -51,9 +58,8 @@ public class RepoReportes { //TODO conectar con DB
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
-        em.createNativeQuery("TRUNCATE TABLE reportesDeLaSemana").executeUpdate();
+        em.createNativeQuery("DELETE FROM reportesDeLaSemana").executeUpdate();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
         em.getTransaction().commit();
-        reportes.clear();
     }
 }

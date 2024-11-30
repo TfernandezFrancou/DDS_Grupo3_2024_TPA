@@ -17,12 +17,7 @@ public class RepoMensajes {
 
     private static RepoMensajes instancia = null;
 
-    @Getter
-    private List<Mensaje> mensajes;
-
-    private RepoMensajes() {
-        this.mensajes = new ArrayList<>();
-    }
+    private RepoMensajes() { }
 
     public static RepoMensajes getInstancia() {
         if (instancia == null) {
@@ -36,7 +31,6 @@ public class RepoMensajes {
         em.getTransaction().begin();
         em.persist(mensaje);
         em.getTransaction().commit();
-        this.mensajes.add(mensaje);
     }
 
     public void quitarMensaje(Mensaje mensaje) {
@@ -46,7 +40,6 @@ public class RepoMensajes {
             Mensaje mensajeEncontrado = em.find(Mensaje.class, mensaje.getIdMensaje());
             if (mensajeEncontrado != null) {
                 em.remove(mensajeEncontrado);
-                this.mensajes.remove(mensaje);
             }
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -71,10 +64,9 @@ public class RepoMensajes {
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate(); //deshabilito el check de FKs
-        em.createNativeQuery("TRUNCATE TABLE mensaje").executeUpdate();
+        em.createNativeQuery("DELETE FROM mensaje").executeUpdate();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate(); //habilito el check de FKs
         em.getTransaction().commit();
-        this.mensajes.clear();
     }
 
     public List<Mensaje> obtenerMensajesPorDestinatario(Persona destinatario) {
