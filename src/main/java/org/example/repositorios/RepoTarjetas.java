@@ -10,12 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepoTarjetas { //TODO conectar con DB
-    private List<Tarjeta> tarjetas;
 
     private static RepoTarjetas instancia = null;
-    private RepoTarjetas() {
-        this.tarjetas = new ArrayList<>();
-    }
+    private RepoTarjetas() { }
 
     public static RepoTarjetas getInstancia() {
         if (instancia == null) {
@@ -25,11 +22,17 @@ public class RepoTarjetas { //TODO conectar con DB
     }
 
     public void agregarTodas(List<TarjetaHeladera> tarjeta) {
-        this.tarjetas.addAll(tarjeta);
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        tarjeta.forEach(em::persist);
+        em.getTransaction().commit();
     }
 
     public void agregarTodasTarjetasColaboradores(List<TarjetaColaborador> tarjetaColaborador) {
-        this.tarjetas.addAll(tarjetaColaborador);
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        tarjetaColaborador.forEach(em::persist);
+        em.getTransaction().commit();
     }
 
     public void agregar(Tarjeta tarjeta) {
@@ -49,11 +52,13 @@ public class RepoTarjetas { //TODO conectar con DB
         em.getTransaction().commit();
     }
 
+    public List<Tarjeta> getTarjetas() {
+        EntityManager em = BDUtils.getEntityManager();
+        return em.createQuery("SELECT t FROM Tarjeta t", Tarjeta.class).getResultList();
+    }
 
     public Tarjeta buscarTarjetaPorId(String id) {
-        return this.tarjetas.stream()
-                .filter((t) -> t.getIdTarjeta().equals(id))
-                .findFirst()
-                .orElseThrow();
+        EntityManager em = BDUtils.getEntityManager();
+        return em.find(Tarjeta.class, id);
     }
 }
