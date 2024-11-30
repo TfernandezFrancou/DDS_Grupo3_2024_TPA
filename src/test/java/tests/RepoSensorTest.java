@@ -34,6 +34,13 @@ public class RepoSensorTest {
     }
 
     @Test
+    public void testBuscarSensorPorId(){
+        Sensor sensorEncontrado = this.repoSensor.buscarSensorPorId(sensorDeTemperatura.getIdSensor());
+
+        Assertions.assertEquals(sensorDeTemperatura.getIdSensor(), sensorEncontrado.getIdSensor());
+    }
+
+    @Test
     public void testAgregarSensor() {
         Heladera heladera = new Heladera();
         repoHeladeras.agregar(heladera);

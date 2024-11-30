@@ -26,9 +26,15 @@ public class RepoSensor { //TODO conectar con DB
     public Sensor buscarSensorDeTemperaturaDeHeladera(Heladera heladera){
         EntityManager em = BDUtils.getEntityManager();
 
-        return em.createQuery("SELECT s FROM Sensor s WHERE s.heladera = :heladera AND TYPE(s) = SensorDeTemperatura", Sensor.class)
-                .setParameter("heladera", heladera)
-                .getSingleResult();
+        try {
+            return em.createQuery("SELECT s FROM Sensor s WHERE TYPE(s) = SensorDeTemperatura AND s.heladera = :heladera", Sensor.class)
+                    .setParameter("heladera", heladera)
+                    .getSingleResult();
+        } catch (Exception e){
+            return null;
+        } finally {
+            em.close();
+        }
     }
 
     public List<Sensor> getSensoresDeTemperatura() {
@@ -39,6 +45,22 @@ public class RepoSensor { //TODO conectar con DB
         } finally {
             em.close();
         }
+    }
+
+    public Sensor buscarSensorPorId(int idSensor){
+        EntityManager em = BDUtils.getEntityManager();
+        try {
+            return em.find(Sensor.class, idSensor);
+        } finally {
+            em.close();
+        }
+    }
+
+    public void actualizarSensor(Sensor sensor){
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.merge(sensor);
+        em.getTransaction().commit();
     }
 
     public void agregarSensor(Sensor sensor){

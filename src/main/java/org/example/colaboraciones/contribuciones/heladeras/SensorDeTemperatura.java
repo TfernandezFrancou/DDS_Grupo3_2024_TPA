@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.mail.MessagingException;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 
 @Getter
 @Setter

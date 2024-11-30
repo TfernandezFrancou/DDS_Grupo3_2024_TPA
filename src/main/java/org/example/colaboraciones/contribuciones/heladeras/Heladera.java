@@ -46,8 +46,8 @@ public class Heladera {
     @OneToOne(cascade = CascadeType.PERSIST)
     private EstadoHeladera estadoHeladeraActual;
 
-    @OneToMany(mappedBy = "heladera", cascade = CascadeType.PERSIST)
-    private List<EstadoHeladera> historialEstadoHeldera;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "heladera", cascade = CascadeType.PERSIST)
+    private List<EstadoHeladera> historialEstadoHeladera;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name="idHeladera")
@@ -73,7 +73,7 @@ public class Heladera {
 
     public Heladera(){
         this.viandasEnHeladera = 0;
-        this.historialEstadoHeldera = new ArrayList<>();
+        this.historialEstadoHeladera = new ArrayList<>();
         this.historialMovimientos = new ArrayList<>();
         this.colaboradoresAutorizados = new ArrayList<>();
         this.temperaturasDeFuncionamiento = new TemperaturaHeladera(0, 200);
@@ -88,7 +88,7 @@ public class Heladera {
         this.direccion = direccion;
         this.capacidadEnViandas = capacidadEnViandas;
         this.viandasEnHeladera = 0;
-        this.historialEstadoHeldera = new ArrayList<>();
+        this.historialEstadoHeladera = new ArrayList<>();
         this.historialMovimientos = new ArrayList<>();
         this.colaboradoresAutorizados = new ArrayList<>();
         this.temperaturasDeFuncionamiento = new TemperaturaHeladera(0, 200);
@@ -109,7 +109,7 @@ public class Heladera {
     }
 
     public int obtenerMesesActivos() {
-        return this.historialEstadoHeldera.stream()
+        return this.historialEstadoHeladera.stream()
                 .filter(EstadoHeladera::getEstaActiva)
                 .map(EstadoHeladera::mesesActivos)
                 .reduce(0, Integer::sum);
@@ -118,11 +118,11 @@ public class Heladera {
     public void actualizarEstadoHeladera(boolean nuevoEstado) {
         if (this.estadoHeladeraActual == null) {
             this.estadoHeladeraActual = new EstadoHeladera(nuevoEstado);
-            this.historialEstadoHeldera.add(this.estadoHeladeraActual);
+            this.historialEstadoHeladera.add(this.estadoHeladeraActual);
         } else if (this.estadoHeladeraActual.getEstaActiva() != nuevoEstado) {
             this.estadoHeladeraActual.setFechaHoraFin(LocalDateTime.now());
             this.estadoHeladeraActual = new EstadoHeladera(nuevoEstado);
-            this.historialEstadoHeldera.add(this.estadoHeladeraActual);
+            this.historialEstadoHeladera.add(this.estadoHeladeraActual);
         }
     }
 
