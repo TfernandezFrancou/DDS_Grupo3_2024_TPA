@@ -61,6 +61,16 @@ public class Application {
         app.get("/alertas/{nombre}", new AlertasHandler());
 
         app.routes(() -> {
+
+            path("reportes", () -> {
+                get("", ReportesController::getListaReportes);
+                //get(":id", ReportesController::getDetalleReporte);  <---   Falta ver
+                get("fallas", ReportesController::getReporteFallas);
+                get("viandas-colocadas", ReportesController::getReporteViandasColocadas);
+                get("viandas-distribuidas", ReportesController::getReporteViandasDistribuidas);
+                get("viandas-retiradas", ReportesController::getReporteViandasRetiradas);
+            });
+
             path("heladeras", () -> {
                 get("registrar", HeladerasController::getRegistrar);
                 post("registrar", HeladerasController::postRegistrar);
