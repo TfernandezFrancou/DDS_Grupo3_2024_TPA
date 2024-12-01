@@ -31,7 +31,7 @@ public class RepositorioVisitasTecnicos { //TODO conectar con DB
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
-        em.createNativeQuery("DELETE FROM VisitaHeladera v WHERE v.idVisitaHeladera=:idVisitaHeladera")
+        em.createQuery("DELETE FROM VisitaHeladera v WHERE v.idVisitaHeladera=:idVisitaHeladera")
                 .setParameter("idVisitaHeladera", visita.getIdVisitaHeladera())
                 .executeUpdate();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
