@@ -15,7 +15,7 @@ public class Zona {
     private int idZona;
     private String nombreZona;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne
     private Ubicacion ubicacion;
     private int radio;
 }

@@ -35,4 +35,8 @@ public class VisitaHeladera {
         this.trabajoCompletado = trabajoCompletado;
         this.incidenteASolucionar = incidenteASolucionar;
     }
+
+    public VisitaHeladera() {
+
+    }
 }

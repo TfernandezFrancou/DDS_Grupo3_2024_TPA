@@ -26,12 +26,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class RepoHeladeras {
-    private List<Heladera> heladeras;
 
     private static RepoHeladeras instancia = null;
-    private RepoHeladeras() {
-        this.heladeras = new ArrayList<>();
-    }
+    private RepoHeladeras() { }
 
     public static RepoHeladeras getInstancia() {
         if (instancia == null) {
@@ -80,7 +77,7 @@ public class RepoHeladeras {
         heladeraGuardada.setViandasEnHeladera(heladeraActualizada.getViandasEnHeladera());
         heladeraGuardada.setFechaInicioFuncionamiento(heladeraActualizada.getFechaInicioFuncionamiento());
         heladeraGuardada.setEstadoHeladeraActual(heladeraActualizada.getEstadoHeladeraActual());
-        heladeraGuardada.setHistorialEstadoHeldera(heladeraActualizada.getHistorialEstadoHeldera());
+        heladeraGuardada.setHistorialEstadoHeladera(heladeraActualizada.getHistorialEstadoHeladera());
         heladeraGuardada.setHistorialMovimientos(heladeraActualizada.getHistorialMovimientos());
         heladeraGuardada.setTemperaturasDeFuncionamiento(heladeraActualizada.getTemperaturasDeFuncionamiento());
 

@@ -4,6 +4,7 @@ import org.example.broker.Broker;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.SensorDeTemperatura;
 import org.example.colaboraciones.contribuciones.heladeras.TemperaturaHeladera;
+import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoSensor;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -20,58 +21,48 @@ import static org.mockito.ArgumentMatchers.any;
 
 public class BrokerTest {
 
-
-    @Mock
-    private Heladera heladeraMock;
+    private RepoSensor repoSensor;
+    private RepoHeladeras repoHeladeras;
+    private Heladera heladera;
 
     @BeforeEach
     public void setUp(){
-        MockitoAnnotations.openMocks(this);
-        RepoSensor.getInstancia().clean();
-        Mockito.when(heladeraMock.getTemperaturasDeFuncionamiento()).thenReturn(new TemperaturaHeladera(0, 200));
+        repoSensor = RepoSensor.getInstancia();
+        repoSensor.clean();
+
+        repoHeladeras = RepoHeladeras.getInstancia();
+        repoHeladeras.clean();
+
+        heladera = new Heladera();
+        repoHeladeras.agregar(heladera);
+
     }
 
     @Test
-    public void testElSistemaPuedeRecibirLasTemperaturaDeHeladeras() throws MessagingException {
+    public void testMandarTemperaturasHeladerasSinSensorAsociado() throws MessagingException {
+        Broker broker = new Broker();
+        int temperatura = 8;
+        broker.mandarTemperaturasHeladeras(heladera, temperatura);
 
-        RepoSensor repoSensor = RepoSensor.getInstancia();
+        SensorDeTemperatura sensorDeTemperatura = (SensorDeTemperatura) repoSensor.buscarSensorDeTemperaturaDeHeladera(heladera);
+
+        Assertions.assertEquals(temperatura, sensorDeTemperatura.getTemperatura());
+    }
+
+    @Test
+    public void testMandarTemperaturasHeladerasConSensorAsociado() throws MessagingException {
+        Broker broker = new Broker();
+        int temperatura = 8;
+
         SensorDeTemperatura sensorDeTemperatura = new SensorDeTemperatura();
-        sensorDeTemperatura.setHeladera(heladeraMock);
+        sensorDeTemperatura.setHeladera(heladera);
         repoSensor.agregarSensor(sensorDeTemperatura);
 
-        Broker broker = new Broker();
-        int temperaturaHeladera = 12;
-        broker.mandarTemperaturasHeladeras(heladeraMock, temperaturaHeladera);
+        broker.mandarTemperaturasHeladeras(heladera, temperatura);
 
-        //debe actualizarse el estado de la heladera
-        Mockito.verify(heladeraMock, Mockito.times(1))
-                    .actualizarEstadoHeladera(any(boolean.class));
+        sensorDeTemperatura = (SensorDeTemperatura) repoSensor.buscarSensorDeTemperaturaDeHeladera(heladera);
 
-        //el sensor  deben tener la temperatura actualizada de la heladera
-        Assertions.assertEquals(temperaturaHeladera, sensorDeTemperatura.getTemperatura());
-    }
-
-    @Test
-    public void testAlRecibirLaTemperaturaDeHeladeraCreaElSensorSiNoLoTiene() throws MessagingException {
-        Broker broker = new Broker();
-        int temperaturaHeladera = 12;
-        broker.mandarTemperaturasHeladeras(heladeraMock, temperaturaHeladera);
-
-        //debe actualizarse el estado de la heladera
-        Mockito.verify(heladeraMock, Mockito.times(1))
-                .actualizarEstadoHeladera(any(boolean.class));
-
-        RepoSensor repoSensor = RepoSensor.getInstancia();
-
-        //debe haber un sensor
-        Assertions.assertEquals(1, repoSensor.getSensores().size());
-
-        //busco el sensor
-        SensorDeTemperatura sensorDeTemperatura = (SensorDeTemperatura) repoSensor
-                    .buscarSensorDeTemperaturaDeHeladera(heladeraMock);
-
-        //el sensor  deben tener la temperatura actualizada de la heladera
-        Assertions.assertEquals(temperaturaHeladera, sensorDeTemperatura.getTemperatura());
+        Assertions.assertEquals(temperatura, sensorDeTemperatura.getTemperatura());
     }
 
 }

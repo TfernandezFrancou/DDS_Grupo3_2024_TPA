@@ -46,12 +46,7 @@ public class RepoIncidente {
     public void agregarAlerta(Alerta alerta) {
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();
-        List<Heladera> heladeras = em.createQuery("from Heladera where idHeladera = :idHeladera", Heladera.class)
-                .setParameter("idHeladera",alerta.getHeladera().getIdHeladera()).getResultList();
-        if(heladeras.size() > 0){
-            alerta.setHeladera(heladeras.get(0));
-        }
-        em.merge(alerta);
+        em.persist(alerta);
         em.getTransaction().commit();
     }
 

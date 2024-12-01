@@ -6,6 +6,7 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.repositorios.RepoApertura;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoTarjetas;
+import org.example.repositorios.RepoUbicacion;
 import org.example.tarjetas.Apertura;
 import org.example.tarjetas.TarjetaColaborador;
 import org.example.tarjetas.TipoDeApertura;
@@ -20,11 +21,14 @@ public class RepoAperturaTest {
 
 
     RepoApertura repoApertura;
+    RepoUbicacion repoUbicacion;
 
     @BeforeEach
     public void setUp(){
         this.repoApertura = RepoApertura.getInstancia();
         this.repoApertura.clean();
+        this.repoUbicacion = RepoUbicacion.getInstancia();
+        this.repoUbicacion.clean();
 
         Apertura apertura_fehaciente = new Apertura(
                 null,
@@ -95,9 +99,11 @@ public class RepoAperturaTest {
         tarjeta.setLimiteDeTiempoDeUsoEnHoras(24);
         RepoTarjetas repoTarjetas =RepoTarjetas.getInstancia();
         repoTarjetas.agregar(tarjeta);
+        Ubicacion ubicacion = new Ubicacion(-34.598620F,-58.420090F);
+        repoUbicacion.agregar(ubicacion);
 
         Heladera heladera1 = new Heladera("Medarno UTN",
-                    new Ubicacion(-34.598620F,-58.420090F),
+                    ubicacion,
                     new Direccion("Av. Medrano","951","CABA"),
                     200);
         RepoHeladeras repoHeladeras = RepoHeladeras.getInstancia();

@@ -22,18 +22,32 @@ public class Broker {
     public void mandarTemperaturasHeladeras(Heladera heladera, int temperatura) throws MessagingException {
         RepoSensor repoSensor = RepoSensor.getInstancia();
 
-        try { // si tiene sensor
-            SensorDeTemperatura sensor = (SensorDeTemperatura) repoSensor.buscarSensorDeTemperaturaDeHeladera(heladera);
+        SensorDeTemperatura sensor = (SensorDeTemperatura) repoSensor.buscarSensorDeTemperaturaDeHeladera(heladera);
+        if (sensor != null) {
             sensor.setTemperatura(temperatura);
+            repoSensor.actualizarSensor(sensor);
             sensor.notificar();
-        } catch (NoSuchElementException ex){ // si no tiene sensor de tempratura
-            SensorDeTemperatura sensor = new SensorDeTemperatura();
+        }
+        else {
+            sensor = new SensorDeTemperatura();
             sensor.setHeladera(heladera);
             sensor.setTemperatura(temperatura);
-
             repoSensor.agregarSensor(sensor);
-            sensor.notificar(); // notifico a la heladera para que actualice su estado
+            sensor.notificar();
         }
+
+//        try { // si tiene sensor
+//            SensorDeTemperatura sensor = (SensorDeTemperatura) repoSensor.buscarSensorDeTemperaturaDeHeladera(heladera);
+//            sensor.setTemperatura(temperatura);
+//            sensor.notificar();
+//        } catch (NoSuchElementException ex){ // si no tiene sensor de temperatura
+//            SensorDeTemperatura sensor = new SensorDeTemperatura();
+//            sensor.setHeladera(heladera);
+//            sensor.setTemperatura(temperatura);
+//
+//            repoSensor.agregarSensor(sensor);
+//            sensor.notificar(); // notifico a la heladera para que actualice su estado
+//        }
     }
 
     public void gestionarAlerta(Alerta alerta) throws MessagingException {

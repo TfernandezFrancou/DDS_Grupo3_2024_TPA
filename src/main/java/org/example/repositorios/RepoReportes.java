@@ -3,6 +3,10 @@ package org.example.repositorios;
 import lombok.Getter;
 import org.example.reportes.ReportesDeLaSemana;
 
+import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
+import org.example.reportes.itemsReportes.ItemReporteViandasColocadasPorHeladera;
+import org.example.reportes.itemsReportes.ItemReporteViandasDistribuidasPorColaborador;
+import org.example.reportes.itemsReportes.ItemReporteViandasRetiradasPorHeladera;
 import org.example.utils.BDUtils;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -62,4 +66,49 @@ public class RepoReportes { //TODO conectar con DB
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
         em.getTransaction().commit();
     }
+
+    public List<ItemReporteFallasPorHeladera> obtenerReporteFallas() {
+        EntityManager em = BDUtils.getEntityManager();
+        List<ItemReporteFallasPorHeladera> reportes = new ArrayList<>();
+        try {
+            reportes = em.createQuery("SELECT r FROM ItemReporteFallasPorHeladera r", ItemReporteFallasPorHeladera.class).getResultList();
+        } finally {
+            em.close();
+        }
+        return reportes;
+    }
+
+    public List<ItemReporteViandasColocadasPorHeladera> obtenerReporteViandasColocadas() {
+        EntityManager em = BDUtils.getEntityManager();
+        List<ItemReporteViandasColocadasPorHeladera> reportes = new ArrayList<>();
+        try {
+            reportes = em.createQuery("SELECT r FROM ItemReporteViandasColocadasPorHeladera r", ItemReporteViandasColocadasPorHeladera.class).getResultList();
+        } finally {
+            em.close();
+        }
+        return reportes;
+    }
+
+    public List<ItemReporteViandasDistribuidasPorColaborador> obtenerReporteViandasDistribuidas() {
+        EntityManager em = BDUtils.getEntityManager();
+        List<ItemReporteViandasDistribuidasPorColaborador> reportes = new ArrayList<>();
+        try {
+            reportes = em.createQuery("SELECT r FROM ItemReporteViandasDistribuidasPorColaborador r", ItemReporteViandasDistribuidasPorColaborador.class).getResultList();
+        } finally {
+            em.close();
+        }
+        return reportes;
+    }
+
+    public List<ItemReporteViandasRetiradasPorHeladera> obtenerReporteViandasRetiradas() {
+        EntityManager em = BDUtils.getEntityManager();
+        List<ItemReporteViandasRetiradasPorHeladera> reportes = new ArrayList<>();
+        try {
+            reportes = em.createQuery("SELECT r FROM ItemReporteViandasRetiradasPorHeladera r", ItemReporteViandasRetiradasPorHeladera.class).getResultList();
+        } finally {
+            em.close();
+        }
+        return reportes;
+    }
 }
+
