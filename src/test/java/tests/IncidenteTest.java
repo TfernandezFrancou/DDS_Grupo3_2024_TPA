@@ -11,9 +11,7 @@ import org.example.personas.contacto.Mensaje;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.roles.Tecnico;
 import org.example.recomendacion.Zona;
-import org.example.repositorios.RepoHeladeras;
-import org.example.repositorios.RepoIncidente;
-import org.example.repositorios.RepoPersona;
+import org.example.repositorios.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,14 +30,27 @@ public class IncidenteTest {
 
     private Heladera heladeraMock;
 
+    private RepoHeladeras repoHeladeras;
+
+    private RepoSensor repoSensor;
+
+    private RepoUbicacion repoUbicacion;
+
     private CorreoElectronico correoElectronicoMock;
 
     private Ubicacion ubicacionMock;
 
     @BeforeEach
     public void setUp(){
+        repoHeladeras = RepoHeladeras.getInstancia();
+        repoHeladeras.clean();
+        repoSensor = RepoSensor.getInstancia();
+        repoSensor.clean();
+        repoUbicacion = RepoUbicacion.getInstancia();
+        repoUbicacion.clean();
+
+
         System.setProperty("env", "test");
-        MockitoAnnotations.openMocks(this);
         RepoIncidente.getInstancia().clean();
         RepoPersona.getInstancia().clean();
         correoElectronicoMock = new CorreoElectronico();
@@ -79,7 +90,7 @@ public class IncidenteTest {
 
         personaMock.addMedioDeContacto(correoElectronicoMock);
 
-
+        repoUbicacion.agregar(ubicacionMockSpy);
         Tecnico rolTecnico = new Tecnico();
         Zona zonaMock = new Zona();
         zonaMock.setUbicacion(ubicacionMockSpy);
@@ -119,6 +130,7 @@ public class IncidenteTest {
         tecnicoPersonaMock.addMedioDeContacto(correoElectronicoMock);
 
         Tecnico rolTecnico = new Tecnico();
+        repoUbicacion.agregar(ubicacionMockSpy);
         Zona zonaMock = new Zona();
         zonaMock.setUbicacion(ubicacionMockSpy);
         zonaMock.setRadio(0);
@@ -162,6 +174,7 @@ public class IncidenteTest {
         Ubicacion ubicacion = new Ubicacion();
         ubicacion.setLongitud(11);
         ubicacion.setLatitud(11);
+        repoUbicacion.agregar(ubicacion);
         zona.setUbicacion(ubicacion);
         rolTecnico.agregarAreaDeCovertura(zona);
         personaHumana.setRol(rolTecnico);
@@ -185,9 +198,12 @@ public class IncidenteTest {
         direccionMock.setAltura("321");
         heladera.setDireccion(direccionMock);
 
+        repoHeladeras.agregar(heladera);
 
         sensorDeTemperatura.setHeladera(heladera);
         sensorDeTemperatura.setTemperatura(1); //temperatura fuera de rango
+
+        repoSensor.agregarSensor(sensorDeTemperatura);
 
         //ejecuto
         sensorDeTemperatura.notificar();
@@ -223,6 +239,7 @@ public class IncidenteTest {
         Ubicacion ubicacion = new Ubicacion();
         ubicacion.setLongitud(11);
         ubicacion.setLatitud(11);
+        repoUbicacion.agregar(ubicacion);
         zona.setUbicacion(ubicacion);
         rolTecnico.agregarAreaDeCovertura(zona);
         personaHumana.setRol(rolTecnico);
@@ -245,9 +262,12 @@ public class IncidenteTest {
         direccionMock.setAltura("321");
         heladera.setDireccion(direccionMock);
 
+        repoHeladeras.agregar(heladera);
 
         sensorDeMovimiento.setHeladera(heladera);
         sensorDeMovimiento.setEstaActivado(true); //detecta movimiento
+
+        repoSensor.agregarSensor(sensorDeMovimiento);
 
         //ejecuto
         sensorDeMovimiento.notificar();
@@ -289,6 +309,9 @@ public class IncidenteTest {
         personaHumana.setRol(rolTecnico);
         personaHumana.addMedioDeContacto(correoElectronicoMock);
 
+        repoUbicacion.agregar(ubicacionCoverturaTecnico);
+        repoUbicacion.agregar(ubicacionHeladera);
+
         RepoPersona.getInstancia().agregar(personaHumana);
 
         //creo la heladera
@@ -304,9 +327,13 @@ public class IncidenteTest {
         direccionMock.setAltura("321");
         heladera.setDireccion(direccionMock);
 
+        repoHeladeras.agregar(heladera);
+
         SensorDeMovimiento sensorDeMovimiento = new SensorDeMovimiento();
         sensorDeMovimiento.setHeladera(heladera);
         sensorDeMovimiento.setEstaActivado(true);
+
+        repoSensor.agregarSensor(sensorDeMovimiento);
 
         //emito la alerta
         sensorDeMovimiento.notificar();

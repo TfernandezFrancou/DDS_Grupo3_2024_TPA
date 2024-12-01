@@ -8,6 +8,7 @@ import org.example.reportes.itemsReportes.ItemReporte;
 import org.example.reportes.itemsReportes.ItemReporteViandasColocadasPorHeladera;
 import org.example.reportes.itemsReportes.ItemReporteViandasRetiradasPorHeladera;
 import org.example.repositorios.RepoHeladeras;
+import org.example.repositorios.RepoUbicacion;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,8 @@ public class RepoHeladerasTest {
 
     private Heladera heladera2;
 
+    private RepoUbicacion repoUbicacion;
+
     LocalDateTime inicioSemana ;
     LocalDateTime finSemana;
 
@@ -30,8 +33,10 @@ public class RepoHeladerasTest {
     @BeforeEach
     public void setUp(){
         this.repoHeladeras  = RepoHeladeras.getInstancia();
-
         repoHeladeras.clean();
+        this.repoUbicacion = RepoUbicacion.getInstancia();
+        repoUbicacion.clean();
+
 
         this.heladera1 = new Heladera();
         this.heladera2 = new Heladera();
@@ -117,24 +122,32 @@ public class RepoHeladerasTest {
 
     @Test
     public void testBuscarHeladerasCercanasA(){
+        Ubicacion ubicacion1 = new Ubicacion(-34.609722F, -58.382592F);
+        Ubicacion ubicacion2 = new Ubicacion(-34.705722F, -58.501592F);
+        Ubicacion ubicacion3 = new Ubicacion(-34.603722F, -60.381592F);
+        Ubicacion ubicacion4 = new Ubicacion(-34.600706F, -58.379833F);
+        repoUbicacion.agregarTodas(List.of(ubicacion1, ubicacion2, ubicacion3, ubicacion4));
+
        // repoHeladeras.clean();
 
         //creo heladeras cernacas a 10 km y heladeras no cercanas para el test
         Heladera heladera1 = new Heladera();
-        heladera1.setUbicacion(new Ubicacion(-34.609722F, -58.382592F) );// Cerca de Buenos Aires
+        heladera1.setUbicacion(ubicacion1);// Cerca de Buenos Aires
 
         Heladera heladera2 = new Heladera();
-        heladera2.setUbicacion(new Ubicacion(-34.705722F, -58.501592F)); // Más lejos de Buenos Aires
+        heladera2.setUbicacion(ubicacion2); // Más lejos de Buenos Aires
 
         Heladera heladera3 = new Heladera();
-        heladera3.setUbicacion(new Ubicacion(-34.603722F, -60.381592F)); // Lejos de Buenos Aires
+        heladera3.setUbicacion(ubicacion3); // Lejos de Buenos Aires
 
         Heladera heladera4 = new Heladera();
-        heladera4.setUbicacion(new Ubicacion(-34.600706F, -58.379833F));// Cerca de Buenos Aires
+        heladera4.setUbicacion(ubicacion4);// Cerca de Buenos Aires
 
         //heladera central
         Heladera heladeraEnBuenosAires = new Heladera(); // Ejemplo en Buenos Aires
-        heladeraEnBuenosAires.setUbicacion(new Ubicacion(-34.603722F, -58.381592F));
+        Ubicacion ubicacionEnBuenosAires = new Ubicacion(-34.603722F, -58.381592F);
+        repoUbicacion.agregar(ubicacionEnBuenosAires);
+        heladeraEnBuenosAires.setUbicacion(ubicacionEnBuenosAires);
 
         // las agrego al repo
         repoHeladeras.agregarTodas(List.of(heladera1, heladera2, heladera3, heladera4, heladeraEnBuenosAires));
@@ -153,23 +166,31 @@ public class RepoHeladerasTest {
 
     @Test
     public void testSiLaDistanciaMaxiaEntreHeladerasEsCeroNoVaAVerNingunaHeladeraCercana(){
+        Ubicacion ubicacion1 = new Ubicacion(-34.609722F, -58.382592F);
+        Ubicacion ubicacion2 = new Ubicacion(-34.705722F, -58.501592F);
+        Ubicacion ubicacion3 = new Ubicacion(-34.603722F, -60.381592F);
+        Ubicacion ubicacion4 = new Ubicacion(-34.600706F, -58.379833F);
+        List<Ubicacion> ubicaciones = List.of(ubicacion1, ubicacion2, ubicacion3, ubicacion4);
+        repoUbicacion.agregarTodas(ubicaciones);
        // repoHeladeras.clean();
         //creo heladeras cernacas a 10 km y heladeras no cercanas para el test
         Heladera heladera1 = new Heladera();
-        heladera1.setUbicacion(new Ubicacion(-34.609722F, -58.382592F) );// Cerca de Buenos Aires
+        heladera1.setUbicacion(ubicacion1);// Cerca de Buenos Aires
 
         Heladera heladera2 = new Heladera();
-        heladera2.setUbicacion(new Ubicacion(-34.705722F, -58.501592F)); // Más lejos de Buenos Aires
+        heladera2.setUbicacion(ubicacion2); // Más lejos de Buenos Aires
 
         Heladera heladera3 = new Heladera();
-        heladera3.setUbicacion(new Ubicacion(-34.603722F, -60.381592F)); // Lejos de Buenos Aires
+        heladera3.setUbicacion(ubicacion3); // Lejos de Buenos Aires
 
         Heladera heladera4 = new Heladera();
-        heladera4.setUbicacion(new Ubicacion(-34.600706F, -58.379833F));// Cerca de Buenos Aires
+        heladera4.setUbicacion(ubicacion4);// Cerca de Buenos Aires
 
         //heladera central
         Heladera heladeraEnBuenosAires = new Heladera(); // Ejemplo en Buenos Aires
-        heladeraEnBuenosAires.setUbicacion(new Ubicacion(-34.603722F, -58.381592F));
+        Ubicacion ubicacionEnBuenosAires = new Ubicacion(-34.603722F, -58.381592F);
+        repoUbicacion.agregar(ubicacionEnBuenosAires);
+        heladeraEnBuenosAires.setUbicacion(ubicacionEnBuenosAires);
 
         // las agrego al repo
         repoHeladeras.agregarTodas(List.of(heladera1, heladera2, heladera3, heladera4, heladeraEnBuenosAires));

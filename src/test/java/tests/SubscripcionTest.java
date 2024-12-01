@@ -33,15 +33,23 @@ import static org.mockito.Mockito.times;
 public class SubscripcionTest {
 
     private Heladera heladera;
+    private RepoUbicacion repoUbicacion;
+    private RepoApertura repoApertura;
 
     @Mock
     private CorreoElectronico correoElectronicoMock;
 
     @BeforeEach
     public void setUp(){
+        this.repoUbicacion = RepoUbicacion.getInstancia();
+        this.repoUbicacion.clean();
+        this.repoApertura = RepoApertura.getInstancia();
+        this.repoApertura.clean();
         MockitoAnnotations.openMocks(this);
         heladera = new Heladera();
-        heladera.setUbicacion(new Ubicacion(0,  0));
+        Ubicacion ubicacion = new Ubicacion(0,  0);
+        repoUbicacion.agregar(ubicacion);
+        heladera.setUbicacion(ubicacion);
         heladera.setNombre("Heladera Medrano");
         heladera.setCapacidadEnViandas(5);
         heladera.actualizarEstadoHeladera(true);

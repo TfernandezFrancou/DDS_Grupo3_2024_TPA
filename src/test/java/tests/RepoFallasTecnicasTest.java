@@ -15,6 +15,7 @@ import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoPersona;
+import org.example.repositorios.RepoUbicacion;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,8 @@ public class RepoFallasTecnicasTest {
     private RepoIncidente repoFallasTecnicas;
 
     private RepoPersona repoPersona;
+
+    private RepoUbicacion repoUbicacion;
 
     private Persona colaborador;
 
@@ -59,6 +62,7 @@ public class RepoFallasTecnicasTest {
         MockitoAnnotations.openMocks(this);
         this.repoFallasTecnicas  = RepoIncidente.getInstancia();
         this.repoPersona = RepoPersona.getInstancia();
+        this.repoUbicacion = RepoUbicacion.getInstancia();
         this.colaborador = new PersonaHumana();
         this.colaborador.setDocumento(new Documento(TipoDocumento.DNI, "43244599"));
 
@@ -66,6 +70,7 @@ public class RepoFallasTecnicasTest {
         this.heladera2 = new Heladera();
 
         repoPersona.clean();
+        repoUbicacion.clean();
         repoFallasTecnicas.clean();
     }
 
@@ -91,6 +96,7 @@ public class RepoFallasTecnicasTest {
         //when(heladera2.getDireccion()).thenReturn(direccionMock);
         this.heladera2.setDireccion(direccionMock);
         //when(heladera2.getUbicacion()).thenReturn(ubicacionMock);
+        repoUbicacion.agregar(ubicacionMock);
         this.heladera2.setUbicacion(ubicacionMock);
 
         RepoHeladeras.getInstancia().agregarTodas(List.of(heladera1, heladera2));

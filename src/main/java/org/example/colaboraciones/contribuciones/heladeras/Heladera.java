@@ -31,7 +31,7 @@ public class Heladera {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idHeladera;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne
     private Ubicacion ubicacion;
     @OneToOne(cascade = CascadeType.PERSIST)
     private Direccion direccion;
