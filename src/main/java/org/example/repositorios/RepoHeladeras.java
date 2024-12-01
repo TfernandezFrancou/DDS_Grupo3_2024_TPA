@@ -83,6 +83,11 @@ public class RepoHeladeras {
         heladeraGuardada.setHistorialEstadoHeldera(heladeraActualizada.getHistorialEstadoHeldera());
         heladeraGuardada.setHistorialMovimientos(heladeraActualizada.getHistorialMovimientos());
         heladeraGuardada.setTemperaturasDeFuncionamiento(heladeraActualizada.getTemperaturasDeFuncionamiento());
+
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.merge(heladeraGuardada);
+        em.getTransaction().commit();
     }
 
     public void eliminar(Heladera heladera) {
