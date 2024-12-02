@@ -12,6 +12,7 @@ import org.example.incidentes.FallaTecnica;
 import org.example.incidentes.Incidente;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoIncidente;
+import org.example.repositorios.RepoUbicacion;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
@@ -89,9 +90,11 @@ public class HeladerasController {
         Heladera heladera = new Heladera(nombre, ubicacion, direccion, capacidad);
 
         try {
+            RepoUbicacion.getInstancia().agregar(ubicacion);
             RepoHeladeras.getInstancia().agregar(heladera);
         } catch (Exception e) {
             System.err.println("Error al agregar la heladera: " + e);
+            e.printStackTrace();
         }
 
         context.redirect("/heladeras");

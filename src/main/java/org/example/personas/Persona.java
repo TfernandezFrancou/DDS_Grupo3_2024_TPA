@@ -30,7 +30,7 @@ public abstract class Persona {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     protected Direccion direccion;
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     protected Rol rol;
     @OneToOne(cascade = CascadeType.PERSIST)
     protected Documento documento;

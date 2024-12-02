@@ -31,13 +31,4 @@ public class AlertasHandler implements Handler {
         model.put("nombre",nombreHeladera);
         context.render("views/heladeras/alertas.mustache",model);
     }
-
-    //TODO codigo hardcodeado para mostrar algo
-    private void prueba() throws Exception{
-        this.repoIncidente.clean();
-        Heladera heladera = new Heladera();
-        heladera.setNombre("MedranoUTN");
-        Alerta alerta = new Alerta("algunTipoDeAlerta",heladera,"algunTipoIncidente", LocalDateTime.now());
-        repoIncidente.agregarAlerta(alerta);
-    }
 }

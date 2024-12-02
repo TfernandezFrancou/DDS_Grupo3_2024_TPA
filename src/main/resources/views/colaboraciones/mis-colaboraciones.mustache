@@ -86,7 +86,7 @@
                         <div class="card mb-4 rounded-3 shadow-sm">
                             <div class="card-body">
                                 <div class="icon">🧊</div>
-                                <h3>Hacerse Cargo De Una Heladera</h3>
+                                <h3>Registrar Persona En situacion vulnerable</h3>
                                 <p>Fecha: {{fechaFormateada}}</p>
                                 <p>Heladeras:</p>
                                 {{#heladerasColocadas}}
@@ -99,6 +99,21 @@
                 {{#OfrecerProductos}}
                 {{/OfrecerProductos}}
                 {{#RegistrarPersonasEnSituacionVulnerable}}
+                    <div class="col-md-4">
+                        <div class="card mb-4 rounded-3 shadow-sm">
+                            <div class="card-body">
+                                <div class="icon">💳</div>
+                                <h3>Registrar Personas En Situacion Vulnerable</h3>
+                                <p>Fecha: {{fechaFormateada}}</p>
+                                <p>Personas:</p>
+                                {{#RegistrarPersonasEnSituacionVulnerable}}
+                                    {{#personasRegistradas}}
+                                        <span>{{nombre}}</span>
+                                    {{/personasRegistradas}}
+                                {{/RegistrarPersonasEnSituacionVulnerable}}
+                            </div>
+                        </div>
+                    </div>
                 {{/RegistrarPersonasEnSituacionVulnerable}}
             {{/colaboraciones}}
         </div>

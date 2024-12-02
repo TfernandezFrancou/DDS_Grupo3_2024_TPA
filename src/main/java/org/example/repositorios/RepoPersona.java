@@ -197,4 +197,19 @@ public class RepoPersona {
 
         return personasHumanas;
     }
+
+    public Persona actualizarPersona(Persona personaUser) {
+        EntityManager em = BDUtils.getEntityManager();
+        Persona personaActualizada = null;
+        try {
+            em.getTransaction().begin();
+            personaActualizada = em.merge(personaUser);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            em.getTransaction().rollback();
+        }
+        return personaActualizada;
+    }
+
 }
