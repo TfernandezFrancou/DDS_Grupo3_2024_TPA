@@ -1,6 +1,8 @@
 package org.example.Presentacion;
 
 import io.javalin.http.Context;
+import org.example.autenticacion.SessionManager;
+import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
 import org.example.personas.Persona;
 import org.example.personas.roles.Colaborador;
@@ -15,7 +17,8 @@ import java.util.Map;
 public class OfertasController {
     public static void getOfertas(@NotNull Context context) throws Exception {
         Map<String, Object> model = new HashMap<>();
-        int idPersona = 1; // TODO: agarrarlo del contexto cuando tengamos auth
+        Usuario user =(Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
+        int idPersona = user.getColaborador().getIdPersona();
         Persona persona = RepoPersona.getInstancia().buscarPorId(idPersona);
         int puntos = 0;
         if (persona.getRol() instanceof Colaborador) {

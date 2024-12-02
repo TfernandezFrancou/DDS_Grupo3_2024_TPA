@@ -67,7 +67,6 @@ public class RepoContribucion {
     }
 
     public List<Contribucion> obtenerContribucionesPorPersona(int idPersona){
-        // TODO: testear
         EntityManager em = BDUtils.getEntityManager();
         return em.createQuery("SELECT c FROM Contribucion c LEFT JOIN Persona p on c.colaborador = p.rol where p.idPersona = :idPersona", Contribucion.class)
                 .setParameter("idPersona", idPersona)

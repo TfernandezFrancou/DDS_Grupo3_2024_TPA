@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.example.utils.BDUtils;
 
-public class RepoSensor { //TODO conectar con DB
+public class RepoSensor {
 
     private static RepoSensor instancia = null;
 

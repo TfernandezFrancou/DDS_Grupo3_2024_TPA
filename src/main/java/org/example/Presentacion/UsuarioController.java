@@ -33,7 +33,7 @@ public class UsuarioController  {
         } catch(UserException e){
             Map<String, Object> model = new HashMap<>();
             model.put("error", e.getMessage());
-            context.render("/views/usuarios/Iniciosesion.mustache",model);
+            context.render("/views/usuarios/InicioSession.mustache",model);
         }
     }
 
@@ -50,7 +50,7 @@ public class UsuarioController  {
             usuario.setDocumento(persona.getDocumento());
 
             RepoUsuario.getInstancia().agregarUsuarios(usuario); // guarda tanto al usuario como a la persona
-            context.redirect("/usuarios/Iniciosesion");
+            context.redirect("/usuarios/InicioSession");
         }catch (Exception exception){
             Map<String, Object> model = new HashMap<>();
             model.put("error", exception.getMessage());
@@ -180,6 +180,6 @@ public class UsuarioController  {
     }
 
     public static void getIniciosesion(@NotNull Context context) {
-        context.render("/views/usuarios/Iniciosesion.mustache");
+        context.render("/views/usuarios/InicioSession.mustache");//InicioSession
     }
 }

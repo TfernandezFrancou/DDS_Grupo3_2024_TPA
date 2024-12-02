@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepositorioVisitasTecnicos { //TODO conectar con DB
+public class RepositorioVisitasTecnicos {
 
     private static RepositorioVisitasTecnicos instancia = null;
     private RepositorioVisitasTecnicos() {}

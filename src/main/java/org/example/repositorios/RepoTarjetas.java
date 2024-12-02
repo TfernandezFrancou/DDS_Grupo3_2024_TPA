@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepoTarjetas { //TODO conectar con DB
+public class RepoTarjetas {
 
     private static RepoTarjetas instancia = null;
     private RepoTarjetas() { }

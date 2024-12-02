@@ -1,6 +1,8 @@
 package org.example.Presentacion;
 
 import io.javalin.http.Context;
+import org.example.autenticacion.SessionManager;
+import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.Contribucion;
 import org.example.repositorios.RepoContribucion;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +14,8 @@ import java.util.Map;
 
 public class ColaboracionesController {
     public static void getColaboraciones(@NotNull Context context) {
-        int idPersona = 1; // TODO: agarrarlo del contexto cuando tengamos auth
+        Usuario user =(Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
+        int idPersona = user.getColaborador().getIdPersona();
         List<Contribucion> contribuciones = RepoContribucion.getInstancia()
                 .obtenerContribucionesPorPersona(idPersona);
         Map<String, Object> model = new HashMap<>();

@@ -1,6 +1,5 @@
 package org.example.repositorios;
 
-import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
 import org.example.utils.BDUtils;
 

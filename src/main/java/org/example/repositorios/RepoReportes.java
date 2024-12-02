@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class RepoReportes { //TODO conectar con DB
+public class RepoReportes {
 
     private static RepoReportes instancia = null;
     private RepoReportes() { }

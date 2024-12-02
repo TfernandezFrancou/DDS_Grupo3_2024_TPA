@@ -9,7 +9,13 @@ import org.example.utils.BDUtils;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 import javax.persistence.EntityManager;
+import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -85,7 +91,7 @@ public class Application {
                 post("inicio-sesion", UsuarioController::postIniciosesion);
                 post("registrarse", UsuarioController::postRegistrarse);
                 get("registrarse", UsuarioController::getRegistrarUsuario);
-                get("Iniciosesion", UsuarioController::getIniciosesion);
+                get("InicioSession", UsuarioController::getIniciosesion);
             });
 
             path("carga-csv", () -> {
@@ -116,16 +122,36 @@ public class Application {
             });
         });
 
-        List<String> rutasSinSesion = List.of("/usuarios", "/api/localidades", "/views/imagenes", "/styles");
+        List<String> rutasSinSesion = List.of("/usuarios", "/api/localidades", "/views/imagenes", "/styles", "/views/js");
         app.before(ctx -> {
             for(String ruta: rutasSinSesion){
                 if(ctx.path().startsWith(ruta)) return;
             }
            if (SessionManager.getInstancia().obtenerAtributo("usuario") == null) {//si no inicio sección
              //TODO comento esto para que no tengan que iniciar sesion mientras hacen las vistas
-               // ctx.redirect("/usuarios/Iniciosesion"); // Redirigir al login si es necesario
+               // si para alguna vista necesitan del usuario o de la persona usuario,
+               //   descomentar esto de aca abajo
+               // ctx.redirect("/usuarios/InicioSession"); // Redirigir al login si es necesario
            }
         });
+
         EntityManager em = BDUtils.getEntityManager();
+        /*try{//TODO aun no termine
+            InputStream inputStream = Application.class.getClassLoader().getResourceAsStream("default_data.sql");
+            Path tempFile = Files.createTempFile("temp-sql", ".sql");
+            Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
+
+            String sql = Files.readString(tempFile);
+            System.out.println("START TRANSACTION; "+sql+" COMMIT;");
+            em.getTransaction().begin();
+            em.createNativeQuery("START TRANSACTION; "+sql+" COMMIT;").executeUpdate();
+            em.getTransaction().commit();
+
+        } catch (Exception e){
+            e.printStackTrace();
+            em.getTransaction().rollback();
+        }*/
+
+
     }
 }

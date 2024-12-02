@@ -1,14 +1,20 @@
 package org.example.Presentacion;
 
 import io.javalin.http.Context;
+import org.example.autenticacion.SessionManager;
+import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Entrega;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.incidentes.FallaTecnica;
+import org.example.personas.Persona;
+import org.example.personas.PersonaHumana;
+import org.example.personas.roles.Colaborador;
 import org.example.repositorios.RepoContribucion;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoIncidente;
+import org.example.repositorios.RepoPersona;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
@@ -47,7 +53,11 @@ public class DonarViandasController {
             donacionDeViandas.setFecha(LocalDate.now());
             donacionDeViandas.setHeladera(heladeraOptional.get());
             donacionDeViandas.setCantidadDeViandas(1);
-            //donacionDeViandas.setColaborador(colaborator);TODO donde saco a colaborador
+
+            Usuario user =(Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
+            Persona persona = user.getColaborador();
+            if(persona.getRol() != null && persona.getRol() instanceof Colaborador)
+                donacionDeViandas.setColaborador((Colaborador) persona.getRol());//TODO verificar si funciona
 
             RepoContribucion.getInstancia().agregarContribucion(donacionDeViandas);
 
