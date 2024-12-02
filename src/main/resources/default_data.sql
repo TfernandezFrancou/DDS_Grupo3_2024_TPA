@@ -52,3 +52,70 @@ INSERT INTO incidente (discriminator, fechaDeEmision, solucionado, tipoDeInciden
 VALUES ('FallaTecnica', '2024-10-22 17:47:10', 0, 'Falla Técnica', 'Termostato de heladera no anda hay que cambiarlo','D:\hola\ \fotos\me.jpg',
 (SELECT p.idPersona FROM persona p JOIN personahumana ph ON ph.id_persona=p.idPersona WHERE ph.nombre = 'Jerry' and ph.apellido='Smith'),
 (SELECT idHeladera FROM heladera WHERE nombre = 'MedranoUTN' and fechaInicioFuncionamiento = '2022-01-10'));
+
+INSERT INTO entrega (estadoEntrega, fechaEntrega)
+VALUES ('ENTREGADO', '2024-12-03'),('ENTREGADO', '2024-12-04');
+
+INSERT INTO vianda (calorias, descripcion, fechaCaducidad, fechaDonacion,peso, colaborador_idrol,entrega_idEntrega, heladera_idHeladera)
+VALUES (200, 'ensalada de tomate', '2102-10-22 00:00:00','2024-12-02 16:00:00', 20,
+ 2,(SELECT idEntrega FROM entrega where estadoEntrega = 'ENTREGADO' and fechaEntrega = '2024-12-03'),
+ (SELECT idHeladera FROM heladera WHERE nombre = 'MedranoUTN' and fechaInicioFuncionamiento = '2022-01-10')),
+ (1000, 'pancho con coca', '2040-10-22 00:00:00','2024-12-03 16:00:00', 10,
+  2,(SELECT idEntrega FROM entrega where estadoEntrega = 'ENTREGADO' and fechaEntrega = '2024-12-04'),
+  (SELECT idHeladera FROM heladera WHERE nombre = 'MedranoUTN' and fechaInicioFuncionamiento = '2022-01-10'));
+;
+
+
+INSERT INTO reportesdelasemana (fechaFinSemana, fechaInicioSemana) VALUES ('2024-12-31', '2024-12-01');
+
+ INSERT INTO itemreporte (id_reporte_de_la_semana)
+ VALUES ((SELECT idReportesDeLaSemana FROM reportesdelasemana WHERE fechaInicioSemana = '2024-12-01'));
+
+ INSERT INTO itemreportefallasporheladera (id_item_reporte, heladera_idHeladera)
+ VALUES ((SELECT idItemReporte FROM itemreporte ir
+    JOIN reportesdelasemana rs ON rs.idReportesDeLaSemana = ir.id_reporte_de_la_semana
+    WHERE rs.fechaInicioSemana = '2024-12-01'),
+ (SELECT idHeladera FROM heladera WHERE nombre = 'MedranoUTN' and fechaInicioFuncionamiento = '2022-01-10')
+ );
+
+ INSERT INTO itemreporteviandascolocadasporheladera (id_item_reporte, heladera_idHeladera)
+ VALUES ((SELECT idItemReporte FROM itemreporte ir
+    JOIN reportesdelasemana rs ON rs.idReportesDeLaSemana = ir.id_reporte_de_la_semana
+    WHERE rs.fechaInicioSemana = '2024-12-01'),
+ (SELECT idHeladera FROM heladera WHERE nombre = 'MedranoUTN' and fechaInicioFuncionamiento = '2022-01-10')
+ );
+
+INSERT INTO itemreporteviandascolocadasporheladeraxvianda(ItemReporteViandasColocadasPorHeladera_id_item_reporte, viandasColocadas_idVianda)
+VALUES ((SELECT idItemReporte FROM itemreporte ir
+            JOIN reportesdelasemana rs ON rs.idReportesDeLaSemana = ir.id_reporte_de_la_semana
+            WHERE rs.fechaInicioSemana = '2024-12-01'),
+(SELECT idVianda FROM vianda v WHERE v.descripcion = 'ensalada de tomate'));
+
+INSERT INTO itemreporteviandasdistribuidasporcolaborador (id_item_reporte, colaborador_idPersona)
+VALUES ((SELECT idItemReporte FROM itemreporte ir
+    JOIN reportesdelasemana rs ON rs.idReportesDeLaSemana = ir.id_reporte_de_la_semana
+    WHERE rs.fechaInicioSemana = '2024-12-01'),
+(SELECT p.idPersona FROM persona p JOIN personahumana ph ON ph.id_persona=p.idPersona WHERE ph.nombre = 'Jerry' and ph.apellido='Smith')
+);
+
+INSERT INTO itemreporteviandasdistribuidasporcolaboradorxvianda (ItemReporteViandasDistribuidasPorColaborador_id_item_reporte, viandasDistribuidas_idVianda)
+VALUES ((SELECT idItemReporte FROM itemreporte ir
+                    JOIN reportesdelasemana rs ON rs.idReportesDeLaSemana = ir.id_reporte_de_la_semana
+                    WHERE rs.fechaInicioSemana = '2024-12-01'),
+        (SELECT idVianda FROM vianda v WHERE v.descripcion = 'ensalada de tomate')),
+        ((SELECT idItemReporte FROM itemreporte ir
+                      JOIN reportesdelasemana rs ON rs.idReportesDeLaSemana = ir.id_reporte_de_la_semana
+                      WHERE rs.fechaInicioSemana = '2024-12-01'),
+        (SELECT idVianda FROM vianda v WHERE v.descripcion = 'pancho con coca'));
+
+INSERT INTO itemreporteviandasretiradasporheladera(id_item_reporte, heladera_idHeladera)
+ VALUES ((SELECT idItemReporte FROM itemreporte ir
+    JOIN reportesdelasemana rs ON rs.idReportesDeLaSemana = ir.id_reporte_de_la_semana
+    WHERE rs.fechaInicioSemana = '2024-12-01'),
+ (SELECT idHeladera FROM heladera WHERE nombre = 'MedranoUTN' and fechaInicioFuncionamiento = '2022-01-10')
+ );
+INSERT INTO itemreporteviandasretiradasporheladeraxvianda(ItemReporteViandasRetiradasPorHeladera_id_item_reporte, viandasRetiradas_idVianda)
+VALUES ((SELECT idItemReporte FROM itemreporte ir
+            JOIN reportesdelasemana rs ON rs.idReportesDeLaSemana = ir.id_reporte_de_la_semana
+            WHERE rs.fechaInicioSemana = '2024-12-01'),
+        (SELECT idVianda FROM vianda v WHERE v.descripcion = 'pancho con coca'));
