@@ -47,8 +47,11 @@ public class RegistrarPersonaVulnerableController {
 
     private static PersonaHumana almacenarPersonaVulnerable(@NotNull Context context) throws AlmacenarPersonaVulnerable {
         String nombreYApellido = context.formParam("nombre");
-        String nombre = nombreYApellido.split(" ")[0];
-        String apellido = nombreYApellido.split(" ")[1];
+        String[] nombreYApellidoArray = nombreYApellido.split(" ");
+        String nombre = nombreYApellidoArray[0];
+        String apellido = null;
+        if(nombreYApellidoArray.length == 2)
+            apellido= nombreYApellidoArray[1];
         String tieneDomicilio = context.formParam("domicilio");
         String domicilio = context.formParam("domicilio-texto");
         String documento = context.formParam("documento");
@@ -67,7 +70,9 @@ public class RegistrarPersonaVulnerableController {
 
         PersonaHumana personaHumana = new PersonaHumana();
         personaHumana.setNombre(nombre);
-        personaHumana.setApellido(apellido);
+        if(apellido == null)
+            personaHumana.setApellido(apellido);
+
         if(tieneDomicilio.equals("si")){
 
             if(domicilio.equals("")) {
