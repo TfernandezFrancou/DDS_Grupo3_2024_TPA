@@ -30,9 +30,10 @@ public class RepoApertura {
     public void quitarApertura(Apertura apertura) {
         EntityManager em = BDUtils.getEntityManager();
         em.getTransaction().begin();
-        em.createQuery("DELETE FROM Apertura a WHERE a.idApertura=:idApertura")
-                        .setParameter("idApertura", apertura.getIdApertura())
-                                .executeUpdate();
+        Apertura resultado = em.find(Apertura.class, apertura.getIdApertura());
+        if (resultado != null) {
+            em.remove(resultado);
+        }
         em.getTransaction().commit();
     }
 
