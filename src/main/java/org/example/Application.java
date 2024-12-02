@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.List;
 
 public class Application {
@@ -136,21 +137,26 @@ public class Application {
         });
 
         EntityManager em = BDUtils.getEntityManager();
-        /*try{//TODO aun no termine
+        try{//inserto valores por defualt para mostrar del script defualt_data.sql
             InputStream inputStream = Application.class.getClassLoader().getResourceAsStream("default_data.sql");
             Path tempFile = Files.createTempFile("temp-sql", ".sql");
             Files.copy(inputStream, tempFile, StandardCopyOption.REPLACE_EXISTING);
 
-            String sql = Files.readString(tempFile);
-            System.out.println("START TRANSACTION; "+sql+" COMMIT;");
+            String sqlScript = Files.readString(tempFile);
+            String[] queries = sqlScript.split(";");
+
             em.getTransaction().begin();
-            em.createNativeQuery("START TRANSACTION; "+sql+" COMMIT;").executeUpdate();
+            for (String query : queries) {
+                if (!query.trim().isEmpty()) {
+                    em.createNativeQuery(query.trim()).executeUpdate();
+                }
+            }
             em.getTransaction().commit();
 
         } catch (Exception e){
             e.printStackTrace();
             em.getTransaction().rollback();
-        }*/
+        }
 
 
     }
