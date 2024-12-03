@@ -67,7 +67,7 @@ public abstract class Persona {
                 return (CorreoElectronico) medioDeContacto;
             }
         }
-        return null;
+        throw new RuntimeException("El tecnico no registro su correo electronico");
     }
 
     public Usuario buscarOCrearUsuario() throws MessagingException {

@@ -114,17 +114,21 @@ public class HeladerasController extends ContribucionController {
     }
 
     public static void postReporte(@NotNull Context context) throws Exception {
-//        Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
-//        Persona personaUser = user.getColaborador();
-       String idHeladeraStr = context.formParam("idHeladera");
-       Heladera heladera = null;
+        Map<String, Object> model = new HashMap<>();
+        List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
+        model.put("heladeras", heladeras);
+
+        String idHeladeraStr = context.formParam("idHeladera");
+        Heladera heladera = null;
         try {
             assert idHeladeraStr != null;
             Integer idHeladera = Integer.parseInt(idHeladeraStr);
             heladera = RepoHeladeras.getInstancia().buscarPorId(idHeladera).get();
         } catch (Exception e) {
+            e.printStackTrace();
             System.err.println("Error al buscar la heladera:" + e);
-            context.status(400);
+            model.put("error", "Error al buscar la heladera:" + e.getMessage());
+            context.render("views/heladeras/reporte.mustache", model);
             return;
         }
 //        LocalDateTime fechaParseada = null;
@@ -141,9 +145,16 @@ public class HeladerasController extends ContribucionController {
         String fotoUrl = context.formParam("foto");
         String tipoFalla = context.formParam("tipoFalla");
         String descripcion = context.formParam("descripcion");
+        try{
+            Colaborador colaborador = obtenerRolColaboradorActual();
+            colaborador.reportarFallaTecnica(descripcion,fotoUrl,heladera);
+        } catch (Exception e){
+          e.printStackTrace();
 
-        Colaborador colaborador = obtenerRolColaboradorActual();
-        colaborador.reportarFallaTecnica(descripcion,fotoUrl,heladera);
+            model.put("error", e.getMessage());
+            context.render("views/heladeras/reporte.mustache", model);
+            return;//salgo para que no redirija a /heladeras
+        }
 
         context.redirect("/heladeras");
     }

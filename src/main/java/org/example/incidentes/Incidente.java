@@ -6,6 +6,7 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.config.Configuracion;
 import org.example.personas.Persona;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
+import org.example.personas.contacto.CorreoElectronico;
 import org.example.personas.contacto.Mensaje;
 import org.example.repositorios.RepoMensajes;
 import org.example.repositorios.RepoPersona;
@@ -63,7 +64,8 @@ public abstract class Incidente {
                     .replace("{direccionHeladera}", direccion.getNombreCalle() +' '+direccion.getAltura() )
                     .replace("{tipoIncidente}", this.tipoDeIncidente);
             Mensaje mensaje = new Mensaje(asunto, contenido, tecnicoCercano);
-            tecnicoCercano.getMediosDeContacto().get(0).notificar(mensaje);//aviso por el primer medio de contacto que registró
+            CorreoElectronico mailTecnico = tecnicoCercano.getEmail();
+            mailTecnico.notificar(mensaje);//aviso por el primer medio de contacto que registró
             RepoMensajes.getInstancia().agregarMensaje(mensaje);
         } //si no hay tecnico cerca, no se avisa a nadie
     }

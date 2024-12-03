@@ -77,7 +77,7 @@ public class Application {
 
             path("reportes", () -> {
                 get("", ReportesController::getListaReportes);
-                //get(":id", ReportesController::getDetalleReporte);  <---   Falta ver
+                //get(":id", ReportesController::getDetalleReporte);  <---   TODO Falta ver
                 get("fallas", ReportesController::getReporteFallas);
                 get("viandas-colocadas", ReportesController::getReporteViandasColocadas);
                 get("viandas-distribuidas", ReportesController::getReporteViandasDistribuidas);

@@ -4,9 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.Contribucion;
+import org.example.personas.Persona;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.PersonaHumana;
 import org.example.repositorios.RepoPersona;
+import org.example.repositorios.RepoUbicacion;
+import org.example.repositorios.RepoUsuario;
 
 import javax.mail.MessagingException;
 import java.io.*;
@@ -42,8 +45,24 @@ public class MigradorContribucion {
     }
 
     private void migrarContribucion(PersonaHumana colaborador, Contribucion contribucion) throws MessagingException {
-        RepoPersona.getInstancia().agregar(colaborador);
-        Usuario usuario = colaborador.buscarOCrearUsuario();//ya lo guarda en el repo
-        ((Colaborador) colaborador.getRol()).agregarContribucion(contribucion);
+        Persona personaExistente = RepoPersona.getInstancia().buscarPorNombre(colaborador.getNombre());
+        if(personaExistente==null){
+            RepoPersona.getInstancia().agregar(colaborador);
+            Usuario usuario = colaborador.buscarOCrearUsuario();//ya lo guarda en el repo
+            ((Colaborador) colaborador.getRol()).agregarContribucion(contribucion);
+            ((Colaborador) colaborador.getRol()).calcularPuntuaje();
+            Persona colaboradorActualizado = RepoPersona.getInstancia().actualizarPersona(colaborador);
+            usuario.setColaborador(colaboradorActualizado);
+        } else {
+            Usuario usuario = personaExistente.buscarOCrearUsuario();//ya lo guarda en el repo
+            if(personaExistente.getRol() == null){
+                personaExistente.setRol(colaborador.getRol());//asigno colaborador ya creado
+                personaExistente = RepoPersona.getInstancia().actualizarPersona(personaExistente);
+            }
+            ((Colaborador) personaExistente.getRol()).agregarContribucion(contribucion);
+            ((Colaborador) personaExistente.getRol()).calcularPuntuaje();
+            personaExistente = RepoPersona.getInstancia().actualizarPersona(personaExistente);
+            usuario.setColaborador(personaExistente);
+        }
     }
 }

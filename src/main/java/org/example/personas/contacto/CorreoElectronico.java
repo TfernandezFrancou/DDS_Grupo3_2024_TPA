@@ -53,6 +53,7 @@ public class CorreoElectronico extends MedioDeContacto {
           System.out.println(response.getBody());
           System.out.println(response.getHeaders());
         } catch (IOException ex) {
+            ex.printStackTrace();
           throw new MessagingException(ex.getMessage());
         }
     }

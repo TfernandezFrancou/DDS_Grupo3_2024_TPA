@@ -57,8 +57,8 @@ public class Colaborador extends Rol {
 
     public void agregarContribucion(Contribucion contribucion)
     {
-        RepoContribucion.getInstancia().agregarContribucion(contribucion);
         contribucion.setColaborador(this);
+        RepoContribucion.getInstancia().agregarContribucion(contribucion);
         this.formasContribucion.add(contribucion);
     }
 

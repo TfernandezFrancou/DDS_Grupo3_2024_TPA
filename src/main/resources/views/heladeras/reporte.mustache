@@ -35,6 +35,10 @@
             <label for="descripcion">Descripcion</label>
             <textarea id="descripcion" name="descripcion" rows="5"></textarea>
 
+            {{#error}}
+            <p class="text-danger">{{error}}</p>
+            {{/error}}
+
             <div class="d-flex justify-content-center">
                 <button type="submit">Enviar</button>
             </div>

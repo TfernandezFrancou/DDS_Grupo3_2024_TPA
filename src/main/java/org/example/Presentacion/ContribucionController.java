@@ -30,6 +30,7 @@ public abstract class ContribucionController {
     private static Persona obtenerPersonaColaboradorActual(){
         Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
         Persona personaUser = user.getColaborador();
+        personaUser = RepoPersona.getInstancia().buscarPorId(personaUser.getIdPersona());
         if(personaUser.getRol() == null){
             Colaborador colaboradorRol = new Colaborador();
             colaboradorRol.setEstaActivo(true);
@@ -53,6 +54,7 @@ public abstract class ContribucionController {
         Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
         Persona personaColaborador = user.getColaborador();
         personaColaborador.setRol(colaborador);
+        personaColaborador = RepoPersona.getInstancia().actualizarPersona(personaColaborador);
         actualizarPersonaColaboradorActual(personaColaborador);
     }
 }

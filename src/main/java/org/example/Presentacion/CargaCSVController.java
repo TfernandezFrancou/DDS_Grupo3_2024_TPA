@@ -47,7 +47,7 @@ public class CargaCSVController {
                 Map<String, Object> model = new HashMap<>();
                 model.put("error", ex.getMessage());
                 context.render("/views/colaboraciones/carga-csv-incorrecta.mustache", model);
-                System.out.println(ex.getCause() !=null ? ex.getCause().getMessage() : ex.getLocalizedMessage());
+                ex.printStackTrace();
             }
         }else {
             Map<String, Object> model = new HashMap<>();

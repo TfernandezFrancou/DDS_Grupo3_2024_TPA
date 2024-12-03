@@ -168,3 +168,8 @@ VALUES ('/views/imagenes/bici.png', 'Bicicleta k153',9,
         WHERE c.fecha = '2024-12-03'
             and c.colaborador_idrol = (SELECT idrol FROM colaborador
                 WHERE puntuaje = 43.5 and estaActivo = 1)));
+
+INSERT INTO mediodecontacto(discriminator, mail, id_persona)
+VALUES('CorreoElectronico','francotomascallero@gmail.com', (SELECT idPersona FROM persona p
+    JOIN documento d ON d.idDocumento = p.documento_idDocumento
+    WHERE d.numeroDocumento = '21244577'));
