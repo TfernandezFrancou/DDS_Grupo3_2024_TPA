@@ -13,7 +13,8 @@ import javax.persistence.*;
 public abstract class Rol {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "rol_seq")
+    @SequenceGenerator(name = "rol_seq", sequenceName = "rol_sequence", allocationSize = 1)
     private int idrol;
 
     @Column(columnDefinition = "INT")

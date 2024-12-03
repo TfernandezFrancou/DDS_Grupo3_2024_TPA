@@ -31,7 +31,7 @@ public class Vianda {
     private int calorias;
     private float peso;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Entrega entrega;
 
     public Vianda(String descripcion, int calorias, float peso) {

@@ -21,16 +21,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OfertasController {
+public class OfertasController extends ContribucionController {
     public static void getOfertas(@NotNull Context context) throws Exception {
         Map<String, Object> model = new HashMap<>();
-        Usuario user =(Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
-        int idPersona = user.getColaborador().getIdPersona();
-        Persona persona = RepoPersona.getInstancia().buscarPorId(idPersona);
-        int puntos = 0;
-        if (persona.getRol() instanceof Colaborador) {
-            puntos = (int) ((Colaborador) persona.getRol()).getPuntuaje();
-        }
+        Colaborador colaborador = obtenerRolColaboradorActual();
+        int puntos = (int) colaborador.getPuntuaje();
+
         model.put("puntos", puntos);
         List<Oferta> ofertas = RepoOfertas.getInstancia().obtenerTodas();
         model.put("ofertas", ofertas);

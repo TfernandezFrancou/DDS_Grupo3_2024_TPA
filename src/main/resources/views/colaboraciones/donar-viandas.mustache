@@ -54,11 +54,30 @@
             <label for="peso">Peso</label>
             <input type="number" id="peso" name="peso" placeholder="Ingrese el peso en kg">
 
-            <button type="submit">Donar</button>
-            <p class="error">{{error}}</p>
+            <div class="form-group">
+                <label>¿Se entregó? <span class="required">*</span></label>
+                <div class="radio-inline">
+                    <label class="radio-label"><input type="radio" id="entregado-si" name="entregado" value="si" required> Sí</label>
+                    <label class="radio-label"><input type="radio" id="entregado-no" name="entregado" value="no"> No </label>
+                </div>
+            </div>
+
+
+            <label for="fecha-entregado">Fecha de Entregada <span class="required">*</span></label>
+            <input type="date" id="fecha-entregado" name="fecha-entregado">
+
+            {{#exito}}
+                <p class="text-success mt-1">{{exito}}</p>
+            {{/exito}}
+            {{#error}}
+                <p class="text-danger mt-1">{{error}}</p>
+            {{/error}}
+
+            <button type="submit" class="button">Donar</button>
         </form>
     </div>
 </div>
+    <script src="/views/js/mainDonarViandas.js"></script>
 </body>
 
 </html>

@@ -6,6 +6,7 @@ import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Entrega;
+import org.example.colaboraciones.contribuciones.viandas.EstadoEntrega;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.incidentes.FallaTecnica;
 import org.example.personas.Persona;
@@ -17,6 +18,7 @@ import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoPersona;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.text.DateFormatter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class DonarViandasController {
+public class DonarViandasController extends ContribucionController {
 
     public static void postDonarVianda(@NotNull Context context) {
         String tipoComida = context.formParam("tipo-comida");
@@ -33,6 +35,8 @@ public class DonarViandasController {
         String idHeladera = context.formParam("heladera");
         String calorias = context.formParam("calorias");
         String peso = context.formParam("peso");
+        String entregado = context.formParam("entregado");
+        String fechaEntregado = context.formParam("fecha-entregado");
 
         Vianda vianda = new Vianda();
         vianda.setDescripcion(tipoComida);
@@ -41,6 +45,18 @@ public class DonarViandasController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         vianda.setFechaCaducidad(LocalDateTime.parse(fechaCaducidad+" 00:00",formatter));
         vianda.setFechaDonacion(LocalDateTime.now());
+
+
+        if(entregado.equals("si")){
+            if(fechaEntregado.equals("")){
+                throw new RuntimeException("No se introdujo una fecha de entrega válida");
+            }else {
+                DateTimeFormatter formatter_date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                vianda.setEntrega(new Entrega(EstadoEntrega.ENTREGADO,LocalDate.parse(fechaEntregado,formatter_date)));
+            }
+        } else if(entregado.equals("no")){
+            vianda.setEntrega(new Entrega(EstadoEntrega.PENDIENTE,null));
+        }
 
         Integer idHeladeraInt = Integer.parseInt(idHeladera);
         Optional<Heladera> heladeraOptional = RepoHeladeras.getInstancia().buscarPorId(idHeladeraInt);
@@ -54,17 +70,16 @@ public class DonarViandasController {
             donacionDeViandas.setHeladera(heladeraOptional.get());
             donacionDeViandas.setCantidadDeViandas(1);
 
-            Usuario user =(Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
-            Persona persona = user.getColaborador();
-            if(persona.getRol() != null && persona.getRol() instanceof Colaborador)
-                donacionDeViandas.setColaborador((Colaborador) persona.getRol());//TODO verificar si funciona
 
-            RepoContribucion.getInstancia().agregarContribucion(donacionDeViandas);
+            actualizarPuntajeUsuarioActual(donacionDeViandas);
+
+            Colaborador colaborador = obtenerRolColaboradorActual();
+            vianda.setColaborador(colaborador);
 
             List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
             Map<String, Object> model = new HashMap<>();
             model.put("heladeras", heladeras);
-            model.put("error", "");
+            model.put("exito", "Contribucion registrada con exito");
             context.render("/views/colaboraciones/donar-viandas.mustache", model);
         } else {
             //error

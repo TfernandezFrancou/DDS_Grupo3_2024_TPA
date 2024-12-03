@@ -18,5 +18,11 @@ public class Entrega {
     private EstadoEntrega estadoEntrega;
     private LocalDate fechaEntrega;
 
+    public Entrega() {
+    }
 
+    public Entrega(EstadoEntrega estadoEntrega, LocalDate fechaEntrega) {
+        this.estadoEntrega = estadoEntrega;
+        this.fechaEntrega = fechaEntrega;
+    }
 }

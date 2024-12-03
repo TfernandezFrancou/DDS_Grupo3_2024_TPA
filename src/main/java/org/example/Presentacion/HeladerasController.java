@@ -8,6 +8,7 @@ import io.javalin.http.Context;
 import org.example.autenticacion.SessionManager;
 import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.Ubicacion;
+import org.example.colaboraciones.contribuciones.HacerseCargoDeUnaHeladera;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.incidentes.FallaTecnica;
@@ -25,7 +26,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class HeladerasController {
+public class HeladerasController extends ContribucionController {
 
     public static void getVisualizar(@NotNull Context context) throws Exception {
         Map<String, Object> model = new HashMap<>();
@@ -91,16 +92,16 @@ public class HeladerasController {
             (float) result.geometry.location.lng
         );
         System.out.println("Latitud: " + ubicacion.getLatitud() + " - Longitud: " + ubicacion.getLongitud());
+        RepoUbicacion.getInstancia().agregar(ubicacion);
 
         Heladera heladera = new Heladera(nombre, ubicacion, direccion, capacidad);
 
-        try {
-            RepoUbicacion.getInstancia().agregar(ubicacion);
-            RepoHeladeras.getInstancia().agregar(heladera);
-        } catch (Exception e) {
-            System.err.println("Error al agregar la heladera: " + e);
-            e.printStackTrace();
-        }
+        HacerseCargoDeUnaHeladera hacerseCargoDeUnaHeladera = new HacerseCargoDeUnaHeladera();
+        hacerseCargoDeUnaHeladera.agregarHeladera(heladera);
+
+        RepoHeladeras.getInstancia().agregar(heladera);
+        actualizarPuntajeUsuarioActual(hacerseCargoDeUnaHeladera);//y guarda la contribucion
+
 
         context.redirect("/heladeras");
     }
@@ -147,21 +148,6 @@ public class HeladerasController {
         context.redirect("/heladeras");
     }
 
-    private static Colaborador obtenerRolColaboradorActual(){
-        Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
-        Persona personaUser = user.getColaborador();
-        if(personaUser.getRol() == null){
-            Colaborador colaboradorRol = new Colaborador();
-            colaboradorRol.setEstaActivo(true);
-            personaUser.setRol(colaboradorRol);
-            // Actualiza persona para obtener id del rol
-            personaUser = RepoPersona.getInstancia().actualizarPersona(personaUser);
-        } else if(!(personaUser.getRol() instanceof Colaborador)){
-            throw new RuntimeException("Solo los colaboradores pueden reportar fallas");
-        }
-
-        return (Colaborador) personaUser.getRol();
-    }
 
     public static void getAlertas(@NotNull Context context) throws Exception {
         List<Incidente> resultados = null;

@@ -164,6 +164,18 @@ public class RepoPersona {
         return persona;
     }
 
+    public Colaborador getRolColaboradorById(int idRol) {
+        System.out.println("buscando id rol: "+ idRol);
+        EntityManager em = BDUtils.getEntityManager();
+        Colaborador colaborador = em.createQuery("SELECT c FROM Colaborador c WHERE c.idrol=:idRol", Colaborador.class)
+                .setParameter("idRol", idRol)
+                .getSingleResult();
+        if(colaborador == null){
+            throw new PersonaInexistenteException("No existe el rol colaborador con id="+idRol);
+        }
+        return colaborador;
+    }
+
     public List<ItemReporte> obtenerCantidadDeViandasDistribuidasPorColaborador(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual) {
         List<Persona> colaboradores = this.buscarPersonasConRol(Colaborador.class);
         List<ItemReporte> reporte = new ArrayList<>();

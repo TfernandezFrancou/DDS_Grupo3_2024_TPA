@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegistrarPersonaVulnerableController {
+public class RegistrarPersonaVulnerableController extends ContribucionController {
     public static void postRegistrarPersonaVulnerable(@NotNull Context context) {
         try{
             PersonaHumana personaVulnerable = almacenarPersonaVulnerable(context);
@@ -29,9 +29,7 @@ public class RegistrarPersonaVulnerableController {
             contribucion.setFecha(LocalDate.now());
             contribucion.agregarPersona(personaVulnerable);
 
-            Colaborador colaborador = obtenerRolColaboradorActual();
-            contribucion.setColaborador(colaborador);
-            RepoContribucion.getInstancia().agregarContribucion(contribucion);
+            actualizarPuntajeUsuarioActual(contribucion);
 
             Map<String, Object> model = new HashMap<>();
             model.put("exito", "El registro fue exitoso");
@@ -50,8 +48,13 @@ public class RegistrarPersonaVulnerableController {
         String[] nombreYApellidoArray = nombreYApellido.split(" ");
         String nombre = nombreYApellidoArray[0];
         String apellido = null;
-        if(nombreYApellidoArray.length == 2)
+        if(nombreYApellidoArray.length == 2){
             apellido= nombreYApellidoArray[1];
+        } else if(nombreYApellidoArray.length == 3){
+            nombre = nombreYApellidoArray[0] + " "+nombreYApellidoArray[1];//nombre y segundo nombre
+            apellido= nombreYApellidoArray[3];
+        }
+
         String tieneDomicilio = context.formParam("domicilio");
         String domicilio = context.formParam("domicilio-texto");
         String documento = context.formParam("documento");
@@ -70,7 +73,7 @@ public class RegistrarPersonaVulnerableController {
 
         PersonaHumana personaHumana = new PersonaHumana();
         personaHumana.setNombre(nombre);
-        if(apellido == null)
+        if(apellido != null)
             personaHumana.setApellido(apellido);
 
         if(tieneDomicilio.equals("si")){
@@ -105,9 +108,10 @@ public class RegistrarPersonaVulnerableController {
         return personaHumana;
     }
 
-    private static Colaborador obtenerRolColaboradorActual(){
+    private static Persona obtenerPersonaColaboradorActual(){
         Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
-        Persona personaUser = user.getColaborador();
+        int idPersonaUser = user.getColaborador().getIdPersona();
+        Persona personaUser = RepoPersona.getInstancia().buscarPorId(idPersonaUser);
         if(personaUser.getRol() == null){
             Colaborador colaboradorRol = new Colaborador();
             colaboradorRol.setEstaActivo(true);
@@ -118,7 +122,7 @@ public class RegistrarPersonaVulnerableController {
             throw new RuntimeException("No puedes registrar a una persona en situacion vulnerable, no eres colaborador");
         }
 
-        return (Colaborador) personaUser.getRol();
+        return personaUser;
     }
 
     public static void getRegistrarPersonaVulnerable(@NotNull Context context) {
