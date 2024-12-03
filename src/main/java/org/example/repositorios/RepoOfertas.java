@@ -44,4 +44,12 @@ public class RepoOfertas { //TODO conectar con DB
                 .createQuery("from Oferta", Oferta.class)
                 .getResultList();
     }
+
+    public Oferta buscarPorNombre(String nombreProducto) {
+        return  BDUtils
+                .getEntityManager()
+                .createQuery("from Oferta o WHERE o.nombre=:nombre", Oferta.class)
+                .setParameter("nombre", nombreProducto)
+                .getSingleResult();
+    }
 }

@@ -23,6 +23,7 @@ public abstract class ContribucionController {
 
     public static Colaborador obtenerRolColaboradorActual(){
         Persona colaboradorPersona = obtenerPersonaColaboradorActual();
+        RepoPersona.getInstancia().actualizarPersona(colaboradorPersona);
         return RepoPersona.getInstancia().getRolColaboradorById(colaboradorPersona.getRol().getIdrol());
     }
 
@@ -39,11 +40,19 @@ public abstract class ContribucionController {
             throw new RuntimeException("Esta funcionalidad está disponible solo para personas con el rol de colaborador");
         }
 
+        user.setColaborador(personaUser);//update
         return personaUser;
     }
 
     private static void actualizarPersonaColaboradorActual(Persona persona){
         Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
          user.setColaborador(persona);
+    }
+
+    public static void actualizarColaboradorUsuarioActual(Colaborador colaborador){
+        Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
+        Persona personaColaborador = user.getColaborador();
+        personaColaborador.setRol(colaborador);
+        actualizarPersonaColaboradorActual(personaColaborador);
     }
 }

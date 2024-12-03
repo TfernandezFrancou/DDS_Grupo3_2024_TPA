@@ -6,9 +6,12 @@ import org.example.autenticacion.SessionManager;
 import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.contribuciones.OfrecerProductos;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
+import org.example.excepciones.PuntosInsuficienteParaCanjearOferta;
 import org.example.personas.Persona;
 import org.example.personas.PersonaJuridica;
 import org.example.personas.roles.Colaborador;
+import org.example.repositorios.RepoContribucion;
+import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoOfertas;
 import org.example.repositorios.RepoPersona;
 import org.jetbrains.annotations.NotNull;
@@ -17,11 +20,64 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class OfertasController extends ContribucionController {
+
+    public static void postCanjearOfera(@NotNull Context context) throws Exception {
+        Map<String, Object> model = new HashMap<>();
+
+        String nombreProducto = context.formParam("nombre");
+
+        Oferta resultadoBusqueda = RepoOfertas.getInstancia().buscarPorNombre(nombreProducto);
+        String errorMessage = null;
+        Colaborador colaborador = obtenerRolColaboradorActual();
+        try{
+            colaborador.canjearOferta(resultadoBusqueda);//tambien modifica el puntaje
+            actualizarColaboradorUsuarioActual(colaborador);
+        } catch (Exception ex){
+            ex.printStackTrace();
+            errorMessage = "puntos insuficientes";
+
+        }
+
+        int puntos = (int) colaborador.getPuntuaje();
+
+        List<Oferta> ofertas = RepoOfertas.getInstancia().obtenerTodas();//se puede canjear mas de una vez una misma oferta
+        List<Map<String,String>> ofertas_view = new ArrayList<>();
+        //agrego mensaje de error si corresponde
+        for (Oferta o: ofertas) {
+            if(o.getNombre().equals(nombreProducto) && errorMessage!= null){
+                ofertas_view.add(Map.of(
+                        "nombre",o.getNombre(),
+                        "imagenURL",o.getImagenURL(),
+                        "puntosNecesarios", o.getPuntosNecesarios().toString(),
+                        "error", errorMessage
+                ));
+            } else if(o.getNombre().equals(nombreProducto)){
+                ofertas_view.add(Map.of(
+                        "nombre",o.getNombre(),
+                        "imagenURL",o.getImagenURL(),
+                        "puntosNecesarios", o.getPuntosNecesarios().toString(),
+                        "exito", "canjeado con exito"
+                ));
+            } else {
+                ofertas_view.add(Map.of(
+                        "nombre",o.getNombre(),
+                        "imagenURL",o.getImagenURL(),
+                        "puntosNecesarios", o.getPuntosNecesarios().toString()
+                ));
+            }
+        }
+
+        model.put("puntos", puntos);
+        model.put("ofertas", ofertas_view);
+        context.render("views/colaboraciones/puntos.mustache", model);
+    }
+
     public static void getOfertas(@NotNull Context context) throws Exception {
         Map<String, Object> model = new HashMap<>();
         Colaborador colaborador = obtenerRolColaboradorActual();

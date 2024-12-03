@@ -122,6 +122,7 @@ public class Application {
 
             path("puntos", () -> {
                 get("", OfertasController::getOfertas);
+                post("",OfertasController::postCanjearOfera);
             });
 
             path("ofrecer-producto", () -> {

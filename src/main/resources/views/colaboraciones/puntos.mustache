@@ -40,12 +40,21 @@
         {{#ofertas}}
             <div class="col-md-3  col-puntos">
                 <div class="card mb-4 rounded-3 shadow-sm">
-                    <div class="card-body">
+                    <form class="card-body" method="POST" action="/puntos" >
                         <h3>{{nombre}}</h3>
-                        <img src="{{imagenURL}}" alt="{{nombra}}">
+                        <input type="hidden" name="nombre" value="{{nombre}}">
+                        <img src="{{imagenURL}}" alt="{{nombre}}">
                         <p>Puntos necesarios: {{puntosNecesarios}}</p>
-                        <button class="button canjear-button" onclick="canjearPuntos(100)">Canjear</button>
-                    </div>
+                        {{#error}}
+                            <p class="text-danger">{{error}}</p>
+                        {{/error}}
+                        {{#exito}}
+                            <p class="text-success-emphasis">{{exito}}</p>
+                        {{/exito}}
+                        <button class="button canjear-button" type="submit" {{#error}}disabled{{/error}}>
+                            Canjear
+                        </button>
+                    </form>
                 </div>
             </div>
         {{/ofertas}}
