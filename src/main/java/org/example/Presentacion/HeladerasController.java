@@ -5,13 +5,18 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.*;
 import io.javalin.http.Context;
+import org.example.autenticacion.SessionManager;
+import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.incidentes.FallaTecnica;
 import org.example.incidentes.Incidente;
+import org.example.personas.Persona;
+import org.example.personas.roles.Colaborador;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoIncidente;
+import org.example.repositorios.RepoPersona;
 import org.example.repositorios.RepoUbicacion;
 import org.jetbrains.annotations.NotNull;
 
@@ -108,6 +113,8 @@ public class HeladerasController {
     }
 
     public static void postReporte(@NotNull Context context) throws Exception {
+//        Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
+//        Persona personaUser = user.getColaborador();
        String idHeladeraStr = context.formParam("idHeladera");
        Heladera heladera = null;
         try {
@@ -119,25 +126,41 @@ public class HeladerasController {
             context.status(400);
             return;
         }
-        LocalDateTime fechaParseada = null;
-        try {
-            String fechaFalla = context.formParam("fechaFalla");
-            assert fechaFalla != null;
-            fechaParseada = LocalDate.parse(fechaFalla).atTime(0, 0, 0);
-        } catch (Exception e) {
-            System.err.println("Error al parsear la fecha:" + e);
-            context.status(400);
-            return;
-        }
+//        LocalDateTime fechaParseada = null;
+//        try {
+//            String fechaFalla = context.formParam("fechaFalla");
+//            assert fechaFalla != null;
+//            fechaParseada = LocalDate.parse(fechaFalla).atTime(0, 0, 0);
+//        } catch (Exception e) {
+//            System.err.println("Error al parsear la fecha:" + e);
+//            context.status(400);
+//            return;
+//        }
 
         String fotoUrl = context.formParam("foto");
         String tipoFalla = context.formParam("tipoFalla");
         String descripcion = context.formParam("descripcion");
 
-        FallaTecnica ft = new FallaTecnica(null, descripcion, fotoUrl, heladera, tipoFalla, fechaParseada);
-        RepoIncidente.getInstancia().agregarFalla(ft);
+        Colaborador colaborador = obtenerRolColaboradorActual();
+        colaborador.reportarFallaTecnica(descripcion,fotoUrl,heladera);
 
         context.redirect("/heladeras");
+    }
+
+    private static Colaborador obtenerRolColaboradorActual(){
+        Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
+        Persona personaUser = user.getColaborador();
+        if(personaUser.getRol() == null){
+            Colaborador colaboradorRol = new Colaborador();
+            colaboradorRol.setEstaActivo(true);
+            personaUser.setRol(colaboradorRol);
+            // Actualiza persona para obtener id del rol
+            personaUser = RepoPersona.getInstancia().actualizarPersona(personaUser);
+        } else if(!(personaUser.getRol() instanceof Colaborador)){
+            throw new RuntimeException("Solo los colaboradores pueden reportar fallas");
+        }
+
+        return (Colaborador) personaUser.getRol();
     }
 
     public static void getAlertas(@NotNull Context context) throws Exception {
