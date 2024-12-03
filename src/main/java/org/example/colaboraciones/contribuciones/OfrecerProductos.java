@@ -6,10 +6,7 @@ import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
 import org.example.repositorios.RepoOfertas;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +16,7 @@ import java.util.Set;
 @Entity
 @PrimaryKeyJoinColumn(name = "id_contribucion")
 public class OfrecerProductos extends Contribucion {
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name ="id_contribucion")
     private List<Oferta> ofertas;
 

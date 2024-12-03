@@ -26,6 +26,7 @@ public class PersonaJuridica extends Persona{
     @Transient
     private IAdapter recomendadorDeUbicaciones;
 
+    public PersonaJuridica(){}
 
     public PersonaJuridica(String razonSocial) {
         this.razonSocial = razonSocial;
