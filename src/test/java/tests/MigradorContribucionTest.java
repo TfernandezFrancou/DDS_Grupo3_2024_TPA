@@ -9,11 +9,13 @@ import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.RegistrarPersonasEnSituacionVulnerable;
 import org.example.excepciones.UserException;
 import org.example.migracion.MigradorContribucion;
+import org.example.personas.Persona;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.personas.documentos.Documento;
 import org.example.personas.documentos.TipoDocumento;
+import org.example.repositorios.RepoPersona;
 import org.example.repositorios.RepoUsuario;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +33,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static org.mockito.ArgumentMatchers.any;
+
 public class MigradorContribucionTest {
     @InjectMocks
     private MigradorContribucion migradorContribucion;
@@ -40,6 +44,10 @@ public class MigradorContribucionTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        RepoPersona.getInstancia().clean();
+        RepoUsuario.getInstancia().clean();
+
+        System.setProperty("env", "test");// para evitar que se notifique en ambiente de pruebas
     }
 
     private void verificarContribucion(Contribucion contribucion, String fechaColaboracion, Class clase) {
@@ -159,55 +167,60 @@ public class MigradorContribucionTest {
     @Test
     public void testMigrarUsuarioExistente() throws MessagingException {
         CorreoElectronico correo = Mockito.mock(CorreoElectronico.class);
-        Mockito.doNothing().when(correo).notificar(Mockito.any());
+        Mockito.doNothing().when(correo).notificar(any());
         Colaborador colaborador = new Colaborador();
-        colaborador.agregarContribucion(new DonacionDeViandas());
         PersonaHumana persona1 = new PersonaHumana("Juan", "Perez", correo, new Documento(TipoDocumento.DNI, "33333333"), colaborador);
+        RepoPersona.getInstancia().agregar(persona1);
+        colaborador.agregarContribucion(new DonacionDeViandas());
+        colaborador.calcularPuntuaje();
+        RepoPersona.getInstancia().actualizarPersona(persona1);
         Usuario usuario1 = new Usuario("Juan Perez", persona1.getDocumento(), persona1);
         try (MockedStatic<RepoUsuario> mockedSingleton = Mockito.mockStatic(RepoUsuario.class)) {
             RepoUsuario repoUsuario = Mockito.mock(RepoUsuario.class);
             Mockito.when(RepoUsuario.getInstancia()).thenReturn(repoUsuario);
-            Mockito.when(repoUsuario.obtenerUsuarioPorDocumento(persona1.getDocumento())).thenReturn(usuario1);
+            Mockito.when(repoUsuario.obtenerUsuarioPorDocumento(any(Documento.class))).thenReturn(usuario1);
 
             migradorContribucion.getColaboradores().add(persona1);
             migradorContribucion.getContribuciones().add(new DonacionDeDinero(LocalDate.of(2022, 1, 1), 100));
             migradorContribucion.migrarColaboradores();
 
             // se hace una busqueda
-            Mockito.verify(repoUsuario, Mockito.times(1)).obtenerUsuarioPorDocumento(Mockito.any());
+            Mockito.verify(repoUsuario, Mockito.times(1)).obtenerUsuarioPorDocumento(any());
             // no se agrega ningun usuario
-            Mockito.verify(repoUsuario, Mockito.times(0)).agregarUsuarios(Mockito.any());
+            Mockito.verify(repoUsuario, Mockito.times(0)).agregarUsuarios(any());
+
+            Persona personaMigrada =RepoPersona.getInstancia().buscarPorId(persona1.getIdPersona());
             // se agrega la forma de contribucion
-            Assertions.assertEquals(((Colaborador) persona1.getRol()).getFormasContribucion().size(), 2);
+            Assertions.assertEquals(((Colaborador) personaMigrada.getRol()).getFormasContribucion().size(), 2);
             // no se notifica al usuario pues no se creo
-            Mockito.verify(correo, Mockito.times(0)).notificar(Mockito.any());
+            Mockito.verify(correo, Mockito.times(0)).notificar(any());
         }
     }
 
     @Test
     public void testMigrarUsuarioNoExistente() throws MessagingException {
-        CorreoElectronico correo = Mockito.mock(CorreoElectronico.class);
-        Mockito.doNothing().when(correo).notificar(Mockito.any());
+        CorreoElectronico correo = new CorreoElectronico("example@gmail.com");
         PersonaHumana persona1 = new PersonaHumana("Juan", "Perez", correo, new Documento(TipoDocumento.DNI, "33333333"), new Colaborador());
+        RepoPersona.getInstancia().agregar(persona1);
+
         try (MockedStatic<RepoUsuario> mockedSingleton = Mockito.mockStatic(RepoUsuario.class)) {
             RepoUsuario repoUsuario = Mockito.mock(RepoUsuario.class);
             Mockito.when(RepoUsuario.getInstancia()).thenReturn(repoUsuario);
-            Mockito.when(repoUsuario.obtenerUsuarioPorDocumento(persona1.getDocumento())).thenThrow(UserException.class);
-            Mockito.doNothing().when(repoUsuario).agregarUsuarios(Mockito.any());
+            Mockito.when(repoUsuario.obtenerUsuarioPorDocumento(any(Documento.class))).thenThrow(UserException.class);
+            Mockito.doNothing().when(repoUsuario).agregarUsuarios(any());
 
             migradorContribucion.getColaboradores().add(persona1);
             migradorContribucion.getContribuciones().add(new DonacionDeDinero(LocalDate.of(2022, 1, 1), 100));
             migradorContribucion.migrarColaboradores();
 
             // se hace una busqueda
-            Mockito.verify(repoUsuario, Mockito.times(1)).obtenerUsuarioPorDocumento(Mockito.any());
+            Mockito.verify(repoUsuario, Mockito.times(1)).obtenerUsuarioPorDocumento(any());
             // se agrega un usuario
-            Mockito.verify(repoUsuario, Mockito.times(1)).agregarUsuarios(Mockito.any());
+            Mockito.verify(repoUsuario, Mockito.times(1)).agregarUsuarios(any());
+            Persona personaMigrada = RepoPersona.getInstancia().buscarPorId(persona1.getIdPersona());
             // termina con una sola forma de colaboracion
-            Assertions.assertEquals(((Colaborador) persona1.getRol()).getFormasContribucion().size(), 1);
-            verificarContribucion(((Colaborador) persona1.getRol()).getFormasContribucion().get(0), "01/01/2022", DonacionDeDinero.class);
-            // se notifica al usuario
-            Mockito.verify(correo, Mockito.times(1)).notificar(Mockito.any());
+            Assertions.assertEquals(((Colaborador) personaMigrada.getRol()).getFormasContribucion().size(), 1);
+            verificarContribucion(((Colaborador) personaMigrada.getRol()).getFormasContribucion().get(0), "01/01/2022", DonacionDeDinero.class);
         }
     }
 
