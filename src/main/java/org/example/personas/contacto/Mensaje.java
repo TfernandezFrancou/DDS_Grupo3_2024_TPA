@@ -18,13 +18,13 @@ public class Mensaje {
 
     private String titulo;
 
-    @Column(length = 1000) // Ajustar longitud máxima si el contenido puede ser extenso
+    @Column(columnDefinition = "TEXT") // Ajustar longitud máxima si el contenido puede ser extenso
     private String contenido;
 
     @Column(name = "fecha_enviado") // Asegura coincidencia con el DER
     private LocalDateTime fechaDeEnvio;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "id_persona_destinatario", nullable = false) // Define explicitamente la FK
     private Persona destinatario;
 

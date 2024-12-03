@@ -5,6 +5,7 @@ import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.Mensaje;
 import org.example.repositorios.RepoMensajes;
+import org.example.repositorios.RepoPersona;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import java.util.List;
 public class RepoMensajesTest {
 
     private RepoMensajes repoMensajes;
+    private RepoPersona repoPersona;
     private Mensaje mensaje;
     private PersonaHumana destinatario;
 
@@ -23,9 +25,11 @@ public class RepoMensajesTest {
     public void setUp() {
         this.repoMensajes = RepoMensajes.getInstancia();
         this.repoMensajes.clean();
-
+        this.repoPersona = RepoPersona.getInstancia();
+        this.repoPersona.clean();
         mensaje = new Mensaje();
         destinatario = new PersonaHumana();
+        this.repoPersona.agregar(destinatario);
         mensaje.setDestinatario(destinatario);
         this.repoMensajes.agregarMensaje(mensaje);
     }
@@ -34,6 +38,7 @@ public class RepoMensajesTest {
     public void testAgregarMensaje() {
         Mensaje mensaje = new Mensaje();
         Persona destinatario1 = new PersonaHumana();
+        this.repoPersona.agregar(destinatario1);
         mensaje.setDestinatario(destinatario1);
         this.repoMensajes.agregarMensaje(mensaje);
 

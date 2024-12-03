@@ -143,6 +143,10 @@ public class Application {
         });
 
         EntityManager em = BDUtils.getEntityManager();
+        cargarScriptSql(em);
+    }
+
+    private static void cargarScriptSql(EntityManager em){
         try{//inserto valores por defualt para mostrar del script defualt_data.sql
             InputStream inputStream = Application.class.getClassLoader().getResourceAsStream("default_data.sql");
             Path tempFile = Files.createTempFile("temp-sql", ".sql");
@@ -163,7 +167,5 @@ public class Application {
             e.printStackTrace();
             em.getTransaction().rollback();
         }
-
-
     }
 }

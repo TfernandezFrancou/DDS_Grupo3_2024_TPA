@@ -119,3 +119,11 @@ VALUES ((SELECT idItemReporte FROM itemreporte ir
             JOIN reportesdelasemana rs ON rs.idReportesDeLaSemana = ir.id_reporte_de_la_semana
             WHERE rs.fechaInicioSemana = '2024-12-01'),
         (SELECT idVianda FROM vianda v WHERE v.descripcion = 'pancho con coca'));
+
+
+INSERT INTO ubicacion (latitud, longitud) VALUES(-34.6725928524, -58.4074856269);
+
+INSERT INTO zona (nombreZona, radio, ubicacion_idUbicacion, id_rol_tecnico)
+VALUES ('Valentin Alsina', '500',
+    (SELECT idUbicacion FROM ubicacion WHERE latitud = -34.6725928524 and longitud = -58.4074856269),
+ 1)

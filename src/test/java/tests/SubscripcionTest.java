@@ -64,7 +64,7 @@ public class SubscripcionTest {
 
         PersonaHumana personaMock = new PersonaHumana();
         personaMock.addMedioDeContacto(correoElectronicoMock);
-
+        RepoPersona.getInstancia().agregar(personaMock);
         heladera.getPublisherDesperfecto().suscribir(new SubscripcionDesperfecto(personaMock, correoElectronicoMock));
 
         sensorDeTemperatura.emitirAlerta("hola");
@@ -78,7 +78,7 @@ public class SubscripcionTest {
 
         PersonaHumana persona = new PersonaHumana();
         persona.addMedioDeContacto(correoElectronicoMock);
-
+        RepoPersona.getInstancia().agregar(persona);
         SubscripcionViandasFaltantes sub = new SubscripcionViandasFaltantes(persona, correoElectronicoMock, 3);
         heladera.getPublisherViandasFaltantes().suscribir(sub);
 

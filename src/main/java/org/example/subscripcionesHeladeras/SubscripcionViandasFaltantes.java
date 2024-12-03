@@ -7,6 +7,7 @@ import org.example.config.Configuracion;
 import org.example.personas.Persona;
 import org.example.personas.contacto.MedioDeContacto;
 import org.example.personas.contacto.Mensaje;
+import org.example.repositorios.RepoMensajes;
 
 import javax.mail.MessagingException;
 import javax.persistence.Entity;
@@ -31,5 +32,6 @@ public class SubscripcionViandasFaltantes extends SubscripcionHeladera {
             .replace("{heladera}", heladera.getNombre());
         Mensaje mensaje = new Mensaje(asunto, contenido, subscriptor);
         medioDeContactoElegido.notificar(mensaje);
+        RepoMensajes.getInstancia().agregarMensaje(mensaje);
     }
 }

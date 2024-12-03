@@ -10,6 +10,7 @@ import org.example.personas.contacto.MedioDeContacto;
 import org.example.personas.contacto.Mensaje;
 import org.example.personas.documentos.Documento;
 import org.example.personas.roles.Colaborador;
+import org.example.repositorios.RepoMensajes;
 import org.example.validaciones.VerificadorContrasenia;
 
 import javax.crypto.SecretKeyFactory;
@@ -121,8 +122,9 @@ public class Usuario {
         String mensajeDeBienvenida = cuerpo
                 .replace("{username}", nombreDeUsuario)
                 .replace("{password}", contrasenia);
-        medioDeContacto.notificar(new Mensaje(asunto, mensajeDeBienvenida, colaborador));
-
+        Mensaje mensaje = new Mensaje(asunto, mensajeDeBienvenida, colaborador);
+        medioDeContacto.notificar(mensaje);
+        RepoMensajes.getInstancia().agregarMensaje(mensaje);
         this.contrasenia = HashGenerator.hash(contrasenia);//encripto contraseña para poder compararla
     }
 

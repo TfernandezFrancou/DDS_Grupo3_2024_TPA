@@ -6,6 +6,7 @@ import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.Contribucion;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.PersonaHumana;
+import org.example.repositorios.RepoPersona;
 
 import javax.mail.MessagingException;
 import java.io.*;
@@ -41,6 +42,7 @@ public class MigradorContribucion {
     }
 
     private void migrarContribucion(PersonaHumana colaborador, Contribucion contribucion) throws MessagingException {
+        RepoPersona.getInstancia().agregar(colaborador);
         Usuario usuario = colaborador.buscarOCrearUsuario();//ya lo guarda en el repo
         ((Colaborador) colaborador.getRol()).agregarContribucion(contribucion);
     }

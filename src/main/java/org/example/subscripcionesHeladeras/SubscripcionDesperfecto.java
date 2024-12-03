@@ -8,6 +8,7 @@ import org.example.personas.Persona;
 import org.example.personas.contacto.MedioDeContacto;
 import org.example.personas.contacto.Mensaje;
 import org.example.repositorios.RepoHeladeras;
+import org.example.repositorios.RepoMensajes;
 
 import javax.mail.MessagingException;
 import javax.persistence.Entity;
@@ -32,6 +33,7 @@ public class SubscripcionDesperfecto extends SubscripcionHeladera {
                 .replace("{heladerasSugueridas}", this.getStringHeladerasSugueridas(heladerasSugueridas));
         Mensaje mensaje = new Mensaje(asunto, contenido, subscriptor);
         medioDeContactoElegido.notificar(mensaje);
+        RepoMensajes.getInstancia().agregarMensaje(mensaje);
     }
     private String getStringHeladerasSugueridas(List<Heladera> heladeras){
         StringBuilder heladerasToTextoBuilder = new StringBuilder();
