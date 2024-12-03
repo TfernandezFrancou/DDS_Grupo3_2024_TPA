@@ -126,6 +126,7 @@ public class Application {
 
             path("ofrecer-producto", () -> {
                 get("", OfertasController::getOfrecerProducto);
+                post("", OfertasController::postOfrecerProducto);
             });
         });
 

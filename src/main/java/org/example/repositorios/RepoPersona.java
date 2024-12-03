@@ -125,8 +125,12 @@ public class RepoPersona {
 
     public Persona buscarPorId(int idPersona) {
         EntityManager em = BDUtils.getEntityManager();
-        PersonaHumana persona =
-                em.createQuery("SELECT p FROM PersonaHumana p WHERE p.idPersona=:id", PersonaHumana.class)
+        //PersonaHumana persona =
+        //        em.createQuery("SELECT p FROM PersonaHumana p WHERE p.idPersona=:id", PersonaHumana.class)
+        //                .setParameter("id", idPersona)
+        //                .getSingleResult();
+        Persona persona =
+                em.createQuery("SELECT p FROM Persona p WHERE p.idPersona=:id", Persona.class)
                         .setParameter("id", idPersona)
                         .getSingleResult();
         if(persona == null) {
