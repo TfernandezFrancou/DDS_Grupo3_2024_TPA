@@ -28,7 +28,7 @@ VALUES ('Alerta', '2024-12-02 17:34:54', 0, 'alerta temperatura minima', 'excede
 (SELECT idHeladera FROM heladera WHERE nombre = 'MedranoUTN' and fechaInicioFuncionamiento = '2022-01-10'));
 
 INSERT INTO documento (numeroDocumento, tipoDocumento)
-VALUES ('21244577', 'DNI'), ('43244597','DNI');
+VALUES ('21244577', 'DNI'), ('43244597','DNI'), ('43244566', 'DNI');
 
 -- Obtener el próximo valor para tecino
 SET @next_id_tecnico = (SELECT next_val FROM rol_sequence);
@@ -135,4 +135,36 @@ INSERT INTO ubicacion (latitud, longitud) VALUES(-34.6725928524, -58.4074856269)
 INSERT INTO zona (nombreZona, radio, ubicacion_idUbicacion, id_rol_tecnico)
 VALUES ('Valentin Alsina', '500',
     (SELECT idUbicacion FROM ubicacion WHERE latitud = -34.6725928524 and longitud = -58.4074856269),
-    (SELECT idrol FROM tecnico WHERE cuil = '20212445773' and apellido = 'Smith'))
+    (SELECT idrol FROM tecnico WHERE cuil = '20212445773' and apellido = 'Smith'));
+
+
+-- Obtener el próximo valor para colaborador
+SET @next_id_colaborador = (SELECT next_val FROM rol_sequence);
+UPDATE rol_sequence SET next_val = next_val + 1;
+
+INSERT INTO colaborador (idrol,estaActivo, puntuaje) VALUES (@next_id_colaborador,1, 43.5);
+
+INSERT INTO persona (documento_idDocumento, rol_idrol)
+VALUES ((SELECT idDocumento FROM documento WHERE numeroDocumento = '43244566'),
+    (SELECT idrol FROM colaborador WHERE puntuaje = 43.5 and estaActivo = 1));
+
+INSERT INTO personajuridica (razonSocial, rubro, tipo, id_persona)
+VALUES ('Bicies S.A.','compra venta de bicicletas', 'EMPRESA',
+(SELECT idPersona FROM persona p
+    JOIN documento d ON d.idDocumento = p.documento_idDocumento
+    WHERE d.numeroDocumento = '43244566'));
+
+INSERT INTO contribucion (fecha, colaborador_idrol)
+VALUES ('2024-12-03', (SELECT idrol FROM colaborador WHERE puntuaje = 43.5 and estaActivo = 1));
+
+INSERT INTO ofrecerproductos (id_contribucion)
+VALUES ((SELECT id_contribucion FROM contribucion c
+    WHERE c.fecha = '2024-12-03' and c.colaborador_idrol = (SELECT idrol FROM colaborador
+        WHERE puntuaje = 43.5 and estaActivo = 1)));
+
+INSERT INTO oferta(imagenURL,nombre, puntosNecesarios, id_contribucion )
+VALUES ('/views/imagenes/bici.png', 'Bicicleta k153',9,
+    (SELECT id_contribucion FROM contribucion c
+        WHERE c.fecha = '2024-12-03'
+            and c.colaborador_idrol = (SELECT idrol FROM colaborador
+                WHERE puntuaje = 43.5 and estaActivo = 1)));
