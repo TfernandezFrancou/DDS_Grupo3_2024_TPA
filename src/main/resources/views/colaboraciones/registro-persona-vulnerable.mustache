@@ -32,16 +32,16 @@
             <h2 class="titulo">Registrar Persona en Situación Vulnerable</h2>
             <form>
                 <div class="form-group">
-                    <label for="nombre">Nombre <span class="required">*</span></label>
+                    <label for="nombre">Nombre y Apellido<span class="required">*</span></label>
                     <input type="text" id="nombre" name="nombre" placeholder="Nombre Apellido" required>
                 </div>
 
                 <div class="form-group">
                     <label>¿Tiene domicilio? <span class="required">*</span></label>
                     <div class="radio-inline">
-                        <label class="radio-label"><input type="radio" name="domicilio" value="si" required> Sí,
+                        <label class="radio-label"><input type="radio" id="domicilio-si" name="domicilio" value="si" required> Sí,
                             posee</label>
-                        <label class="radio-label"><input type="radio" name="domicilio" value="no"> No, está en situación de
+                        <label class="radio-label"><input type="radio" id="domicilio-no" name="domicilio" value="no"> No, está en situación de
                             calle</label>
                     </div>
                 </div>
@@ -56,22 +56,22 @@
                     <select id="documento" name="documento">
                         <option value="" selected disabled>Seleccione el tipo de documento</option>
                         <option value="DNI">DNI</option>
-                        <option value="pasaporte">Pasaporte</option>
-                        <option value="otro">Otro</option>
+                        <option value="LC">Libreta cívica</option>
+                        <option value="LE">Libreta de Enrolamiento</option>
                         <option value="noTiene">No tiene</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label>Numero documento</label>
-                    <input type="text" id="numero-documento" name="numero-documento">
+                    <input type="text" id="numero-documento" name="numero-documento" placeholder="12344567">
                 </div>
 
                 <div class="form-group">
                     <label>¿Posee menores a cargo? <span class="required">*</span></label>
                     <div class="radio-inline">
-                        <label class="radio-label"><input type="radio" name="menores" value="si" required> Sí</label>
-                        <label class="radio-label"><input type="radio" name="menores" value="no"> No</label>
+                        <label class="radio-label"><input type="radio" id="menores-si" name="menores" value="si" required> Sí</label>
+                        <label class="radio-label"><input type="radio" id="menores-no" name="menores" value="no"> No</label>
                     </div>
                 </div>
 
@@ -93,6 +93,7 @@
                     <button type="submit" class="button">Registrar</button>
                 </div>
             </form>
+            <script src="/views/js/mainRegistroPersonaVulnerable.js"></script>
         </div>
     </form>
 </div>
