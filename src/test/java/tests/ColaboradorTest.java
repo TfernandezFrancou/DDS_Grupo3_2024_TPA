@@ -8,17 +8,22 @@ import org.example.excepciones.PuntosInsuficienteParaCanjearOferta;
 import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
 import org.example.personas.roles.Colaborador;
+import org.example.repositorios.RepoContribucion;
+import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoPersona;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 public class ColaboradorTest {
 
@@ -35,20 +40,42 @@ public class ColaboradorTest {
     @Mock
     private Heladera heladeraMock;
 
+    @Mock
+    private PersonaHumana persona;
+
+    @Mock
+    private RepoContribucion repoContribucionMock;
+    private MockedStatic<RepoContribucion> repoContribucionStatic;
+
+    @Mock
+    private RepoPersona repoPersonaMock;
+    private MockedStatic<RepoPersona> repoPersonaStatic;
+
     @BeforeEach
     public void setUp(){
         MockitoAnnotations.openMocks(this);
+        repoContribucionStatic = mockStatic(RepoContribucion.class);
+        repoContribucionStatic.when(RepoContribucion::getInstancia).thenReturn(repoContribucionMock);
+        repoPersonaStatic = mockStatic(RepoPersona.class);
+        repoPersonaStatic.when(RepoPersona::getInstancia).thenReturn(repoPersonaMock);
+        when(persona.getIdPersona()).thenReturn(1);
+        when(rolColaboradorMock.getPersona()).thenReturn(persona);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        repoContribucionStatic.close();
+        repoPersonaStatic.close();
     }
 
     @Test
     public void testCalcularPuntaje(){
-
-
-        rolColaboradorMock.setFormasContribucion(List.of(contribucionMock, contribucionMock,contribucionMock, contribucionMock));
+        List<Contribucion> contribuciones = List.of(contribucionMock, contribucionMock, contribucionMock, contribucionMock);
+        when(repoContribucionMock.obtenerContribucionesPorPersona(persona.getIdPersona())).thenReturn(contribuciones);
+        when(repoPersonaMock.actualizarPersona(any())).thenReturn(persona);
         when(contribucionMock.obtenerPuntaje()).thenReturn(25F);
-
+        rolColaboradorMock.setFormasContribucion(contribuciones);
         rolColaboradorMock.calcularPuntuaje();
-
         Assertions.assertEquals(rolColaboradorMock.getPuntuaje(),100F);
     }
 

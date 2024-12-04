@@ -23,27 +23,28 @@ import java.util.Map;
 
 public class RegistrarPersonaVulnerableController extends ContribucionController {
     public static void postRegistrarPersonaVulnerable(@NotNull Context context) {
+        Map<String, Object> model = new HashMap<>();
+        Colaborador colaborador = obtenerRolColaboradorActual(context);
         try{
-            PersonaHumana personaVulnerable = almacenarPersonaVulnerable(context);
+            PersonaHumana personaVulnerable = parsearPersonaVulnerable(context);
+
             RegistrarPersonasEnSituacionVulnerable contribucion = new RegistrarPersonasEnSituacionVulnerable();
             contribucion.setFecha(LocalDate.now());
             contribucion.agregarPersona(personaVulnerable);
+            contribucion.setColaborador(colaborador);
 
-            actualizarPuntajeUsuarioActual(context, contribucion);
+            contribucion.ejecutarContribucion();
 
-            Map<String, Object> model = new HashMap<>();
             model.put("exito", "El registro fue exitoso");
             context.render("/views/colaboraciones/registro-persona-vulnerable.mustache", model);
-        }catch (Exception exception){
-            Map<String, Object> model = new HashMap<>();
+        } catch (Exception exception) {
             model.put("error", exception.getMessage());
             context.render("/views/colaboraciones/registro-persona-vulnerable.mustache", model);
             exception.printStackTrace();
         }
-
     }
 
-    private static PersonaHumana almacenarPersonaVulnerable(@NotNull Context context) throws AlmacenarPersonaVulnerable {
+    private static PersonaHumana parsearPersonaVulnerable(@NotNull Context context) throws AlmacenarPersonaVulnerable {
         String nombreYApellido = context.formParam("nombre");
         String[] nombreYApellidoArray = nombreYApellido.split(" ");
         String nombre = nombreYApellidoArray[0];
@@ -52,7 +53,7 @@ public class RegistrarPersonaVulnerableController extends ContribucionController
             apellido= nombreYApellidoArray[1];
         } else if(nombreYApellidoArray.length == 3){
             nombre = nombreYApellidoArray[0] + " "+nombreYApellidoArray[1];//nombre y segundo nombre
-            apellido= nombreYApellidoArray[3];
+            apellido= nombreYApellidoArray[2];
         }
 
         String tieneDomicilio = context.formParam("domicilio");
@@ -104,25 +105,7 @@ public class RegistrarPersonaVulnerableController extends ContribucionController
             personaHumana.setDocumento(documento1);
         }
 
-        RepoPersona.getInstancia().agregar(personaHumana);
         return personaHumana;
-    }
-
-    private static Persona obtenerPersonaColaboradorActual(Context context){
-        Usuario user = context.attribute("usuario");
-        int idPersonaUser = user.getColaborador().getIdPersona();
-        Persona personaUser = RepoPersona.getInstancia().buscarPorId(idPersonaUser);
-        if(personaUser.getRol() == null){
-            Colaborador colaboradorRol = new Colaborador();
-            colaboradorRol.setEstaActivo(true);
-            personaUser.setRol(colaboradorRol);
-            // Actualiza persona para obtener id del rol
-            personaUser = RepoPersona.getInstancia().actualizarPersona(personaUser);
-        } else if(!(personaUser.getRol() instanceof Colaborador)){
-            throw new RuntimeException("No puedes registrar a una persona en situacion vulnerable, no eres colaborador");
-        }
-
-        return personaUser;
     }
 
     public static void getRegistrarPersonaVulnerable(@NotNull Context context) {

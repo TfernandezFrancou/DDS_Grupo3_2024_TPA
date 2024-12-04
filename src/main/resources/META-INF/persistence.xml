@@ -15,11 +15,6 @@
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
-
-            <!-- Configuración del pool de conexiones HikariCP -->
-            <property name="hibernate.hikari.maximumPoolSize" value="200" />
-            <!-- Habilitar detección de fugas -->
-            <property name="hibernate.hikari.leakDetectionThreshold" value="1000" />
         </properties>
     </persistence-unit>
 </persistence>

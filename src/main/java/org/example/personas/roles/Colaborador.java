@@ -55,34 +55,49 @@ public class Colaborador extends Rol {
         this.puntuaje = 0;
     }
 
-    public void agregarContribucion(Contribucion contribucion)
-    {
+    public void agregarContribucion(Contribucion contribucion) {
         contribucion.setColaborador(this);
         this.formasContribucion.add(contribucion);
         RepoContribucion.getInstancia().agregarContribucion(contribucion);
     }
 
+
     public void calcularPuntuaje()
     {
         this.puntuaje=0;//recalculamos el puntaje desde cero
 
-        for (Contribucion contribucion:this.formasContribucion) {
+
+        List<Contribucion> contribuciones = RepoContribucion.getInstancia().obtenerContribucionesPorPersona(this.getPersona().getIdPersona());
+
+        for (Contribucion contribucion: contribuciones) {
+            System.out.println("calculando contribucion " + contribucion);
+            System.out.println("puntaje:" + contribucion.obtenerPuntaje());
             this.puntuaje += contribucion.obtenerPuntaje();
         }
 
+        System.out.println("puntaje final:" + this.puntuaje);
+
         int puntosCanjeados = 0;
 
-        for(Oferta oferta: this.ofertasCanjeadas){
-            puntosCanjeados += oferta.getPuntosNecesarios();
+        for (Oferta oferta: this.ofertasCanjeadas) {
+            puntosCanjeados = oferta.getPuntosNecesarios();
+
         }
 
-        this.puntuaje  -= puntosCanjeados;
+        this.puntuaje -= puntosCanjeados;
+
+        System.out.println("puntaje - ofertas canjeadas:" + this.puntuaje);
+
+        if (this.puntuaje < 0) this.puntuaje = 0;
+
+        RepoPersona.getInstancia().actualizarColaborador(this);
     }
 
     public void canjearOferta(Oferta oferta) throws PuntosInsuficienteParaCanjearOferta {
         if(this.puedeCanjearOferta(oferta)){
             this.ofertasCanjeadas.add(oferta);
             this.puntuaje -= oferta.getPuntosNecesarios();
+            RepoPersona.getInstancia().actualizarColaborador(this);
         } else {
             throw new PuntosInsuficienteParaCanjearOferta();
         }

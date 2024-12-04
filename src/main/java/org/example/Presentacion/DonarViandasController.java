@@ -1,24 +1,16 @@
 package org.example.Presentacion;
 
 import io.javalin.http.Context;
-import org.example.autenticacion.SessionManager;
-import org.example.autenticacion.Usuario;
+
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Entrega;
 import org.example.colaboraciones.contribuciones.viandas.EstadoEntrega;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
-import org.example.incidentes.FallaTecnica;
-import org.example.personas.Persona;
-import org.example.personas.PersonaHumana;
 import org.example.personas.roles.Colaborador;
-import org.example.repositorios.RepoContribucion;
 import org.example.repositorios.RepoHeladeras;
-import org.example.repositorios.RepoIncidente;
-import org.example.repositorios.RepoPersona;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.text.DateFormatter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +22,12 @@ import java.util.Optional;
 public class DonarViandasController extends ContribucionController {
 
     public static void postDonarVianda(@NotNull Context context) {
+        List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
+        Map<String, Object> model = new HashMap<>();
+        model.put("heladeras", heladeras);
+
+        Colaborador colaborador = obtenerRolColaboradorActual(context);
+
         String tipoComida = context.formParam("tipo-comida");
         String fechaCaducidad = context.formParam("fecha-caducidad");
         String idHeladera = context.formParam("heladera");
@@ -45,7 +43,7 @@ public class DonarViandasController extends ContribucionController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         vianda.setFechaCaducidad(LocalDateTime.parse(fechaCaducidad+" 00:00",formatter));
         vianda.setFechaDonacion(LocalDateTime.now());
-
+        vianda.setColaborador(colaborador);
 
         if(entregado.equals("si")){
             if(fechaEntregado.equals("")){
@@ -63,42 +61,38 @@ public class DonarViandasController extends ContribucionController {
 
         if(heladeraOptional.isPresent()){
             vianda.setHeladera(heladeraOptional.get());
-            Colaborador colaborador = obtenerRolColaboradorActual(context);
-            vianda.setColaborador(colaborador);
 
             DonacionDeViandas donacionDeViandas = new DonacionDeViandas();
             donacionDeViandas.setViandas(List.of(vianda));
             donacionDeViandas.setFecha(LocalDate.now());
             donacionDeViandas.setHeladera(heladeraOptional.get());
             donacionDeViandas.setCantidadDeViandas(1);
+            donacionDeViandas.setColaborador(colaborador);
+
+            try {
+                colaborador.agregarContribucion(donacionDeViandas);
+                colaborador.calcularPuntuaje();
+                //donacionDeViandas.ejecutarContribucion();
+            } catch (Exception e) {
+                // TODO: ACA FALLA PORQUE LA TARJETA NO ESTA AUTORIZADA
+//                model.put("error", e.getMessage());
+//                context.render("/views/colaboraciones/donar-viandas.mustache", model);
+//                return;
+            }
 
 
-            actualizarPuntajeUsuarioActual(context, donacionDeViandas);
-
-            //RepoContribucion.getInstancia().actualizarContribucion(donacionDeViandas);//update colaborador en vianda
-
-            List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
-            Map<String, Object> model = new HashMap<>();
-            model.put("heladeras", heladeras);
             model.put("exito", "Contribucion registrada con exito");
             context.render("/views/colaboraciones/donar-viandas.mustache", model);
         } else {
-            //error
-            List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
-            Map<String, Object> model = new HashMap<>();
-            model.put("heladeras", heladeras);
             model.put("error", "No existe la heladera seleccionada");
             context.render("/views/colaboraciones/donar-viandas.mustache", model);
         }
-
     }
 
     public static void getDonarVianda(@NotNull Context context) {
         List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
         Map<String, Object> model = new HashMap<>();
         model.put("heladeras", heladeras);
-        model.put("error", "");
         context.render("/views/colaboraciones/donar-viandas.mustache", model);
     }
-
 }

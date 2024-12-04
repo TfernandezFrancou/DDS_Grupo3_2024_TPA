@@ -10,7 +10,7 @@ import org.example.repositorios.RepoPersona;
 
 public abstract class ContribucionController {
 
-    public static void actualizarPuntajeUsuarioActual(Context context, Contribucion contribucion){
+    /*public static void actualizarPuntajeUsuarioActual(Context context, Contribucion contribucion){
         Persona colaboradorPersona = obtenerPersonaColaboradorActual(context);
         Colaborador colaborador = RepoPersona.getInstancia().getRolColaboradorById(colaboradorPersona.getRol().getIdrol());
 
@@ -19,7 +19,7 @@ public abstract class ContribucionController {
         colaboradorPersona.setRol(colaborador);//update
         colaboradorPersona = RepoPersona.getInstancia().actualizarPersona(colaboradorPersona);
         actualizarPersonaColaboradorActual(context, colaboradorPersona);
-    }
+    }*/
 
     public static Colaborador obtenerRolColaboradorActual(Context context){
         Persona colaboradorPersona = obtenerPersonaColaboradorActual(context);
@@ -45,16 +45,4 @@ public abstract class ContribucionController {
         return personaUser;
     }
 
-    private static void actualizarPersonaColaboradorActual(Context context, Persona persona){
-        Usuario user = context.attribute("usuario");
-        user.setColaborador(persona);
-    }
-
-    public static void actualizarColaboradorUsuarioActual(Context context, Colaborador colaborador){
-        Usuario user = context.attribute("usuario");
-        Persona personaColaborador = user.getColaborador();
-        personaColaborador.setRol(colaborador);
-        personaColaborador = RepoPersona.getInstancia().actualizarPersona(personaColaborador);
-        actualizarPersonaColaboradorActual(context, personaColaborador);
-    }
 }

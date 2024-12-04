@@ -61,12 +61,11 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
 
     @Override
     public void ejecutarContribucion() throws Exception{
-        super.ejecutarContribucion();
         RepoPersona.getInstancia().agregarTodas(personasRegistradas);
         RepoTarjetas.getInstancia().agregarTodas(tarjetasAEntregar);
         this.setTarjetasEntregadas(personasRegistradas.size());
+        super.ejecutarContribucion();
     }
-
 
     //cuando se tengan las tarjetas, se las envia al colaborador
     public void setTarjetasAEntregar(List<TarjetaHeladera> tarjetasAEntregar) throws MessagingException {
