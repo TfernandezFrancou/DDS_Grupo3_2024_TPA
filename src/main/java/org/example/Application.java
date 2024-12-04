@@ -167,11 +167,12 @@ public class Application {
                 }
             }
             em.getTransaction().commit();
-            em.close();
 
         } catch (Exception e){
             e.printStackTrace();
             em.getTransaction().rollback();
+        } finally {
+            em.close();
         }
     }
 }

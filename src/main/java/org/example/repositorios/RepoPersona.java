@@ -17,6 +17,7 @@ import org.example.personas.roles.Tecnico;
 import org.example.recomendacion.Zona;
 import org.example.reportes.itemsReportes.ItemReporte;
 import org.example.reportes.itemsReportes.ItemReporteViandasDistribuidasPorColaborador;
+import org.example.tarjetas.TarjetaHeladera;
 import org.example.utils.BDUtils;
 
 import javax.persistence.EntityManager;
@@ -39,39 +40,61 @@ public class RepoPersona {
 
     public void agregarTodas(List<Persona> personas) {
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        for (Persona persona: personas) {
-            em.persist(persona);
+        try{
+            BDUtils.comenzarTransaccion(em);
+            for (Persona persona: personas) {
+                em.persist(persona);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+        }finally {
+            em.close();
         }
-        em.getTransaction().commit();;
     }
 
     public void agregar(Persona persona) {
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.persist(persona);
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.persist(persona);
+            em.getTransaction().commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+        } finally {
+            em.close();
+        }
     }
 
     public void eliminar(Persona persona) {
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        int idPersona =persona.getIdPersona();
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
+        try{
+            BDUtils.comenzarTransaccion(em);
+            int idPersona =persona.getIdPersona();
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
 
-        PersonaHumana ph = em.find(PersonaHumana.class, idPersona);
-        if(ph != null)
-            em.remove(ph);
+            PersonaHumana ph = em.find(PersonaHumana.class, idPersona);
+            if(ph != null)
+                em.remove(ph);
 
-        PersonaJuridica pj = em.find(PersonaJuridica.class, idPersona);
-        if(pj != null)
-            em.remove(pj);
+            PersonaJuridica pj = em.find(PersonaJuridica.class, idPersona);
+            if(pj != null)
+                em.remove(pj);
 
-        Persona p = em.find(Persona.class, idPersona);
-        if(p != null)
-            em.remove(p);
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
-        em.getTransaction().commit();
+            Persona p = em.find(Persona.class, idPersona);
+            if(p != null)
+                em.remove(p);
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+        } finally {
+            em.close();
+        }
+
     }
 
 
@@ -97,28 +120,49 @@ public class RepoPersona {
 
     public void clean(){
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
-        em.createNativeQuery("DELETE FROM Tecnico").executeUpdate();
-        em.createNativeQuery("DELETE FROM Colaborador").executeUpdate();
-        em.createNativeQuery("DELETE FROM PersonaEnSituacionVulnerable").executeUpdate();
-        em.createNativeQuery("DELETE FROM Documento").executeUpdate();
-        em.createNativeQuery("DELETE FROM MedioDeContacto").executeUpdate();
-        em.createNativeQuery("DELETE FROM PersonaHumana").executeUpdate();
-        em.createNativeQuery("DELETE FROM PersonaJuridica").executeUpdate();
-        em.createNativeQuery("DELETE FROM Persona").executeUpdate();
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
+            em.createNativeQuery("DELETE FROM Tecnico").executeUpdate();
+            em.createNativeQuery("DELETE FROM Colaborador").executeUpdate();
+            em.createNativeQuery("DELETE FROM PersonaEnSituacionVulnerable").executeUpdate();
+            em.createNativeQuery("DELETE FROM Documento").executeUpdate();
+            em.createNativeQuery("DELETE FROM MedioDeContacto").executeUpdate();
+            em.createNativeQuery("DELETE FROM PersonaHumana").executeUpdate();
+            em.createNativeQuery("DELETE FROM PersonaJuridica").executeUpdate();
+            em.createNativeQuery("DELETE FROM Persona").executeUpdate();
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+        } finally {
+            em.close();
+        }
     }
 
     public Persona buscarPorId(int idPersona) {
         EntityManager em = BDUtils.getEntityManager();
-        Persona persona =
-                em.createQuery("SELECT p FROM Persona p WHERE p.idPersona=:id", Persona.class)
-                        .setParameter("id", idPersona)
-                        .getSingleResult();
-        if(persona == null) {
-            throw new PersonaInexistenteException("No existe la persona con id " + idPersona);
+        Persona persona = null;
+        try{
+            persona = em.createQuery("SELECT p FROM Persona p WHERE p.idPersona=:id", Persona.class)
+                            .setParameter("id", idPersona)
+                            .getSingleResult();
+            if(persona == null) {
+                throw new PersonaInexistenteException("No existe la persona con id " + idPersona);
+            }
+            persona.getMediosDeContacto().size();
+            persona.getContribucionesQuePuedeHacer().size();
+            if(persona.getRol() instanceof Colaborador){
+                Colaborador rol = (Colaborador) persona.getRol();
+                rol.getOfertasCanjeadas().size();
+                rol.getFormasContribucion().size();
+            }
+        } catch ( Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+        } finally {
+            em.close();
         }
         return persona;
     }
@@ -128,38 +172,95 @@ public class RepoPersona {
         String nombre = nombreYApellidoArray[0];
         String apellido = nombreYApellidoArray[1];
         EntityManager em = BDUtils.getEntityManager();
-        PersonaHumana persona =
-                em.createQuery("SELECT p FROM PersonaHumana p WHERE p.nombre=:nombre and p.apellido=:apellido", PersonaHumana.class)
-                        .setParameter("nombre", nombre)
-                        .setParameter("apellido", apellido)
-                        .getSingleResult();
-        if (persona == null) {
-            throw new PersonaInexistenteException("No existe la persona con nombre " + nombreYApellido);
+        PersonaHumana persona = null;
+        try{
+            persona =
+                    em.createQuery("SELECT p FROM PersonaHumana p WHERE p.nombre=:nombre and p.apellido=:apellido", PersonaHumana.class)
+                            .setParameter("nombre", nombre)
+                            .setParameter("apellido", apellido)
+                            .getSingleResult();
+            if (persona == null) {
+                throw new PersonaInexistenteException("No existe la persona con nombre " + nombreYApellido);
+            }
+            //lazy initializations
+            persona.getMediosDeContacto().size();
+            persona.getContribucionesQuePuedeHacer().size();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+        } finally {
+            em.close();
         }
         return persona;
     }
 
     public List<Persona> buscarPersonasConRol(Class<?> rol) {
         EntityManager em = BDUtils.getEntityManager();
-        if(rol.equals(Colaborador.class)){
-            return  em.createQuery("SELECT p FROM Persona p JOIN Colaborador c ON p.rol.idrol=c.idrol", Persona.class)
-                    .getResultList();
-        } else if(rol.equals(Tecnico.class)){
-            return  em.createQuery("SELECT p FROM Persona p JOIN Tecnico t ON p.rol.idrol=t.idrol", Persona.class)
-                    .getResultList();
-        }else if(rol.equals(PersonaEnSituacionVulnerable.class)){
-            return  em.createQuery("SELECT p FROM Persona p JOIN PersonaEnSituacionVulnerable psv ON p.rol.idrol=psv.idrol", Persona.class)
-                    .getResultList();
-        }else return null;
+        List<Persona> personas = null;
+        try {
+            if(rol.equals(Colaborador.class)){
+                personas=   em.createQuery("SELECT p FROM Persona p JOIN Colaborador c ON p.rol.idrol=c.idrol", Persona.class)
+                        .getResultList();
+
+                personas.forEach(persona -> {
+                    ((Colaborador) persona.getRol()).getOfertasCanjeadas().size();
+                    ((Colaborador) persona.getRol()).getFormasContribucion().size();
+                    List<Contribucion> contribuciones = ((Colaborador) persona.getRol()).getFormasContribucion();
+                    contribuciones.forEach(contribucion -> {
+                        if(contribucion instanceof DonacionDeViandas){
+                            DonacionDeViandas c = (DonacionDeViandas) contribucion;
+                            c.getViandas().size();
+                        }
+                    });
+                });
+            } else if(rol.equals(Tecnico.class)){
+                personas=   em.createQuery("SELECT p FROM Persona p JOIN Tecnico t ON p.rol.idrol=t.idrol", Persona.class)
+                        .getResultList();
+                personas.forEach(persona -> {
+                    ((Tecnico) persona.getRol()).getAreasDeCobertura().size();
+                });
+
+            }else if(rol.equals(PersonaEnSituacionVulnerable.class)){
+                personas=   em.createQuery("SELECT p FROM Persona p JOIN PersonaEnSituacionVulnerable psv ON p.rol.idrol=psv.idrol", Persona.class)
+                        .getResultList();
+                personas.forEach(persona -> {
+                    ((PersonaEnSituacionVulnerable) persona.getRol()).getTarjetaHeladera().getUsos().size();
+                });
+            }
+
+            //lazy initializations
+            if(personas != null){
+                personas.forEach(p -> {
+                    p.getContribucionesQuePuedeHacer().size();
+                    p.getMediosDeContacto().size();
+                });
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+        } finally {
+            em.close();
+        }
+        return personas;
     }
 
     public Persona buscarPersonaAsociadaAlRol(Rol rol) {
         EntityManager em = BDUtils.getEntityManager();
-        Persona persona = em.createQuery("SELECT p FROM Persona p WHERE p.rol.idrol=:idRol", Persona.class)
-                .setParameter("idRol", rol.getIdrol())
-                .getSingleResult();
-        if(persona == null){
-            throw new PersonaInexistenteException("No existe la persona que tiene el rol con id="+rol.getIdrol());
+        Persona persona = null;
+        try{
+            persona = em.createQuery("SELECT p FROM Persona p WHERE p.rol.idrol=:idRol", Persona.class)
+                    .setParameter("idRol", rol.getIdrol())
+                    .getSingleResult();
+            if(persona == null){
+                throw new PersonaInexistenteException("No existe la persona que tiene el rol con id="+rol.getIdrol());
+            }
+            persona.getMediosDeContacto().size();
+            persona.getContribucionesQuePuedeHacer().size();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+        } finally {
+            em.close();
         }
         return persona;
     }
@@ -167,17 +268,26 @@ public class RepoPersona {
     public Colaborador getRolColaboradorById(int idRol) {
         System.out.println("buscando id rol: "+ idRol);
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        Colaborador colaborador = em.createQuery("SELECT c FROM Colaborador c WHERE c.idrol=:idRol", Colaborador.class)
-                .setParameter("idRol", idRol)
-                .getSingleResult();
-        BDUtils.commit(em);
-        if(colaborador == null){
+        Colaborador colaborador = null;
+        try{
+            BDUtils.comenzarTransaccion(em);
+            colaborador = em.createQuery("SELECT c FROM Colaborador c WHERE c.idrol=:idRol", Colaborador.class)
+                    .setParameter("idRol", idRol)
+                    .getSingleResult();
+            BDUtils.commit(em);
+            if(colaborador == null){
+                BDUtils.rollback(em);
+                throw new PersonaInexistenteException("No existe el rol colaborador con id="+idRol);
+            }
+            //lazy initializations
+            colaborador.getFormasContribucion().size();
+            colaborador.getOfertasCanjeadas().size();
+        } catch (Exception e){
+            e.printStackTrace();
             BDUtils.rollback(em);
-            throw new PersonaInexistenteException("No existe el rol colaborador con id="+idRol);
+         }finally {
+            em.close();
         }
-        //fetch lazy de formas de contribucion
-        System.out.println("formas De Contribucion: "+ colaborador.getFormasContribucion().size());
         return colaborador;
     }
 
@@ -199,43 +309,73 @@ public class RepoPersona {
 
     public List<PersonaHumana> obtenerPersonasEnSituacionVulnerable(){
         EntityManager em = BDUtils.getEntityManager();
-        List<Rol> rolesDepersonasEnSituacionVulnerable =
-                em.createQuery("SELECT p FROM PersonaEnSituacionVulnerable p", Rol.class)
-                .getResultList();
-        List<PersonaHumana> personasHumanas = new ArrayList<>();
-        for (Rol rol:rolesDepersonasEnSituacionVulnerable) {
-            int idRol = rol.getIdrol();
-            List<Persona> persona_n=
-                    em.createQuery("SELECT p FROM Persona p WHERE p.rol.idrol=:idRol", Persona.class)
-                    .setParameter("idRol", idRol)
-                    .getResultList();
-            if(persona_n.size() == 1){
-                PersonaHumana ph = em.find(PersonaHumana.class, persona_n.get(0).getIdPersona());
-                if(ph != null)
-                    personasHumanas.add(ph);
+        List<PersonaHumana> personasHumanas = null;
+        try{
+            List<Rol> rolesDepersonasEnSituacionVulnerable =
+                    em.createQuery("SELECT p FROM PersonaEnSituacionVulnerable p", Rol.class)
+                            .getResultList();
+            rolesDepersonasEnSituacionVulnerable.forEach(rol -> {
+                if(rol instanceof PersonaEnSituacionVulnerable){
+                    PersonaEnSituacionVulnerable r = (PersonaEnSituacionVulnerable) rol;
+                    TarjetaHeladera tarjetaHeladera = r.getTarjetaHeladera();
+                    if(tarjetaHeladera != null)
+                        tarjetaHeladera.getUsos().size();
+                }
+            });
+             personasHumanas = new ArrayList<>();
+            for (Rol rol:rolesDepersonasEnSituacionVulnerable) {
+                int idRol = rol.getIdrol();
+                List<Persona> persona_n=
+                        em.createQuery("SELECT p FROM Persona p WHERE p.rol.idrol=:idRol", Persona.class)
+                                .setParameter("idRol", idRol)
+                                .getResultList();
+                if(persona_n.size() == 1){
+                    PersonaHumana ph = em.find(PersonaHumana.class, persona_n.get(0).getIdPersona());
+                    if(ph != null){
+                        personasHumanas.add(ph);
+                        //lazy initializations
+                        ph.getContribucionesQuePuedeHacer().size();
+                        ph.getMediosDeContacto().size();
+                    }
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            em.close();
         }
-
         return personasHumanas;
     }
 
     public void actualizarColaborador(Colaborador colaborador) {
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.merge(colaborador);
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.merge(colaborador);
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+        } finally {
+            em.close();
+        }
     }
 
     public Persona actualizarPersona(Persona personaUser) {
         EntityManager em = BDUtils.getEntityManager();
-        Persona personaActualizada = em.find(Persona.class, personaUser.getIdPersona());
+        Persona personaActualizada = null;
         try {
+            personaActualizada = em.find(Persona.class, personaUser.getIdPersona());
             BDUtils.comenzarTransaccion(em);
             personaActualizada = em.merge(personaUser);
             em.getTransaction().commit();
+            personaActualizada.getMediosDeContacto().size();
+            personaActualizada.getContribucionesQuePuedeHacer().size();
         } catch (Exception e) {
             e.printStackTrace();
-            em.getTransaction().rollback();
+            BDUtils.rollback(em);
+        } finally {
+            em.close();
         }
         return personaActualizada;
     }

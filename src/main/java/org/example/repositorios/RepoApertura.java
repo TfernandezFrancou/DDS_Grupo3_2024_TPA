@@ -22,26 +22,47 @@ public class RepoApertura {
 
     public void agregarApertura(Apertura apertura) {
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.persist(apertura);
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.persist(apertura);
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+        }finally {
+            em.close();
+        }
     }
 
     public void quitarApertura(Apertura apertura) {
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        Apertura resultado = em.find(Apertura.class, apertura.getIdApertura());
-        if (resultado != null) {
-            em.remove(resultado);
-        }
-        em.getTransaction().commit();
+       try{
+           BDUtils.comenzarTransaccion(em);
+           Apertura resultado = em.find(Apertura.class, apertura.getIdApertura());
+           if (resultado != null) {
+               em.remove(resultado);
+           }
+           em.getTransaction().commit();
+       } catch (Exception e){
+           e.printStackTrace();
+           BDUtils.rollback(em);
+       } finally {
+           em.close();
+       }
     }
 
     public void clean(){
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.createQuery("DELETE FROM Apertura").executeUpdate();
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.createQuery("DELETE FROM Apertura").executeUpdate();
+            em.getTransaction().commit();
+        } catch (Exception exception){
+            exception.printStackTrace();
+            BDUtils.rollback(em);
+        }finally {
+            em.close();
+        }
     }
 
 
@@ -58,12 +79,20 @@ public class RepoApertura {
     public List<Apertura> obtenerSolicitudesDeAperturas(){
 
         EntityManager em = BDUtils.getEntityManager();
+        List<Apertura> result = null;
+        try{
+            result= em.createQuery(
+                            "SELECT a FROM Apertura a " +
+                                    "  WHERE a.tipoDeApertura=:tipoDeApertura ", Apertura.class)
+                    .setParameter("tipoDeApertura", TipoDeApertura.SOLICITUD_APERTURA)
+                    .getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
 
-        return em.createQuery(
-                        "SELECT a FROM Apertura a " +
-                                "  WHERE a.tipoDeApertura=:tipoDeApertura ", Apertura.class)
-                .setParameter("tipoDeApertura", TipoDeApertura.SOLICITUD_APERTURA)
-                .getResultList();
+        return result;
     }
     public Apertura buscarSolicitudDeApertura(Heladera heladera, Tarjeta tarjeta){
         return this.obtenerSolicitudesDeAperturas().stream()

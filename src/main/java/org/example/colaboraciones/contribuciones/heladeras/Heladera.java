@@ -46,10 +46,10 @@ public class Heladera {
     @OneToOne(cascade = CascadeType.PERSIST)
     private EstadoHeladera estadoHeladeraActual;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "heladera", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "heladera", cascade = CascadeType.PERSIST)
     private List<EstadoHeladera> historialEstadoHeladera;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="idHeladera")
     private List<MovimientoViandas> historialMovimientos;
 

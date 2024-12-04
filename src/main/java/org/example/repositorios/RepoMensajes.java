@@ -28,9 +28,16 @@ public class RepoMensajes {
 
     public void agregarMensaje(Mensaje mensaje) {
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.persist(mensaje);
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.persist(mensaje);
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+        } finally {
+            em.close();
+        }
     }
 
     public void quitarMensaje(Mensaje mensaje) {
@@ -43,7 +50,7 @@ public class RepoMensajes {
             }
             em.getTransaction().commit();
         } catch (Exception e) {
-            em.getTransaction().rollback();
+            BDUtils.rollback(em);
             throw new RuntimeException("Error al quitar el mensaje", e);
         } finally {
             em.close();
@@ -52,21 +59,32 @@ public class RepoMensajes {
 
     public List<Mensaje> obtenerMensajes() {
         EntityManager em = BDUtils.getEntityManager();
+        List<Mensaje> result = null;
         try {
-            return em.createQuery("SELECT m FROM Mensaje m", Mensaje.class)
+            result =  em.createQuery("SELECT m FROM Mensaje m", Mensaje.class)
                     .getResultList();
-        } finally {
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
             em.close();
         }
+        return result;
     }
 
     public void clean(){
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate(); //deshabilito el check de FKs
-        em.createNativeQuery("DELETE FROM mensaje").executeUpdate();
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate(); //habilito el check de FKs
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate(); //deshabilito el check de FKs
+            em.createNativeQuery("DELETE FROM mensaje").executeUpdate();
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate(); //habilito el check de FKs
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+        } finally {
+            em.close();
+        }
     }
 
     public List<Mensaje> obtenerMensajesPorDestinatario(Persona destinatario) {

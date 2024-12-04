@@ -25,16 +25,20 @@ public class RepoSensor {
 
     public Sensor buscarSensorDeTemperaturaDeHeladera(Heladera heladera){
         EntityManager em = BDUtils.getEntityManager();
-
+        Sensor sensor = null;
         try {
-            return em.createQuery("SELECT s FROM Sensor s WHERE TYPE(s) = SensorDeTemperatura AND s.heladera = :heladera", Sensor.class)
+            sensor =  em.createQuery("SELECT s FROM Sensor s WHERE TYPE(s) = SensorDeTemperatura AND s.heladera = :heladera", Sensor.class)
                     .setParameter("heladera", heladera)
                     .getSingleResult();
+            sensor.getHeladera().getHistorialEstadoHeladera().size();//lazy initialization
+
         } catch (Exception e){
-            return null;
+           e.printStackTrace();
+           BDUtils.rollback(em);
         } finally {
             em.close();
         }
+        return sensor;
     }
 
     public List<Sensor> getSensoresDeTemperatura() {
