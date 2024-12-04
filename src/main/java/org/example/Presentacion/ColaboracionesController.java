@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class ColaboracionesController {
     public static void getColaboraciones(@NotNull Context context) {
-        Usuario user =(Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
+        Usuario user = context.attribute("usuario");
         int idPersona = user.getColaborador().getIdPersona();
         List<Contribucion> contribuciones = RepoContribucion.getInstancia()
                 .obtenerContribucionesPorPersona(idPersona);

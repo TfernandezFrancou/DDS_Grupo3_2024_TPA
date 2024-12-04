@@ -1,8 +1,8 @@
 package org.example.Presentacion;
 
 import io.javalin.http.Context;
-import org.example.autenticacion.IniciarSesion;
 import org.example.autenticacion.RegistrarUsuario;
+import org.example.autenticacion.SessionManager;
 import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.excepciones.UserException;
@@ -24,17 +24,20 @@ public class UsuarioController  {
     public static void postIniciosesion(@NotNull Context context){
         String nombreDeUsuario = context.formParam("username");
         String contraseniaUsuario = context.formParam("password");
-
-        IniciarSesion iniciarSesion = new IniciarSesion();
-        try{
-            if(iniciarSesion.iniciarSesion(nombreDeUsuario, contraseniaUsuario)){
-                context.redirect("/heladeras");
-            }
+        try {
+            String token = SessionManager.getInstancia().iniciarSesion(nombreDeUsuario, contraseniaUsuario);
+            context.cookie("token", token);
+            context.redirect("/heladeras");
         } catch(UserException e){
             Map<String, Object> model = new HashMap<>();
             model.put("error", e.getMessage());
             context.render("/views/usuarios/InicioSession.mustache",model);
         }
+    }
+
+    public static void getCerrarSesion(@NotNull Context context){
+        context.removeCookie("token");
+        context.redirect("/usuarios/InicioSession");
     }
 
     public static void postRegistrarse(@NotNull Context context) {

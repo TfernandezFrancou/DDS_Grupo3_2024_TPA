@@ -1,5 +1,6 @@
 package org.example.Presentacion;
 
+import io.javalin.http.Context;
 import org.example.autenticacion.SessionManager;
 import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.Contribucion;
@@ -9,8 +10,8 @@ import org.example.repositorios.RepoPersona;
 
 public abstract class ContribucionController {
 
-    public static void actualizarPuntajeUsuarioActual(Contribucion contribucion){
-        Persona colaboradorPersona = obtenerPersonaColaboradorActual();
+    public static void actualizarPuntajeUsuarioActual(Context context, Contribucion contribucion){
+        Persona colaboradorPersona = obtenerPersonaColaboradorActual(context);
         Colaborador colaborador = RepoPersona.getInstancia().getRolColaboradorById(colaboradorPersona.getRol().getIdrol());
         contribucion.setColaborador(colaborador);
 
@@ -18,17 +19,17 @@ public abstract class ContribucionController {
         colaborador.calcularPuntuaje();
         colaboradorPersona.setRol(colaborador);//update
         colaboradorPersona = RepoPersona.getInstancia().actualizarPersona(colaboradorPersona);
-        actualizarPersonaColaboradorActual(colaboradorPersona);
+        actualizarPersonaColaboradorActual(context, colaboradorPersona);
     }
 
-    public static Colaborador obtenerRolColaboradorActual(){
-        Persona colaboradorPersona = obtenerPersonaColaboradorActual();
+    public static Colaborador obtenerRolColaboradorActual(Context context){
+        Persona colaboradorPersona = obtenerPersonaColaboradorActual(context);
         RepoPersona.getInstancia().actualizarPersona(colaboradorPersona);
         return RepoPersona.getInstancia().getRolColaboradorById(colaboradorPersona.getRol().getIdrol());
     }
 
-    private static Persona obtenerPersonaColaboradorActual(){
-        Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
+    private static Persona obtenerPersonaColaboradorActual(Context context){
+        Usuario user = context.attribute("usuario");
         Persona personaUser = user.getColaborador();
         personaUser = RepoPersona.getInstancia().buscarPorId(personaUser.getIdPersona());
         if(personaUser.getRol() == null){
@@ -45,16 +46,16 @@ public abstract class ContribucionController {
         return personaUser;
     }
 
-    private static void actualizarPersonaColaboradorActual(Persona persona){
-        Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
-         user.setColaborador(persona);
+    private static void actualizarPersonaColaboradorActual(Context context, Persona persona){
+        Usuario user = context.attribute("usuario");
+        user.setColaborador(persona);
     }
 
-    public static void actualizarColaboradorUsuarioActual(Colaborador colaborador){
-        Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
+    public static void actualizarColaboradorUsuarioActual(Context context, Colaborador colaborador){
+        Usuario user = context.attribute("usuario");
         Persona personaColaborador = user.getColaborador();
         personaColaborador.setRol(colaborador);
         personaColaborador = RepoPersona.getInstancia().actualizarPersona(personaColaborador);
-        actualizarPersonaColaboradorActual(personaColaborador);
+        actualizarPersonaColaboradorActual(context, personaColaborador);
     }
 }

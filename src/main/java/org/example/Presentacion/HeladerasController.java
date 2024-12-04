@@ -100,7 +100,7 @@ public class HeladerasController extends ContribucionController {
         hacerseCargoDeUnaHeladera.agregarHeladera(heladera);
 
         RepoHeladeras.getInstancia().agregar(heladera);
-        actualizarPuntajeUsuarioActual(hacerseCargoDeUnaHeladera);//y guarda la contribucion
+        actualizarPuntajeUsuarioActual(context, hacerseCargoDeUnaHeladera);//y guarda la contribucion
 
 
         context.redirect("/heladeras");
@@ -146,7 +146,7 @@ public class HeladerasController extends ContribucionController {
         String tipoFalla = context.formParam("tipoFalla");
         String descripcion = context.formParam("descripcion");
         try{
-            Colaborador colaborador = obtenerRolColaboradorActual();
+            Colaborador colaborador = obtenerRolColaboradorActual(context);
             colaborador.reportarFallaTecnica(descripcion,fotoUrl,heladera);
         } catch (Exception e){
           e.printStackTrace();

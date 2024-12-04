@@ -78,6 +78,22 @@ public class RepoUsuario {
     }
   }
 
+  public Usuario obtenerUsuarioPorId(int idUsuario) {
+    EntityManager em = BDUtils.getEntityManager();
+    try {
+      List<Usuario> usuarios1 = em.createQuery(
+                      "SELECT u FROM Usuario u WHERE u.idUsuario=:idUsuario", Usuario.class)
+              .setParameter("idUsuario", idUsuario)
+              .getResultList();
+      if(usuarios1.isEmpty()){
+        throw new UserException("Usuario inexistente");
+      }
+      return usuarios1.get(0);
+    } catch (Exception exception){
+      throw new UserException("Usuario inexistente");
+    }
+  }
+
   public void clean(){
     EntityManager em = BDUtils.getEntityManager();
     em.getTransaction().begin();

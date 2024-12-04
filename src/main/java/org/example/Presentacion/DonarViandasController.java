@@ -71,9 +71,9 @@ public class DonarViandasController extends ContribucionController {
             donacionDeViandas.setCantidadDeViandas(1);
 
 
-            actualizarPuntajeUsuarioActual(donacionDeViandas);
+            actualizarPuntajeUsuarioActual(context, donacionDeViandas);
 
-            Colaborador colaborador = obtenerRolColaboradorActual();
+            Colaborador colaborador = obtenerRolColaboradorActual(context);
             vianda.setColaborador(colaborador);
 
             List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();

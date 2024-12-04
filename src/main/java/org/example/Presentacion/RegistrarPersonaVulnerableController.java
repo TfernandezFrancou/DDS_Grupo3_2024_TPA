@@ -29,7 +29,7 @@ public class RegistrarPersonaVulnerableController extends ContribucionController
             contribucion.setFecha(LocalDate.now());
             contribucion.agregarPersona(personaVulnerable);
 
-            actualizarPuntajeUsuarioActual(contribucion);
+            actualizarPuntajeUsuarioActual(context, contribucion);
 
             Map<String, Object> model = new HashMap<>();
             model.put("exito", "El registro fue exitoso");
@@ -108,8 +108,8 @@ public class RegistrarPersonaVulnerableController extends ContribucionController
         return personaHumana;
     }
 
-    private static Persona obtenerPersonaColaboradorActual(){
-        Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
+    private static Persona obtenerPersonaColaboradorActual(Context context){
+        Usuario user = context.attribute("usuario");
         int idPersonaUser = user.getColaborador().getIdPersona();
         Persona personaUser = RepoPersona.getInstancia().buscarPorId(idPersonaUser);
         if(personaUser.getRol() == null){

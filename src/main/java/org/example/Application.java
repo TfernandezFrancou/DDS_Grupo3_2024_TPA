@@ -3,6 +3,7 @@ package org.example;
 import io.javalin.Javalin;
 import org.example.Presentacion.*;
 import org.example.autenticacion.SessionManager;
+import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
 import org.example.incidentes.Alerta;
@@ -99,6 +100,7 @@ public class Application {
                 post("registrarse", UsuarioController::postRegistrarse);
                 get("registrarse", UsuarioController::getRegistrarUsuario);
                 get("InicioSession", UsuarioController::getIniciosesion);
+                get("cerrar-sesion", UsuarioController::getCerrarSesion);
             });
 
             path("carga-csv", () -> {
@@ -133,15 +135,11 @@ public class Application {
 
         List<String> rutasSinSesion = List.of("/usuarios", "/api/localidades", "/views/imagenes", "/styles", "/views/js");
         app.before(ctx -> {
-            for(String ruta: rutasSinSesion){
-                if(ctx.path().startsWith(ruta)) return;
+            for (String ruta: rutasSinSesion){
+                if (ctx.path().startsWith(ruta)) return;
             }
-           if (SessionManager.getInstancia().obtenerAtributo("usuario") == null) {//si no inicio sección
-             //TODO comento esto para que no tengan que iniciar sesion mientras hacen las vistas
-               // si para alguna vista necesitan del usuario o de la persona usuario,
-               //   descomentar esto de aca abajo
-               // ctx.redirect("/usuarios/InicioSession"); // Redirigir al login si es necesario
-           }
+            //TODO comento esto para que no tengan que iniciar sesion mientras hacen las vistas
+            // SessionManager.getInstancia().validarUsuario(ctx);
         });
 
         EntityManager em = BDUtils.getEntityManager();

@@ -34,10 +34,10 @@ public class OfertasController extends ContribucionController {
 
         Oferta resultadoBusqueda = RepoOfertas.getInstancia().buscarPorNombre(nombreProducto);
         String errorMessage = null;
-        Colaborador colaborador = obtenerRolColaboradorActual();
+        Colaborador colaborador = obtenerRolColaboradorActual(context);
         try{
             colaborador.canjearOferta(resultadoBusqueda);//tambien modifica el puntaje
-            actualizarColaboradorUsuarioActual(colaborador);
+            actualizarColaboradorUsuarioActual(context, colaborador);
         } catch (Exception ex){
             ex.printStackTrace();
             errorMessage = "puntos insuficientes";
@@ -80,7 +80,7 @@ public class OfertasController extends ContribucionController {
 
     public static void getOfertas(@NotNull Context context) throws Exception {
         Map<String, Object> model = new HashMap<>();
-        Colaborador colaborador = obtenerRolColaboradorActual();
+        Colaborador colaborador = obtenerRolColaboradorActual(context);
         int puntos = (int) colaborador.getPuntuaje();
 
         model.put("puntos", puntos);
@@ -95,7 +95,7 @@ public class OfertasController extends ContribucionController {
 
     public static void postOfrecerProducto(@NotNull Context context){
         try{
-            verificarEsPersonaJuridica();
+            verificarEsPersonaJuridica(context);
             OfrecerProductos contribucion = almacernarOferta(context);
             contribucion.ejecutarContribucion();
             Map<String, Object> model = new HashMap<>();
@@ -109,8 +109,8 @@ public class OfertasController extends ContribucionController {
 
     }
 
-    private static void verificarEsPersonaJuridica() throws RuntimeException{
-        Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
+    private static void verificarEsPersonaJuridica(Context context) throws RuntimeException{
+        Usuario user = context.attribute("usuario");
         Persona personaUser = user.getColaborador();
         if (!(personaUser instanceof PersonaJuridica)){
             throw new RuntimeException("Esta funcionalidad está disponible solo para personas jurídicas.");
@@ -150,15 +150,15 @@ public class OfertasController extends ContribucionController {
         Oferta oferta = new Oferta(nombre,intPuntos,fotoUrl);
 
         ofrecerProductos.agregarOferta(oferta);
-        Colaborador colaborador = asignarRol();
+        Usuario usuario = context.attribute("usuario");
+        Colaborador colaborador = asignarRol(usuario);
         ofrecerProductos.setColaborador(colaborador);
         return ofrecerProductos;
 
     }
 
-    private static Colaborador asignarRol(){
-        Usuario user = (Usuario) SessionManager.getInstancia().obtenerAtributo("usuario");
-        Persona personaUser = user.getColaborador();
+    private static Colaborador asignarRol(Usuario usuario){
+        Persona personaUser = usuario.getColaborador();
         if(personaUser.getRol() == null) {
             Colaborador colaboradorRol = new Colaborador();
             colaboradorRol.setEstaActivo(true);
