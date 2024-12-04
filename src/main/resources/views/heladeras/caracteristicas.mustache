@@ -43,40 +43,109 @@
 
     <a href="/heladeras/{{heladera.idHeladera}}/alertas" class="btn btn-primary but boton-nuevo">Ver Alertas</a>
 
-    <h2 style="margin-top: 30px; margin-bottom: 30px;">Suscripción a la heladera</h2>
-    <div class="container mt-4 formulario">
-        <form action="" class="text-center">
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="" class="formulario-input"><strong>Notificar si la heladera sufrió algun
-                        desperfecto?</strong></label>
+    <h2 class="mt-4 mb-5">Suscripciones a la heladera</h2>
+
+    {{#suscripcionDesperfecto}}
+        <div class="container mt-1 formulario">
+            <form method="post" action="/heladeras/{{heladera.idHeladera}}/suscripciones/{{idSuscripcion}}/cancelar">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <span class="formulario-input"><strong>Se te notificará cuando la heladera sufra un desperfecto</strong></span>
+                    <button type="submit" class="btn btn-danger">Cancelar suscripción</button>
                 </div>
-                <div class="col">
-                    <input type="radio" name="recibir-notificacion" id="yes" required class="form-check-input">
-                    <label for="yes" class="form-check-label formulario-label">Si</label>
-                    <input type="radio" id="no" name="recibir-notificacion" class="form-check-input">
-                    <label for="no" class="form-check-label">No</label>
+            </form>
+        </div>
+    {{/suscripcionDesperfecto}}
+    {{^suscripcionDesperfecto}}
+        <div class="container mt-1 formulario">
+            <form method="post" action="/heladeras/{{heladera.idHeladera}}/suscripcion-desperfecto">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <span class="formulario-input"><strong>Notificarme si la heladera sufrió algun desperfecto</strong></span>
+                    <button type="submit" class="btn btn-primary but boton-nuevo">Suscribirse</button>
                 </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6" style="align-content: center;">
-                    <label for=""><strong>Cantidad de viandas faltantes a notificar:</strong></label>
+            </form>
+        </div>
+    {{/suscripcionDesperfecto}}
+    {{#suscripcionFaltantes}}
+        <div class="container mt-1 formulario">
+            <form method="post" action="/heladeras/{{heladera.idHeladera}}/suscripciones/{{idSuscripcion}}/cancelar">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <span class="formulario-input"><strong>Se te notificará cuando a la heladera le falten {{cantidadDeViandas}} viandas para llenarse</strong></span>
+                    <button type="submit" class="btn btn-danger">Cancelar suscripción</button>
                 </div>
-                <div class="col-md-6">
-                    <input type="number" name="" id="" class="form-control" min="0" required>
+            </form>
+        </div>
+    {{/suscripcionFaltantes}}
+    {{^suscripcionFaltantes}}
+        <div class="container mt-1 formulario">
+            <form method="post" action="/heladeras/{{heladera.idHeladera}}/suscripcion-faltantes">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <div class="d-flex flex-row align-items-baseline gap-2">
+                        <span class="text-nowrap formulario-input" style="display: block"><strong>Notificarme cuando falten</strong></span>
+                        <input name="cantidad" type="number" required placeholder="5" class="form-control" />
+                        <span class="text-nowrap formulario-input"><strong>viandas para llenarla</strong></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary but boton-nuevo">Suscribirse</button>
                 </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for=""><strong>Cantidad de viandas disponibles a notificar:</strong></label>
+            </form>
+        </div>
+    {{/suscripcionFaltantes}}
+    {{#suscripcionDisponibles}}
+        <div class="container mt-1 formulario">
+            <form method="post" action="/heladeras/{{heladera.idHeladera}}/suscripciones/{{idSuscripcion}}/cancelar">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <span class="formulario-input"><strong>Se te notificará cuando la heladera tenga {{cantidadDeViandas}} viandas</strong></span>
+                    <button type="submit" class="btn btn-danger">Cancelar suscripción</button>
                 </div>
-                <div class="col-md-6">
-                    <input type="number" name="" id="" class="form-control" min="0" required>
+            </form>
+        </div>
+    {{/suscripcionDisponibles}}
+    {{^suscripcionDisponibles}}
+        <div class="container mt-1 formulario">
+            <form method="post" action="/heladeras/{{heladera.idHeladera}}/suscripcion-disponibles">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <div class="d-flex flex-row align-items-baseline gap-2">
+                        <span class="text-nowrap formulario-input" style="display: block"><strong>Notificarme cuando queden</strong></span>
+                        <input name="cantidad" type="number" required placeholder="5" class="form-control" />
+                        <span class="text-nowrap formulario-input"><strong>viandas</strong></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary but boton-nuevo">Suscribirse</button>
                 </div>
-            </div>
-            <button type="submit" class="btn btn-primary but boton-nuevo">Suscribirse</button>
-        </form>
-    </div>
+            </form>
+        </div>
+    {{/suscripcionDisponibles}}
+<!--    <div class="container mt-4 formulario">-->
+<!--        <form action="" class="text-center">-->
+<!--            <div class="row mb-3">-->
+<!--                <div class="col-md-6">-->
+<!--                    <label for="" class="formulario-input"><strong>Notificar si la heladera sufrió algun-->
+<!--                        desperfecto?</strong></label>-->
+<!--                </div>-->
+<!--                <div class="col">-->
+<!--                    <input type="radio" name="recibir-notificacion" id="yes" required class="form-check-input">-->
+<!--                    <label for="yes" class="form-check-label formulario-label">Si</label>-->
+<!--                    <input type="radio" id="no" name="recibir-notificacion" class="form-check-input">-->
+<!--                    <label for="no" class="form-check-label">No</label>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="row mb-3">-->
+<!--                <div class="col-md-6" style="align-content: center;">-->
+<!--                    <label for=""><strong>Cantidad de viandas faltantes a notificar:</strong></label>-->
+<!--                </div>-->
+<!--                <div class="col-md-6">-->
+<!--                    <input type="number" name="" id="" class="form-control" min="0" required>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="row mb-3">-->
+<!--                <div class="col-md-6">-->
+<!--                    <label for=""><strong>Cantidad de viandas disponibles a notificar:</strong></label>-->
+<!--                </div>-->
+<!--                <div class="col-md-6">-->
+<!--                    <input type="number" name="" id="" class="form-control" min="0" required>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <button type="submit" class="btn btn-primary but boton-nuevo">Suscribirse</button>-->
+<!--        </form>-->
+<!--    </div>-->
 </div>
 </body>
 
