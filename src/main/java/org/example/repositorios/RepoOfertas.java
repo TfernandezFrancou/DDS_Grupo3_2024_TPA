@@ -6,50 +6,102 @@ import org.example.utils.BDUtils;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.NoResultException;
 
-public class RepoOfertas { //TODO conectar con DB
-    private List<Oferta> ofertas;
+public class RepoOfertas {
 
     private static RepoOfertas instancia = null;
 
     private RepoOfertas() {
-        this.ofertas = new ArrayList<>();
     }
 
     public static RepoOfertas getInstancia() {
         if (instancia == null) {
-            RepoOfertas.instancia = new RepoOfertas();
+            instancia = new RepoOfertas();
         }
         return instancia;
     }
 
     public void agregarOferta(Oferta oferta) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
-        em.persist(oferta);
-        em.getTransaction().commit();
+        try {
+            BDUtils.comenzarTransaccion(em);
+            em.persist(oferta);
+            BDUtils.commit(em);
+        } catch (Exception e) {
+            BDUtils.rollback(em);
+            throw new RuntimeException("Error al agregar la oferta: " + e.getMessage(), e);
+        } finally {
+            em.close();
+        }
     }
 
     public void agregarTodas(List<Oferta> ofertas) {
-        this.ofertas.addAll(ofertas);
+        EntityManager em = BDUtils.getEntityManager();
+        try {
+            BDUtils.comenzarTransaccion(em);
+            for (Oferta oferta : ofertas) {
+                em.persist(oferta);
+            }
+            BDUtils.commit(em);
+        } catch (Exception e) {
+            BDUtils.rollback(em);
+            throw new RuntimeException("Error al agregar las ofertas: " + e.getMessage(), e);
+        } finally {
+            em.close();
+        }
     }
 
     public void eliminarOferta(Oferta oferta) {
-        this.ofertas.remove(oferta);
+        EntityManager em = BDUtils.getEntityManager();
+        try {
+            BDUtils.comenzarTransaccion(em);
+            Oferta ofertaEncontrada = em.find(Oferta.class, oferta.getIdOferta());
+            if (ofertaEncontrada != null) {
+                em.remove(ofertaEncontrada);
+            }
+            BDUtils.commit(em);
+        } catch (Exception e) {
+            BDUtils.rollback(em);
+            throw new RuntimeException("Error al eliminar la oferta: " + e.getMessage(), e);
+        } finally {
+            em.close();
+        }
     }
 
     public List<Oferta> obtenerTodas() {
-        return BDUtils
-                .getEntityManager()
-                .createQuery("from Oferta", Oferta.class)
-                .getResultList();
+        EntityManager em = BDUtils.getEntityManager();
+        try {
+            return em.createQuery("FROM Oferta", Oferta.class).getResultList();
+        } finally {
+            em.close();
+        }
     }
 
     public Oferta buscarPorNombre(String nombreProducto) {
-        return  BDUtils
-                .getEntityManager()
-                .createQuery("from Oferta o WHERE o.nombre=:nombre", Oferta.class)
-                .setParameter("nombre", nombreProducto)
-                .getSingleResult();
+        EntityManager em = BDUtils.getEntityManager();
+        try {
+            return em.createQuery("FROM Oferta o WHERE o.nombre = :nombre", Oferta.class)
+                    .setParameter("nombre", nombreProducto)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null; // Si no se encuentra ninguna oferta con ese nombre
+        } finally {
+            em.close();
+        }
+    }
+
+    public void limpiar() {
+        EntityManager em = BDUtils.getEntityManager();
+        try {
+            BDUtils.comenzarTransaccion(em);
+            em.createQuery("DELETE FROM Oferta").executeUpdate();
+            BDUtils.commit(em);
+        } catch (Exception e) {
+            BDUtils.rollback(em);
+            throw new RuntimeException("Error al limpiar el repositorio: " + e.getMessage(), e);
+        } finally {
+            em.close();
+        }
     }
 }
