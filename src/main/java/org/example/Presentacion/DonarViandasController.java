@@ -63,6 +63,8 @@ public class DonarViandasController extends ContribucionController {
 
         if(heladeraOptional.isPresent()){
             vianda.setHeladera(heladeraOptional.get());
+            Colaborador colaborador = obtenerRolColaboradorActual(context);
+            vianda.setColaborador(colaborador);
 
             DonacionDeViandas donacionDeViandas = new DonacionDeViandas();
             donacionDeViandas.setViandas(List.of(vianda));
@@ -73,8 +75,7 @@ public class DonarViandasController extends ContribucionController {
 
             actualizarPuntajeUsuarioActual(context, donacionDeViandas);
 
-            Colaborador colaborador = obtenerRolColaboradorActual(context);
-            vianda.setColaborador(colaborador);
+            //RepoContribucion.getInstancia().actualizarContribucion(donacionDeViandas);//update colaborador en vianda
 
             List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
             Map<String, Object> model = new HashMap<>();

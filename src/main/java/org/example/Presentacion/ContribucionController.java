@@ -13,9 +13,8 @@ public abstract class ContribucionController {
     public static void actualizarPuntajeUsuarioActual(Context context, Contribucion contribucion){
         Persona colaboradorPersona = obtenerPersonaColaboradorActual(context);
         Colaborador colaborador = RepoPersona.getInstancia().getRolColaboradorById(colaboradorPersona.getRol().getIdrol());
-        contribucion.setColaborador(colaborador);
 
-        colaborador.agregarContribucion(contribucion);
+        colaborador.agregarContribucion(contribucion);//se persiste la contribucion
         colaborador.calcularPuntuaje();
         colaboradorPersona.setRol(colaborador);//update
         colaboradorPersona = RepoPersona.getInstancia().actualizarPersona(colaboradorPersona);

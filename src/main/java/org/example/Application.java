@@ -139,7 +139,7 @@ public class Application {
                 if (ctx.path().startsWith(ruta)) return;
             }
             //TODO comento esto para que no tengan que iniciar sesion mientras hacen las vistas
-            // SessionManager.getInstancia().validarUsuario(ctx);
+             SessionManager.getInstancia().validarUsuario(ctx);
         });
 
         EntityManager em = BDUtils.getEntityManager();

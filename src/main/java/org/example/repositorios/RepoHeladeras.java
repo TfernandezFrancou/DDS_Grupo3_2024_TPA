@@ -40,7 +40,7 @@ public class RepoHeladeras {
     public void clean(){
 
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
         em.createNativeQuery("DELETE FROM MovimientoViandasXVianda_sacadas").executeUpdate();
         em.createNativeQuery("DELETE FROM MovimientoViandasXVianda_introducidas").executeUpdate();
@@ -56,7 +56,7 @@ public class RepoHeladeras {
 
     public void agregarTodas(List<Heladera> heladeras) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         for (Heladera heladera : heladeras) {
             em.persist(heladera);
         }
@@ -65,7 +65,7 @@ public class RepoHeladeras {
 
     public void agregar(Heladera heladera) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.persist(heladera);
         em.getTransaction().commit();
     }
@@ -82,7 +82,7 @@ public class RepoHeladeras {
         heladeraGuardada.setTemperaturasDeFuncionamiento(heladeraActualizada.getTemperaturasDeFuncionamiento());
 
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.merge(heladeraGuardada);
         em.getTransaction().commit();
     }
@@ -91,7 +91,7 @@ public class RepoHeladeras {
         //this.heladeras.remove(heladera);
 
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.remove(heladera);
         em.getTransaction().commit();
     }

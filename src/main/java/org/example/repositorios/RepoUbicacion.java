@@ -21,14 +21,14 @@ public class RepoUbicacion {
 
     public void agregar(Ubicacion ubicacion) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.persist(ubicacion);
         em.getTransaction().commit();
     }
 
     public void eliminar(Ubicacion ubicacion) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FK
         Ubicacion ubicacion1 = em.find(Ubicacion.class, ubicacion.getIdUbicacion());
         if (ubicacion1 != null) {
@@ -40,7 +40,7 @@ public class RepoUbicacion {
 
     public void clean() {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FK
         em.createNativeQuery("DELETE FROM ubicacion").executeUpdate();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FK
@@ -58,7 +58,7 @@ public class RepoUbicacion {
 
     public void agregarTodas(List<Ubicacion> ubicaciones) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         for (Ubicacion ubicacion : ubicaciones) {
             em.persist(ubicacion);
         }

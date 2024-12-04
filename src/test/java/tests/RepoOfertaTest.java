@@ -35,7 +35,8 @@ public class RepoOfertaTest {
         // Verificar que ahora hay dos ofertas en el repositorio
         List<Oferta> ofertas = repoOfertas.obtenerTodas();
         Assertions.assertEquals(2, ofertas.size(), "Debe haber dos ofertas en el repositorio");
-        Assertions.assertTrue(ofertas.contains(oferta2), "La oferta recién agregada debe estar en el repositorio");
+        Assertions.assertTrue(ofertas.stream().anyMatch(oferta -> oferta.getIdOferta() == oferta2.getIdOferta()),
+                "La oferta recién agregada debe estar en el repositorio");
     }
 
     @Test

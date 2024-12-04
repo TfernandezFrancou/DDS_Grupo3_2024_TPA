@@ -22,14 +22,14 @@ public class RepositorioVisitasTecnicos {
 
     public void agregarVisita(VisitaHeladera visita) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.persist(visita);
         em.getTransaction().commit();
     }
 
     public void quitarVisita(VisitaHeladera visita) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
         VisitaHeladera resultado = em.find(VisitaHeladera.class, visita.getIdVisitaHeladera());
         if (resultado != null) {
@@ -41,7 +41,7 @@ public class RepositorioVisitasTecnicos {
 
     public void clean(){
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
         em.createNativeQuery("DELETE FROM VisitaHeladera").executeUpdate();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs

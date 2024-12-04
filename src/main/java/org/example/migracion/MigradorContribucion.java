@@ -55,12 +55,15 @@ public class MigradorContribucion {
             usuario.setColaborador(colaboradorActualizado);
         } else {
             Usuario usuario = personaExistente.buscarOCrearUsuario();//ya lo guarda en el repo
-            if(personaExistente.getRol() == null){
+            if (personaExistente.getRol() == null) {
                 personaExistente.setRol(colaborador.getRol());//asigno colaborador ya creado
                 personaExistente = RepoPersona.getInstancia().actualizarPersona(personaExistente);
             }
-            ((Colaborador) personaExistente.getRol()).agregarContribucion(contribucion);
-            ((Colaborador) personaExistente.getRol()).calcularPuntuaje();
+            Colaborador rol = ((Colaborador) personaExistente.getRol());
+            Colaborador rolColaborador = RepoPersona.getInstancia().getRolColaboradorById(rol.getIdrol());
+            rolColaborador.agregarContribucion(contribucion);//y guarda la contribucion
+            rolColaborador.calcularPuntuaje();
+            personaExistente.setRol(rolColaborador);
             personaExistente = RepoPersona.getInstancia().actualizarPersona(personaExistente);
             usuario.setColaborador(personaExistente);
         }

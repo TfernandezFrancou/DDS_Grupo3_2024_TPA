@@ -58,12 +58,13 @@ public class Colaborador extends Rol {
     public void agregarContribucion(Contribucion contribucion)
     {
         contribucion.setColaborador(this);
-        RepoContribucion.getInstancia().agregarContribucion(contribucion);
         this.formasContribucion.add(contribucion);
+        RepoContribucion.getInstancia().agregarContribucion(contribucion);
     }
 
     public void calcularPuntuaje()
     {
+        this.puntuaje=0;//recalculamos el puntaje desde cero
 
         for (Contribucion contribucion:this.formasContribucion) {
             this.puntuaje += contribucion.obtenerPuntaje();
@@ -72,7 +73,7 @@ public class Colaborador extends Rol {
         int puntosCanjeados = 0;
 
         for(Oferta oferta: this.ofertasCanjeadas){
-            puntosCanjeados = oferta.getPuntosNecesarios();
+            puntosCanjeados += oferta.getPuntosNecesarios();
         }
 
         this.puntuaje  -= puntosCanjeados;
