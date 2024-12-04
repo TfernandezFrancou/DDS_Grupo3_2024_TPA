@@ -23,28 +23,28 @@ public class RepoTarjetas {
 
     public void agregarTodas(List<TarjetaHeladera> tarjeta) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         tarjeta.forEach(em::persist);
         em.getTransaction().commit();
     }
 
     public void agregarTodasTarjetasColaboradores(List<TarjetaColaborador> tarjetaColaborador) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);//
         tarjetaColaborador.forEach(em::persist);
         em.getTransaction().commit();
     }
 
     public void agregar(Tarjeta tarjeta) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.persist(tarjeta);
         em.getTransaction().commit();
     }
 
     public void clean() {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
         em.createNativeQuery("DELETE FROM Uso").executeUpdate();
         em.createNativeQuery("DELETE FROM Tarjeta").executeUpdate();

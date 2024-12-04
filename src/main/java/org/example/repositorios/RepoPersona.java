@@ -39,7 +39,7 @@ public class RepoPersona {
 
     public void agregarTodas(List<Persona> personas) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         for (Persona persona: personas) {
             em.persist(persona);
         }
@@ -48,14 +48,14 @@ public class RepoPersona {
 
     public void agregar(Persona persona) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.persist(persona);
         em.getTransaction().commit();
     }
 
     public void eliminar(Persona persona) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         int idPersona =persona.getIdPersona();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
 
@@ -97,7 +97,7 @@ public class RepoPersona {
 
     public void clean(){
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
         em.createNativeQuery("DELETE FROM Tecnico").executeUpdate();
         em.createNativeQuery("DELETE FROM Colaborador").executeUpdate();
@@ -113,10 +113,6 @@ public class RepoPersona {
 
     public Persona buscarPorId(int idPersona) {
         EntityManager em = BDUtils.getEntityManager();
-        //PersonaHumana persona =
-        //        em.createQuery("SELECT p FROM PersonaHumana p WHERE p.idPersona=:id", PersonaHumana.class)
-        //                .setParameter("id", idPersona)
-        //                .getSingleResult();
         Persona persona =
                 em.createQuery("SELECT p FROM Persona p WHERE p.idPersona=:id", Persona.class)
                         .setParameter("id", idPersona)
@@ -171,12 +167,17 @@ public class RepoPersona {
     public Colaborador getRolColaboradorById(int idRol) {
         System.out.println("buscando id rol: "+ idRol);
         EntityManager em = BDUtils.getEntityManager();
+        BDUtils.comenzarTransaccion(em);
         Colaborador colaborador = em.createQuery("SELECT c FROM Colaborador c WHERE c.idrol=:idRol", Colaborador.class)
                 .setParameter("idRol", idRol)
                 .getSingleResult();
+        BDUtils.commit(em);
         if(colaborador == null){
+            BDUtils.rollback(em);
             throw new PersonaInexistenteException("No existe el rol colaborador con id="+idRol);
         }
+        //fetch lazy de formas de contribucion
+        System.out.println("formas De Contribucion: "+ colaborador.getFormasContribucion().size());
         return colaborador;
     }
 
@@ -220,7 +221,7 @@ public class RepoPersona {
 
     public void actualizarColaborador(Colaborador colaborador) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.merge(colaborador);
         em.getTransaction().commit();
     }
@@ -229,7 +230,7 @@ public class RepoPersona {
         EntityManager em = BDUtils.getEntityManager();
         Persona personaActualizada = em.find(Persona.class, personaUser.getIdPersona());
         try {
-            em.getTransaction().begin();
+            BDUtils.comenzarTransaccion(em);
             personaActualizada = em.merge(personaUser);
             em.getTransaction().commit();
         } catch (Exception e) {

@@ -61,8 +61,11 @@ public class Colaborador extends Rol {
         RepoContribucion.getInstancia().agregarContribucion(contribucion);
     }
 
-    public void calcularPuntuaje() {
-        this.puntuaje = 0;
+
+    public void calcularPuntuaje()
+    {
+        this.puntuaje=0;//recalculamos el puntaje desde cero
+
 
         List<Contribucion> contribuciones = RepoContribucion.getInstancia().obtenerContribucionesPorPersona(this.getPersona().getIdPersona());
 
@@ -78,6 +81,7 @@ public class Colaborador extends Rol {
 
         for (Oferta oferta: this.ofertasCanjeadas) {
             puntosCanjeados = oferta.getPuntosNecesarios();
+
         }
 
         this.puntuaje -= puntosCanjeados;

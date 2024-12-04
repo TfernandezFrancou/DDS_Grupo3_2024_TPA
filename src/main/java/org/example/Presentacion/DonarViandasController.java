@@ -1,24 +1,16 @@
 package org.example.Presentacion;
 
 import io.javalin.http.Context;
-import org.example.autenticacion.SessionManager;
-import org.example.autenticacion.Usuario;
+
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Entrega;
 import org.example.colaboraciones.contribuciones.viandas.EstadoEntrega;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
-import org.example.incidentes.FallaTecnica;
-import org.example.personas.Persona;
-import org.example.personas.PersonaHumana;
 import org.example.personas.roles.Colaborador;
-import org.example.repositorios.RepoContribucion;
 import org.example.repositorios.RepoHeladeras;
-import org.example.repositorios.RepoIncidente;
-import org.example.repositorios.RepoPersona;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.text.DateFormatter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -77,9 +69,17 @@ public class DonarViandasController extends ContribucionController {
             donacionDeViandas.setCantidadDeViandas(1);
             donacionDeViandas.setColaborador(colaborador);
 
-            // no usamos ejecutarContribucion porque eso involucra lo de las tarjetas
-            colaborador.agregarContribucion(donacionDeViandas);
-            colaborador.calcularPuntuaje();
+            try {
+                colaborador.agregarContribucion(donacionDeViandas);
+                colaborador.calcularPuntuaje();
+                //donacionDeViandas.ejecutarContribucion();
+            } catch (Exception e) {
+                // TODO: ACA FALLA PORQUE LA TARJETA NO ESTA AUTORIZADA
+//                model.put("error", e.getMessage());
+//                context.render("/views/colaboraciones/donar-viandas.mustache", model);
+//                return;
+            }
+
 
             model.put("exito", "Contribucion registrada con exito");
             context.render("/views/colaboraciones/donar-viandas.mustache", model);

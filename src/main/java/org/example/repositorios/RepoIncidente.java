@@ -33,7 +33,7 @@ public class RepoIncidente {
 
     public void agregarFalla(FallaTecnica fallaTecnica) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         List<Heladera> heladeras = em.createQuery("from Heladera where idHeladera = :idHeladera", Heladera.class)
                         .setParameter("idHeladera",fallaTecnica.getHeladera().getIdHeladera()).getResultList();
        if(heladeras.size() > 0){
@@ -45,7 +45,7 @@ public class RepoIncidente {
 
     public void agregarAlerta(Alerta alerta) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.persist(alerta);
         em.getTransaction().commit();
     }
@@ -117,7 +117,7 @@ public class RepoIncidente {
         //this.incidentes.clear();
 
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
         em.createQuery("delete from Incidente").executeUpdate();
         em.createQuery("delete from Heladera").executeUpdate();

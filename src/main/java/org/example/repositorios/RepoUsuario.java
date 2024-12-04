@@ -27,7 +27,7 @@ public class RepoUsuario {
 
   public void agregarUsuarios(Usuario usuarioNuevo) {
     EntityManager em = BDUtils.getEntityManager();
-    em.getTransaction().begin();
+    BDUtils.comenzarTransaccion(em);
     em.persist(usuarioNuevo);
     em.getTransaction().commit();
   }
@@ -96,7 +96,7 @@ public class RepoUsuario {
 
   public void clean(){
     EntityManager em = BDUtils.getEntityManager();
-    em.getTransaction().begin();
+    BDUtils.comenzarTransaccion(em);
     em.createQuery("delete from Usuario").executeUpdate();
     em.getTransaction().commit();
   }

@@ -21,14 +21,14 @@ public class RepoContribucion {
 
     public void agregarContribucion(Contribucion contribucion) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.persist(contribucion);
         em.getTransaction().commit();
     }
 
     public void eliminarContribucion(Contribucion contribucion) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         int idContribucion =contribucion.getIdContribucion();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
 
@@ -75,7 +75,7 @@ public class RepoContribucion {
 
     public void clean(){
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();//deshabilito el check de FKs
+        BDUtils.comenzarTransaccion(em);//deshabilito el check de FKs
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();
         em.createNativeQuery("DELETE FROM DistribucionDeViandas_Vianda").executeUpdate();
         em.createNativeQuery("DELETE FROM DistribucionDeViandas").executeUpdate();

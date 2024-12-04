@@ -58,21 +58,21 @@ public class RepoSensor {
 
     public void actualizarSensor(Sensor sensor){
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.merge(sensor);
         em.getTransaction().commit();
     }
 
     public void agregarSensor(Sensor sensor){
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.persist(sensor);
         em.getTransaction().commit();
     }
 
     public void eliminarSensor(Sensor sensor){
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
 
         int idSensor = sensor.getIdSensor();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate(); //deshabilito el check de FKs
@@ -88,7 +88,7 @@ public class RepoSensor {
 
     public void clean(){
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate(); //deshabilito el check de FKs
         em.createNativeQuery("DELETE FROM sensor").executeUpdate();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate(); //habilito el check de FKs

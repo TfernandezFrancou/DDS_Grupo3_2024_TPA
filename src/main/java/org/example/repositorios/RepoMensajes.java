@@ -28,7 +28,7 @@ public class RepoMensajes {
 
     public void agregarMensaje(Mensaje mensaje) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.persist(mensaje);
         em.getTransaction().commit();
     }
@@ -36,7 +36,7 @@ public class RepoMensajes {
     public void quitarMensaje(Mensaje mensaje) {
         EntityManager em = BDUtils.getEntityManager();
         try {
-            em.getTransaction().begin();
+            BDUtils.comenzarTransaccion(em);
             Mensaje mensajeEncontrado = em.find(Mensaje.class, mensaje.getIdMensaje());
             if (mensajeEncontrado != null) {
                 em.remove(mensajeEncontrado);
@@ -62,7 +62,7 @@ public class RepoMensajes {
 
     public void clean(){
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate(); //deshabilito el check de FKs
         em.createNativeQuery("DELETE FROM mensaje").executeUpdate();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate(); //habilito el check de FKs

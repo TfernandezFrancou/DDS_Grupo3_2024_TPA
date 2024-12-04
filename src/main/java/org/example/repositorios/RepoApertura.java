@@ -22,14 +22,14 @@ public class RepoApertura {
 
     public void agregarApertura(Apertura apertura) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.persist(apertura);
         em.getTransaction().commit();
     }
 
     public void quitarApertura(Apertura apertura) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         Apertura resultado = em.find(Apertura.class, apertura.getIdApertura());
         if (resultado != null) {
             em.remove(resultado);
@@ -39,7 +39,7 @@ public class RepoApertura {
 
     public void clean(){
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.createQuery("DELETE FROM Apertura").executeUpdate();
         em.getTransaction().commit();
     }

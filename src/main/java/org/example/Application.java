@@ -164,13 +164,14 @@ public class Application {
             String sqlScript = Files.readString(tempFile);
             String[] queries = sqlScript.split(";");
 
-            em.getTransaction().begin();
+            BDUtils.comenzarTransaccion(em);
             for (String query : queries) {
                 if (!query.trim().isEmpty()) {
                     em.createNativeQuery(query.trim()).executeUpdate();
                 }
             }
             em.getTransaction().commit();
+            em.close();
 
         } catch (Exception e){
             e.printStackTrace();

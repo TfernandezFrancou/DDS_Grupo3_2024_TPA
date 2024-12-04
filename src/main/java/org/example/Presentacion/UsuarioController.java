@@ -48,7 +48,7 @@ public class UsuarioController  {
 
         try{
             Persona persona = crearPersona(context);
-            Usuario usuario = registrarUsuario.registrarUsuario(nombreDeUsuario, contraseniaUsuario);//persiste el usuario
+            Usuario usuario = registrarUsuario.registrarUsuario(nombreDeUsuario, contraseniaUsuario);
             usuario.setColaborador(persona);
             usuario.setDocumento(persona.getDocumento());
 

@@ -38,14 +38,14 @@ public class RepoReportes {
 
     public void agregarReporte(ReportesDeLaSemana nuevoReporte) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.persist(nuevoReporte);
         em.getTransaction().commit();
     }
 
     public void eliminarReporte(ReportesDeLaSemana reporte){
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         int idReporte = reporte.getIdReportesDeLaSemana();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
 
@@ -60,7 +60,7 @@ public class RepoReportes {
 
     public void clean(){
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
+        BDUtils.comenzarTransaccion(em);
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
         em.createNativeQuery("DELETE FROM reportesDeLaSemana").executeUpdate();
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
