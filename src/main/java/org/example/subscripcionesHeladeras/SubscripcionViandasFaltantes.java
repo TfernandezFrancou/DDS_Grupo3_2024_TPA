@@ -18,7 +18,11 @@ import javax.persistence.Entity;
 public class SubscripcionViandasFaltantes extends SubscripcionHeladera {
     private int cantidadDeViandas;
 
-    public SubscripcionViandasFaltantes(Persona persona, MedioDeContacto medioDeContacto, int cantidad) {
+    public SubscripcionViandasFaltantes() {
+    }
+
+    public SubscripcionViandasFaltantes(Heladera heladera, Persona persona, MedioDeContacto medioDeContacto, int cantidad) {
+        this.setHeladera(heladera);
         this.subscriptor = persona;
         this.medioDeContactoElegido = medioDeContacto;
         this.cantidadDeViandas = cantidad;

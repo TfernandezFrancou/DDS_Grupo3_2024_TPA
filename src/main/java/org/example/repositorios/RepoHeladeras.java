@@ -9,6 +9,10 @@ import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.reportes.itemsReportes.ItemReporte;
 import org.example.reportes.itemsReportes.ItemReporteViandasColocadasPorHeladera;
 import org.example.reportes.itemsReportes.ItemReporteViandasRetiradasPorHeladera;
+import org.example.subscripcionesHeladeras.SubscripcionDesperfecto;
+import org.example.subscripcionesHeladeras.SubscripcionHeladera;
+import org.example.subscripcionesHeladeras.SubscripcionViandasDisponibles;
+import org.example.subscripcionesHeladeras.SubscripcionViandasFaltantes;
 import org.example.utils.BDUtils;
 import org.hibernate.SessionFactory;
 
@@ -290,5 +294,52 @@ public class RepoHeladeras {
             em.close();
         }
         return result;
+    }
+
+    public void agregarSubscripcion(SubscripcionHeladera subscripcion) {
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.persist(subscripcion);
+        em.getTransaction().commit();
+    }
+
+    public void eliminarSuscripcion(int idSuscripcion) {
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.remove(em.find(SubscripcionHeladera.class, idSuscripcion));
+        em.getTransaction().commit();
+    }
+
+    public List<SubscripcionHeladera> obtenerSubscripcionesPorPersona(int idHeladera, int idPersona) {
+        return BDUtils
+                .getEntityManager()
+                .createQuery("from SubscripcionHeladera s where s.subscriptor.id = :idPersona and s.heladera.id = :idHeladera", SubscripcionHeladera.class)
+                .setParameter("idPersona", idPersona)
+                .setParameter("idHeladera", idHeladera)
+                .getResultList();
+    }
+
+    public List<SubscripcionDesperfecto> obtenerSubscripcionesDesperfecto(int idHeladera) {
+        return BDUtils
+                .getEntityManager()
+                .createQuery("from SubscripcionDesperfecto s where s.heladera.id = :idHeladera", SubscripcionDesperfecto.class)
+                .setParameter("idHeladera", idHeladera)
+                .getResultList();
+    }
+
+    public List<SubscripcionViandasFaltantes> obtenerSubscripcionesViandasFaltantes(int idHeladera) {
+        return BDUtils
+                .getEntityManager()
+                .createQuery("from SubscripcionViandasFaltantes s where s.heladera.id = :idHeladera", SubscripcionViandasFaltantes.class)
+                .setParameter("idHeladera", idHeladera)
+                .getResultList();
+    }
+
+    public List<SubscripcionViandasDisponibles> obtenerSubscripcionesViandasDisponibles(int idHeladera) {
+        return BDUtils
+                .getEntityManager()
+                .createQuery("from SubscripcionViandasFaltantes s where s.heladera.id = :idHeladera", SubscripcionViandasDisponibles.class)
+                .setParameter("idHeladera", idHeladera)
+                .getResultList();
     }
 }

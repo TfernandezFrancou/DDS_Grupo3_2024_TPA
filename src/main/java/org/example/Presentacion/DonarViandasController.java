@@ -69,17 +69,9 @@ public class DonarViandasController extends ContribucionController {
             donacionDeViandas.setCantidadDeViandas(1);
             donacionDeViandas.setColaborador(colaborador);
 
-            try {
-                colaborador.agregarContribucion(donacionDeViandas);
-                colaborador.calcularPuntuaje();
-                //donacionDeViandas.ejecutarContribucion();
-            } catch (Exception e) {
-                // TODO: ACA FALLA PORQUE LA TARJETA NO ESTA AUTORIZADA
-//                model.put("error", e.getMessage());
-//                context.render("/views/colaboraciones/donar-viandas.mustache", model);
-//                return;
-            }
-
+            // no usamos ejecutarContribucion porque eso involucra lo de las tarjetas
+            colaborador.agregarContribucion(donacionDeViandas);
+            colaborador.calcularPuntuaje();
 
             model.put("exito", "Contribucion registrada con exito");
             context.render("/views/colaboraciones/donar-viandas.mustache", model);

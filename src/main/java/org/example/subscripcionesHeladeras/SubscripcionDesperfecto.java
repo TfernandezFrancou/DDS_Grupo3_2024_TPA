@@ -19,9 +19,12 @@ import java.util.List;
 @Entity
 public class SubscripcionDesperfecto extends SubscripcionHeladera {
 
-    public SubscripcionDesperfecto(Persona suscriptor, MedioDeContacto medioDeContacto) {
-        super.subscriptor = suscriptor;
-        super.medioDeContactoElegido = medioDeContacto;
+    public SubscripcionDesperfecto() { }
+
+    public SubscripcionDesperfecto(Heladera heladera, Persona suscriptor, MedioDeContacto medioDeContacto) {
+        this.setHeladera(heladera);
+        this.subscriptor = suscriptor;
+        this.medioDeContactoElegido = medioDeContacto;
     }
 
     @Override

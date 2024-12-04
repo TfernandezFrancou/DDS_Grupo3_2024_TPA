@@ -93,6 +93,10 @@ public class Application {
                 get("", HeladerasController::getVisualizar);
                 get("{id}", HeladerasController::getCaracteristicas);
                 get("{id}/alertas", HeladerasController::getAlertas);
+                post("{id}/suscripcion-desperfecto", HeladerasController::postSuscripcionDesperfectos);
+                post("{id}/suscripcion-faltantes", HeladerasController::postSuscripcionViandasFaltantes);
+                post("{id}/suscripcion-disponibles", HeladerasController::postSuscripcionViandasDisponibles);
+                post("{heladera}/suscripciones/{suscripcion}/cancelar", HeladerasController::cancelarSuscripcion);
             });
 
             path("usuarios", () -> {

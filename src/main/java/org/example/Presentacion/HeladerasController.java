@@ -19,6 +19,10 @@ import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoPersona;
 import org.example.repositorios.RepoUbicacion;
+import org.example.subscripcionesHeladeras.SubscripcionDesperfecto;
+import org.example.subscripcionesHeladeras.SubscripcionHeladera;
+import org.example.subscripcionesHeladeras.SubscripcionViandasDisponibles;
+import org.example.subscripcionesHeladeras.SubscripcionViandasFaltantes;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
@@ -53,6 +57,22 @@ public class HeladerasController extends ContribucionController {
             Map<String, Object> model = new HashMap<>();
             model.put("heladera", heladera);
             model.put("tiempoActiva", heladera.obtenerMesesActivos());
+
+            Colaborador colaborador = obtenerRolColaboradorActual(context);
+            List<SubscripcionHeladera> subscripciones = RepoHeladeras.getInstancia().obtenerSubscripcionesPorPersona(
+                heladera.getIdHeladera(),
+                colaborador.getPersona().getIdPersona()
+            );
+            for (SubscripcionHeladera subscripcion : subscripciones) {
+                if (subscripcion instanceof SubscripcionDesperfecto) {
+                    model.put("suscripcionDesperfecto", subscripcion);
+                } else if (subscripcion instanceof SubscripcionViandasFaltantes) {
+                    model.put("suscripcionFaltantes", subscripcion);
+                } else if (subscripcion instanceof SubscripcionViandasDisponibles) {
+                    model.put("suscripcionDisponibles", subscripcion);
+                }
+            }
+
             context.render("views/heladeras/caracteristicas.mustache", model);
         }else{
             context.status(404);
@@ -181,5 +201,62 @@ public class HeladerasController extends ContribucionController {
         }).toList());
 
         context.render("views/heladeras/alertas.mustache", model);
+    }
+
+    public static void postSuscripcionDesperfectos(@NotNull Context context) throws Exception {
+        Integer idHeladera = context.pathParamAsClass("id", Integer.class).get();
+        Colaborador colaborador = obtenerRolColaboradorActual(context);
+        Persona persona = colaborador.getPersona();
+        persona.getMediosDeContacto().stream().findFirst().ifPresent(medioDeContacto -> {
+            RepoHeladeras.getInstancia().buscarPorId(idHeladera).ifPresent(heladera -> {
+                SubscripcionDesperfecto s = new SubscripcionDesperfecto(heladera, persona, medioDeContacto);
+                heladera.getPublisherViandasFaltantes().suscribir(s);
+            });
+        });
+        context.redirect("/heladeras/" + idHeladera);
+    }
+
+    public static void cancelarSuscripcionDesperfectos(@NotNull Context context) throws Exception {
+    }
+
+    public static void postSuscripcionViandasFaltantes(@NotNull Context context) throws Exception {
+        Integer idHeladera = context.pathParamAsClass("id", Integer.class).get();
+        Integer cantidad = context.formParamAsClass("cantidad", Integer.class).get();
+        Colaborador colaborador = obtenerRolColaboradorActual(context);
+        Persona persona = colaborador.getPersona();
+        persona.getMediosDeContacto().stream().findFirst().ifPresent(medioDeContacto -> {
+            RepoHeladeras.getInstancia().buscarPorId(idHeladera).ifPresent(heladera -> {
+                SubscripcionViandasFaltantes s = new SubscripcionViandasFaltantes(heladera, persona, medioDeContacto, cantidad);
+                heladera.getPublisherViandasFaltantes().suscribir(s);
+            });
+        });
+        context.redirect("/heladeras/" + idHeladera);
+    }
+
+    public static void cancelarSuscripcionViandasFaltantes(@NotNull Context context) throws Exception {
+    }
+
+    public static void postSuscripcionViandasDisponibles(@NotNull Context context) throws Exception {
+        Integer idHeladera = context.pathParamAsClass("id", Integer.class).get();
+        Integer cantidad = context.formParamAsClass("cantidad", Integer.class).get();
+        Colaborador colaborador = obtenerRolColaboradorActual(context);
+        Persona persona = colaborador.getPersona();
+        persona.getMediosDeContacto().stream().findFirst().ifPresent(medioDeContacto -> {
+            RepoHeladeras.getInstancia().buscarPorId(idHeladera).ifPresent(heladera -> {
+                SubscripcionViandasDisponibles s = new SubscripcionViandasDisponibles(heladera, persona, medioDeContacto, cantidad);
+                heladera.getPublisherViandasFaltantes().suscribir(s);
+            });
+        });
+        context.redirect("/heladeras/" + idHeladera);
+    }
+
+    public static void cancelarSuscripcionViandasDisponibles(@NotNull Context context) throws Exception {
+    }
+
+    public static void cancelarSuscripcion(@NotNull Context context) throws Exception {
+        Integer idHeladera = context.pathParamAsClass("heladera", Integer.class).get();
+        Integer idSuscripcion = context.pathParamAsClass("suscripcion", Integer.class).get();
+        RepoHeladeras.getInstancia().eliminarSuscripcion(idSuscripcion);
+        context.redirect("/heladeras/" + idHeladera);
     }
 }
