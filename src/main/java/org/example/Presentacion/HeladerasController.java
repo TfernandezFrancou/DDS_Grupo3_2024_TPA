@@ -96,12 +96,10 @@ public class HeladerasController extends ContribucionController {
 
         Heladera heladera = new Heladera(nombre, ubicacion, direccion, capacidad);
 
-        HacerseCargoDeUnaHeladera hacerseCargoDeUnaHeladera = new HacerseCargoDeUnaHeladera();
-        hacerseCargoDeUnaHeladera.agregarHeladera(heladera);
+        Colaborador colaborador = obtenerRolColaboradorActual(context);
 
-        RepoHeladeras.getInstancia().agregar(heladera);
-        actualizarPuntajeUsuarioActual(context, hacerseCargoDeUnaHeladera);//y guarda la contribucion
-
+        HacerseCargoDeUnaHeladera hacerseCargoDeUnaHeladera = new HacerseCargoDeUnaHeladera(colaborador, List.of(heladera));
+        hacerseCargoDeUnaHeladera.ejecutarContribucion();
 
         context.redirect("/heladeras");
     }

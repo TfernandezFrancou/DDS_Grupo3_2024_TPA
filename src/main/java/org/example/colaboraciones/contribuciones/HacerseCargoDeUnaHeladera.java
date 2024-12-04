@@ -42,8 +42,8 @@ public class HacerseCargoDeUnaHeladera extends Contribucion {
 
     @Override
     public void ejecutarContribucion() throws Exception{
-        super.ejecutarContribucion();
         RepoHeladeras.getInstancia().agregarTodas(heladerasColocadas);
+        super.ejecutarContribucion();
     }
 
     public void agregarHeladera(Heladera heladera){

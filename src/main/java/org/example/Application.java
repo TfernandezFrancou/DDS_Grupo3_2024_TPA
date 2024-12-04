@@ -113,6 +113,11 @@ public class Application {
                 get("", DonarViandasController::getDonarVianda);
             });
 
+            path("donar-dinero", () -> {
+                post("", DonarDineroController::postDonarDinero);
+                get("", DonarDineroController::getDonarDinero);
+            });
+
             path("registrar-persona-vulnerable", () -> {
                 post("", RegistrarPersonaVulnerableController::postRegistrarPersonaVulnerable);
                 get("", RegistrarPersonaVulnerableController::getRegistrarPersonaVulnerable);
@@ -139,7 +144,7 @@ public class Application {
                 if (ctx.path().startsWith(ruta)) return;
             }
             //TODO comento esto para que no tengan que iniciar sesion mientras hacen las vistas
-            // SessionManager.getInstancia().validarUsuario(ctx);
+            SessionManager.getInstancia().validarUsuario(ctx);
         });
 
         EntityManager em = BDUtils.getEntityManager();

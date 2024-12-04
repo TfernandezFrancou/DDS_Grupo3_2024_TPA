@@ -42,8 +42,8 @@ public abstract class Contribucion {
     public abstract float getCoeficientePuntaje();
 
     public void ejecutarContribucion() throws Exception {
-        colaborador.setPuntuaje(colaborador.getPuntuaje() + this.obtenerPuntaje());
-        RepoContribucion.getInstancia().agregarContribucion(this);
+        colaborador.agregarContribucion(this);
+        colaborador.calcularPuntuaje();
     }
 
     public abstract float obtenerPuntaje();

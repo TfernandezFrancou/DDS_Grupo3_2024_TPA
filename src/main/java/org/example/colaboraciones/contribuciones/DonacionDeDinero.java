@@ -10,6 +10,7 @@ import org.example.personas.roles.Colaborador;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -25,6 +26,15 @@ public class DonacionDeDinero extends Contribucion {
         this.tiposDePersona = Set.of(TipoDePersona.HUMANA, TipoDePersona.JURIDICA);
         this.setFecha(fecha);
         this.monto = cantidad;
+        this.frecuencia = null;
+    }
+
+    public DonacionDeDinero(Colaborador colaborador, Integer cantidad, Integer frecuencia) {
+        this.tiposDePersona = Set.of(TipoDePersona.HUMANA, TipoDePersona.JURIDICA);
+        this.setFecha(LocalDate.now());
+        this.colaborador = colaborador;
+        this.monto = cantidad;
+        this.frecuencia = frecuencia;
     }
 
     public DonacionDeDinero(Colaborador colaborador, LocalDate fecha, Integer cantidad) {
@@ -32,6 +42,7 @@ public class DonacionDeDinero extends Contribucion {
         this.setFecha(fecha);
         this.colaborador = colaborador;
         this.monto = cantidad;
+        this.frecuencia = null;
     }
 
     @Override

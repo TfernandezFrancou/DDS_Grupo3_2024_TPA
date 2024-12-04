@@ -23,6 +23,7 @@
                 <li><a href="/heladeras">Heladeras</a></li>
                 <li><a href="/puntos">Puntos</a></li>
                 <li><a href="/donar-vianda">Donar viandas</a></li>
+                <li><a href="/donar-dinero">Donar dinero</a></li>
                 <li><a href="/reportes">Reportes</a></li>
                 <li><a href="/registrar-persona-vulnerable">Registrar persona</a></li>
                 <li><a href="/usuarios/cerrar-sesion" class="text-danger">Salir</a></li>
@@ -45,7 +46,9 @@
                                 <h3>Donar Dinero</h3>
                                 <p>Fecha: {{fechaFormateada}}</p>
                                 <p>Monto: ${{monto}}</p>
-                                <p>Frecuencia: {{frecuencia}}</p>
+                                {{#frecuencia}}
+                                    <p>Frecuencia: cada {{frecuencia}} días</p>
+                                {{/frecuencia}}
                             </div>
                         </div>
                     </div>

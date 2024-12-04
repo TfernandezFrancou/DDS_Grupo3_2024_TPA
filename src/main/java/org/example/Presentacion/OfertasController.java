@@ -36,12 +36,10 @@ public class OfertasController extends ContribucionController {
         String errorMessage = null;
         Colaborador colaborador = obtenerRolColaboradorActual(context);
         try{
-            colaborador.canjearOferta(resultadoBusqueda);//tambien modifica el puntaje
-            actualizarColaboradorUsuarioActual(context, colaborador);
+            colaborador.canjearOferta(resultadoBusqueda); // tambien modifica el puntaje
         } catch (Exception ex){
             ex.printStackTrace();
             errorMessage = "puntos insuficientes";
-
         }
 
         int puntos = (int) colaborador.getPuntuaje();

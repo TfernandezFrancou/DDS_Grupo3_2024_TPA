@@ -218,9 +218,16 @@ public class RepoPersona {
         return personasHumanas;
     }
 
+    public void actualizarColaborador(Colaborador colaborador) {
+        EntityManager em = BDUtils.getEntityManager();
+        em.getTransaction().begin();
+        em.merge(colaborador);
+        em.getTransaction().commit();
+    }
+
     public Persona actualizarPersona(Persona personaUser) {
         EntityManager em = BDUtils.getEntityManager();
-        Persona personaActualizada = null;
+        Persona personaActualizada = em.find(Persona.class, personaUser.getIdPersona());
         try {
             em.getTransaction().begin();
             personaActualizada = em.merge(personaUser);
