@@ -134,8 +134,8 @@ public class Colaborador extends Rol {
         broker.gestionarSolicitudApertura(solicitudDeApertura, this.getPersona());
     }
     //se llama cuando un colaborador reporta una falla
-    public void reportarFallaTecnica(String descripcion, String foto, Heladera heladera) throws MessagingException {
-        FallaTecnica fallaTecnica = new FallaTecnica(this.getPersona(),descripcion,foto,heladera,"Falla Técnica",LocalDateTime.now());
+    public void reportarFallaTecnica(String descripcion, String foto, Heladera heladera, LocalDateTime fechaReportada) throws MessagingException {
+        FallaTecnica fallaTecnica = new FallaTecnica(this.getPersona(),descripcion,foto,heladera,"Falla Técnica",fechaReportada);
 
         fallaTecnica.reportarIncidente();
         RepoIncidente.getInstancia().agregarFalla(fallaTecnica);

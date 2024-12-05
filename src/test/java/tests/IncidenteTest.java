@@ -20,6 +20,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import javax.mail.MessagingException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -148,7 +149,7 @@ public class IncidenteTest {
         rolColaborador.reportarFallaTecnica(
                 "no enfria",
                 "C:/users/marcopolo/Desktop/heladera_pinchada.png",
-                heladeraMockSpy
+                heladeraMockSpy, LocalDateTime.now()
         );
 
         //se desactiva la heladera

@@ -45,7 +45,13 @@
                     <form class="card-body" method="POST" action="/puntos" >
                         <h3>{{nombre}}</h3>
                         <input type="hidden" name="nombre" value="{{nombre}}">
-                        <img src="{{imagenURL}}" alt="{{nombre}}">
+                        {{#imagenURL}}
+                            <img src="{{imagenURL}}" alt="{{nombre}}">
+                        {{/imagenURL}}
+                        {{^imagenURL}}
+                            <img src="/views/imagenes/placeholder.png" alt="{{nombre}}">
+                        {{/imagenURL}}
+
                         <p>Puntos necesarios: {{puntosNecesarios}}</p>
                         {{#error}}
                             <p class="text-danger">{{error}}</p>

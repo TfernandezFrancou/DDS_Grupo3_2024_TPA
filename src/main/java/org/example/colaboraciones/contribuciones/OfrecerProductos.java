@@ -29,7 +29,7 @@ public class OfrecerProductos extends Contribucion {
     @Override
     public void ejecutarContribucion() throws Exception{
         super.ejecutarContribucion();
-        RepoOfertas.getInstancia().agregarTodas(ofertas);
+        //RepoOfertas.getInstancia().agregarTodas(ofertas);
     }
 
     public void agregarOferta(Oferta oferta){

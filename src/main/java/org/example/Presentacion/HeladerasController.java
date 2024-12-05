@@ -23,6 +23,7 @@ import org.example.subscripcionesHeladeras.SubscripcionDesperfecto;
 import org.example.subscripcionesHeladeras.SubscripcionHeladera;
 import org.example.subscripcionesHeladeras.SubscripcionViandasDisponibles;
 import org.example.subscripcionesHeladeras.SubscripcionViandasFaltantes;
+import org.example.validadores.VerificadorImagenURL;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
@@ -156,23 +157,27 @@ public class HeladerasController extends ContribucionController {
             context.render("views/heladeras/reporte.mustache", model);
             return;
         }
-//        LocalDateTime fechaParseada = null;
-//        try {
-//            String fechaFalla = context.formParam("fechaFalla");
-//            assert fechaFalla != null;
-//            fechaParseada = LocalDate.parse(fechaFalla).atTime(0, 0, 0);
-//        } catch (Exception e) {
-//            System.err.println("Error al parsear la fecha:" + e);
-//            context.status(400);
-//            return;
-//        }
+        LocalDateTime fechaParseada = null;
+        try {
+            String fechaFalla = context.formParam("fechaFalla");
+            assert fechaFalla != null;
+            fechaParseada = LocalDate.parse(fechaFalla).atTime(0, 0, 0);
+        } catch (Exception e) {
+            System.err.println("Error al parsear la fecha:" + e);
+            model.put("error", e.getMessage());
+            context.render("views/heladeras/reporte.mustache", model);
+            return;
+        }
 
         String fotoUrl = context.formParam("foto");
-        String tipoFalla = context.formParam("tipoFalla");
         String descripcion = context.formParam("descripcion");
+
+        VerificadorImagenURL verificadorImagenURL = VerificadorImagenURL.getInstancia();
+        verificadorImagenURL.verifyImagen(fotoUrl);
+
         try{
             Colaborador colaborador = obtenerRolColaboradorActual(context);
-            colaborador.reportarFallaTecnica(descripcion,fotoUrl,heladera);
+            colaborador.reportarFallaTecnica(descripcion,fotoUrl,heladera, fechaParseada);
         } catch (Exception e){
           e.printStackTrace();
 

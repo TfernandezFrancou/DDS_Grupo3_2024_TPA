@@ -14,16 +14,21 @@ import org.example.repositorios.RepoContribucion;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoOfertas;
 import org.example.repositorios.RepoPersona;
+import org.example.validadores.VerificadorAperturaHeladera;
+import org.example.validadores.VerificadorContribucion;
+import org.example.validadores.VerificadorImagenURL;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OfertasController extends ContribucionController {
 
@@ -119,51 +124,19 @@ public class OfertasController extends ContribucionController {
         String nombre = context.formParam("nombre");
         String puntos = context.formParam("puntos");
         int intPuntos = Integer.parseInt(puntos);
+        String fotoUrl = context.formParam("imagen");
 
-        String fotoUrl = "";
-        //TODO comento esto apra no tener que subir una foto
-//        UploadedFile uploadedFile = context.uploadedFile("imagen");
-//
-//
-//        if(uploadedFile != null){
-//            String uploadDir = "/uploads/imagen/";
-//            String fileName = uploadedFile.filename();
-//            Path filePath = Paths.get(uploadDir, fileName);
-//
-//            try{
-//                //crea el directorio si no existe
-//                Files.createDirectories(filePath.getParent());
-//
-//                //guarda el archivo
-//                Files.copy(uploadedFile.content(), filePath, StandardCopyOption.REPLACE_EXISTING);
-//
-//                //guardo la url
-//                fotoUrl = uploadDir + fileName;
-//            } catch (Exception exception){
-//                throw new RuntimeException("Error al guardar la imagen");
-//            }
-//        }
+        VerificadorImagenURL verificadorImagenURL = VerificadorImagenURL.getInstancia();
+        verificadorImagenURL.verifyImagen(fotoUrl);
 
         OfrecerProductos ofrecerProductos = new OfrecerProductos();
         Oferta oferta = new Oferta(nombre,intPuntos,fotoUrl);
 
         ofrecerProductos.agregarOferta(oferta);
-        Usuario usuario = context.attribute("usuario");
-        Colaborador colaborador = asignarRol(usuario);
+        Colaborador colaborador = obtenerRolColaboradorActual(context);
         ofrecerProductos.setColaborador(colaborador);
         return ofrecerProductos;
-
     }
 
-    private static Colaborador asignarRol(Usuario usuario){
-        Persona personaUser = usuario.getColaborador();
-        if(personaUser.getRol() == null) {
-            Colaborador colaboradorRol = new Colaborador();
-            colaboradorRol.setEstaActivo(true);
-            personaUser.setRol(colaboradorRol);
-            // Actualiza persona para obtener id del rol
-            personaUser = RepoPersona.getInstancia().actualizarPersona(personaUser);
-        }
-        return (Colaborador) personaUser.getRol();
-    }
+
 }
