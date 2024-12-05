@@ -52,7 +52,7 @@ public class Application {
 
             path("reportes", () -> {
                 get("", ReportesController::getListaReportes);
-                get("/fallas/:id", ReportesController::getDetalleFalla);
+                get("/fallas/{id}", ReportesController::getDetalleFalla);
                 get("fallas", ReportesController::getReporteFallas);
                 get("viandas-colocadas", ReportesController::getReporteViandasColocadas);
                 get("viandas-distribuidas", ReportesController::getReporteViandasDistribuidas);

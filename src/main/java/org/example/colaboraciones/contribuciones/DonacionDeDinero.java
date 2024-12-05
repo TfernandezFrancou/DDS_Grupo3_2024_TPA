@@ -20,14 +20,16 @@ import java.util.Set;
 @Entity
 @PrimaryKeyJoinColumn(name = "id_contribucion")
 public class DonacionDeDinero extends Contribucion {
-    private float monto;
+    private float monto;//monto por pago periódico
     private Integer frecuencia;
+    private float montoPagado; //monto pagado acumulado hasta el momento
 
     public DonacionDeDinero(LocalDate fecha, Integer cantidad) {
         this.tiposDePersona = Set.of(TipoDePersona.HUMANA, TipoDePersona.JURIDICA);
         this.setFecha(fecha);
         this.monto = cantidad;
         this.frecuencia = null;
+        this.montoPagado = cantidad;
     }
 
     public DonacionDeDinero(Colaborador colaborador, Integer cantidad, Integer frecuencia) {
@@ -36,6 +38,7 @@ public class DonacionDeDinero extends Contribucion {
         this.colaborador = colaborador;
         this.monto = cantidad;
         this.frecuencia = frecuencia;
+        this.montoPagado = cantidad;
     }
 
     public DonacionDeDinero(Colaborador colaborador, LocalDate fecha, Integer cantidad) {
@@ -44,6 +47,7 @@ public class DonacionDeDinero extends Contribucion {
         this.colaborador = colaborador;
         this.monto = cantidad;
         this.frecuencia = null;
+        this.montoPagado = cantidad;
     }
 
     @Override
@@ -61,9 +65,13 @@ public class DonacionDeDinero extends Contribucion {
         if (frecuencia == null) {
             return monto  * this.getCoeficientePuntaje();
         }
-        long dias = ChronoUnit.DAYS.between(this.getFecha(), LocalDate.now());
-        int pagos = (int) (dias / frecuencia);
-        return monto * pagos * this.getCoeficientePuntaje();
-    }
 
+        //cantidad de días desde la fecha inicial hasta hoy
+        long diasTranscurridos = ChronoUnit.DAYS.between(this.getFecha(), LocalDate.now());
+
+        // cantidad de pagos realizados hasta ahora.
+        int cantidadPagos = (int) (diasTranscurridos / frecuencia);
+
+        return monto * cantidadPagos * this.getCoeficientePuntaje();
+    }
 }
