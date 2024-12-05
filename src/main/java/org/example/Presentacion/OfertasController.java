@@ -107,6 +107,8 @@ public class OfertasController extends ContribucionController {
         }catch (Exception exception){
             Map<String, Object> model = new HashMap<>();
             model.put("error", exception.getMessage());
+            System.err.println(exception.getClass());
+            System.err.println(Arrays.toString(exception.getStackTrace()));
             context.render("views/colaboraciones/ofrecer-producto.mustache", model);
         }
 
@@ -125,6 +127,7 @@ public class OfertasController extends ContribucionController {
         String puntos = context.formParam("puntos");
         int intPuntos = Integer.parseInt(puntos);
         String fotoUrl = context.formParam("imagen");
+
 
         VerificadorImagenURL verificadorImagenURL = VerificadorImagenURL.getInstancia();
         verificadorImagenURL.verifyImagen(fotoUrl);
