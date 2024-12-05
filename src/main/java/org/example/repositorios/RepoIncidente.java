@@ -153,4 +153,15 @@ public class RepoIncidente {
             em.close();
         }
     }
+
+    public FallaTecnica obtenerFallaPorId(int idFalla) {
+        EntityManager em = BDUtils.getEntityManager();
+        FallaTecnica falla = null;
+        try {
+            falla = em.find(FallaTecnica.class, idFalla);
+        } finally {
+            em.close();
+        }
+        return falla;
+    }
 }
