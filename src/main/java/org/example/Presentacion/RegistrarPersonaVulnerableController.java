@@ -47,19 +47,13 @@ public class RegistrarPersonaVulnerableController extends ContribucionController
     }
 
     private static PersonaHumana parsearPersonaVulnerable(@NotNull Context context) throws AlmacenarPersonaVulnerable {
-        String nombreYApellido = context.formParam("nombre");
-        String[] nombreYApellidoArray = nombreYApellido.split(" ");
-        String nombre = nombreYApellidoArray[0];
-        String apellido = null;
-        if(nombreYApellidoArray.length == 2){
-            apellido= nombreYApellidoArray[1];
-        } else if(nombreYApellidoArray.length == 3){
-            nombre = nombreYApellidoArray[0] + " "+nombreYApellidoArray[1];//nombre y segundo nombre
-            apellido= nombreYApellidoArray[2];
-        }
+        String nombre = context.formParam("nombre");
+        String apellido = context.formParam("apellido");
 
         String tieneDomicilio = context.formParam("domicilio");
-        String domicilio = context.formParam("domicilio-texto");
+        String domicilioCalle = context.formParam("domicilio-calle");
+        String domicilioAltura = context.formParam("domicilio-altura");
+        String localidad = context.formParam("domicilio-localidad");
         String documento = context.formParam("documento");
         String numeroDocumento = context.formParam("numero-documento");
         String tieneMenores = context.formParam("menores");
@@ -80,17 +74,19 @@ public class RegistrarPersonaVulnerableController extends ContribucionController
             personaHumana.setApellido(apellido);
 
         if(tieneDomicilio.equals("si")){
-
-            if(domicilio.equals("")) {
-                throw new AlmacenarPersonaVulnerable("No se introdujo un domicilio valido");
+            Direccion direccion1;
+            if(domicilioCalle.equals("")){
+                direccion1 = null;
+            } else if( domicilioAltura.equals("")){
+                throw new AlmacenarPersonaVulnerable("La altura de la calle no es válida");
+            } else if(localidad.equals("")){
+                throw new AlmacenarPersonaVulnerable("La localidad de dirección ingresada no es válida");
             }else{
-                Direccion direccion = new Direccion();
-                String[] partes1 = domicilio.split(",");
-                direccion.setLocalidad(partes1[1]);
-                String[] partes2 = partes1[0].split(" ");
-                direccion.setNombreCalle(partes2[0]);
-                direccion.setAltura(partes2[1]);
-                personaHumana.setDireccion(direccion);
+                direccion1 = new Direccion();
+                direccion1.setNombreCalle(domicilioCalle);
+                direccion1.setAltura(domicilioAltura);
+                direccion1.setLocalidad(localidad.toLowerCase());
+                personaHumana.setDireccion(direccion1);
             }
         }
         personaHumana.setRol(personaEnSituacionVulnerable);

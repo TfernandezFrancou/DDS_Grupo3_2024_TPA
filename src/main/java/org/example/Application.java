@@ -121,7 +121,7 @@ public class Application {
             for (String ruta: rutasSinSesion){
                 if (ctx.path().startsWith(ruta)) return;
             }
-            // comentar esto para trabajar sin loguearse
+            //comentar esto para trabajar sin loguearse
             SessionManager.getInstancia().validarUsuario(ctx);
         });
 

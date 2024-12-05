@@ -39,8 +39,14 @@ public class DonarViandasController extends ContribucionController {
 
         Vianda vianda = new Vianda();
         vianda.setDescripcion(tipoComida);
-        vianda.setCalorias(Integer.parseInt(calorias));
-        vianda.setPeso(Float.parseFloat(peso));
+        if(!calorias.equals("")){
+            vianda.setCalorias(Integer.parseInt(calorias));
+        }
+
+        if(!peso.equals("")){
+            vianda.setPeso(Float.parseFloat(peso));
+        }
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         vianda.setFechaCaducidad(LocalDateTime.parse(fechaCaducidad+" 00:00",formatter));
         vianda.setFechaDonacion(LocalDateTime.now());
