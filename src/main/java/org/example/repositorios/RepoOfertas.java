@@ -27,8 +27,9 @@ public class RepoOfertas {
         try {
             BDUtils.comenzarTransaccion(em);
             em.persist(oferta);
-            BDUtils.commit(em);
+            em.getTransaction().commit();
         } catch (Exception e) {
+            e.printStackTrace();
             BDUtils.rollback(em);
             throw new RuntimeException("Error al agregar la oferta: " + e.getMessage(), e);
         } finally {
@@ -43,8 +44,9 @@ public class RepoOfertas {
             for (Oferta oferta : ofertas) {
                 em.persist(oferta);
             }
-            BDUtils.commit(em);
+            em.getTransaction().commit();
         } catch (Exception e) {
+            e.printStackTrace();
             BDUtils.rollback(em);
             throw new RuntimeException("Error al agregar las ofertas: " + e.getMessage(), e);
         } finally {
@@ -60,8 +62,9 @@ public class RepoOfertas {
             if (ofertaEncontrada != null) {
                 em.remove(ofertaEncontrada);
             }
-            BDUtils.commit(em);
+            em.getTransaction().commit();
         } catch (Exception e) {
+            e.printStackTrace();
             BDUtils.rollback(em);
             throw new RuntimeException("Error al eliminar la oferta: " + e.getMessage(), e);
         } finally {
@@ -96,8 +99,9 @@ public class RepoOfertas {
         try {
             BDUtils.comenzarTransaccion(em);
             em.createQuery("DELETE FROM Oferta").executeUpdate();
-            BDUtils.commit(em);
+            em.getTransaction().commit();
         } catch (Exception e) {
+            e.printStackTrace();
             BDUtils.rollback(em);
             throw new RuntimeException("Error al limpiar el repositorio: " + e.getMessage(), e);
         } finally {

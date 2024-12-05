@@ -20,10 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OfertasController extends ContribucionController {
 
@@ -102,6 +99,8 @@ public class OfertasController extends ContribucionController {
         }catch (Exception exception){
             Map<String, Object> model = new HashMap<>();
             model.put("error", exception.getMessage());
+            System.err.println(exception.getClass());
+            System.err.println(Arrays.toString(exception.getStackTrace()));
             context.render("views/colaboraciones/ofrecer-producto.mustache", model);
         }
 
@@ -120,7 +119,7 @@ public class OfertasController extends ContribucionController {
         String puntos = context.formParam("puntos");
         int intPuntos = Integer.parseInt(puntos);
 
-        String fotoUrl = "";
+        String fotoUrl = context.formParam("imagen");
         //TODO comento esto apra no tener que subir una foto
 //        UploadedFile uploadedFile = context.uploadedFile("imagen");
 //
