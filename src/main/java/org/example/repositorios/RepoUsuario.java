@@ -27,16 +27,28 @@ public class RepoUsuario {
 
   public void agregarUsuarios(Usuario usuarioNuevo) {
     EntityManager em = BDUtils.getEntityManager();
-    BDUtils.comenzarTransaccion(em);
-    em.persist(usuarioNuevo);
-    em.getTransaction().commit();
+    try{
+      BDUtils.comenzarTransaccion(em);
+      em.persist(usuarioNuevo);
+      em.getTransaction().commit();
+    } catch (Exception e){
+      e.printStackTrace();
+      BDUtils.rollback(em);
+      throw e;
+    } finally {
+      em.close();
+    }
   }
 
   public boolean existeNombreUsuarioRegistrado(String nombreUsuario) {
     EntityManager em = BDUtils.getEntityManager();
-
-    List<Usuario> usuarios1 = em.createQuery("FROM Usuario where nombreDeUsuario=:nombreDeUsuario", Usuario.class)
-            .setParameter("nombreDeUsuario",nombreUsuario).getResultList();
+    List<Usuario> usuarios1 = new ArrayList<>();
+    try{
+      usuarios1 = em.createQuery("FROM Usuario where nombreDeUsuario=:nombreDeUsuario", Usuario.class)
+              .setParameter("nombreDeUsuario",nombreUsuario).getResultList();
+    } finally {
+      em.close();
+    }
 
     return usuarios1.size() > 0;
   }
@@ -58,6 +70,8 @@ public class RepoUsuario {
     } catch ( Exception ex){
       throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-sesion.error-documento")
               .replace("{doc}", documento.getNumeroDocumento()));
+    } finally {
+      em.close();
     }
   }
 
@@ -75,30 +89,42 @@ public class RepoUsuario {
     }catch (Exception exception){
       throw new UserException(Configuracion.obtenerProperties("mensaje.inicio-sesion.error")
               .replace("{username}", nombreUsuario));
+    } finally {
+      em.close();
     }
   }
 
   public Usuario obtenerUsuarioPorId(int idUsuario) {
     EntityManager em = BDUtils.getEntityManager();
     try {
-      List<Usuario> usuarios1 = em.createQuery(
+      Usuario usuario = em.createQuery(
                       "SELECT u FROM Usuario u WHERE u.idUsuario=:idUsuario", Usuario.class)
               .setParameter("idUsuario", idUsuario)
-              .getResultList();
-      if(usuarios1.isEmpty()){
+              .getSingleResult();
+      if(usuario == null){
         throw new UserException("Usuario inexistente");
       }
-      return usuarios1.get(0);
+      return usuario;
     } catch (Exception exception){
       throw new UserException("Usuario inexistente");
+    } finally {
+      em.close();
     }
   }
 
   public void clean(){
     EntityManager em = BDUtils.getEntityManager();
-    BDUtils.comenzarTransaccion(em);
-    em.createQuery("delete from Usuario").executeUpdate();
-    em.getTransaction().commit();
+    try{
+      BDUtils.comenzarTransaccion(em);
+      em.createQuery("delete from Usuario").executeUpdate();
+      em.getTransaction().commit();
+    } catch (Exception e){
+      e.printStackTrace();
+      BDUtils.rollback(em);
+      throw e;
+    } finally {
+      em.close();
+    }
   }
 
 }

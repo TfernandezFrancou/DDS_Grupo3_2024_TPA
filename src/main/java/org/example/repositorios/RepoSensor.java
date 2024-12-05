@@ -1,5 +1,6 @@
 package org.example.repositorios;
 
+import com.mysql.cj.util.EscapeTokenizer;
 import lombok.Getter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.Sensor;
@@ -43,12 +44,14 @@ public class RepoSensor {
 
     public List<Sensor> getSensoresDeTemperatura() {
         EntityManager em = BDUtils.getEntityManager();
+        List<Sensor> sensores = null;
         try {
-            return em.createQuery("SELECT s FROM Sensor s WHERE TYPE(s) = SensorDeTemperatura", Sensor.class)
+            sensores= em.createQuery("SELECT s FROM Sensor s WHERE TYPE(s) = SensorDeTemperatura", Sensor.class)
                     .getResultList();
         } finally {
             em.close();
         }
+        return sensores;
     }
 
     public Sensor buscarSensorPorId(int idSensor){
@@ -62,41 +65,73 @@ public class RepoSensor {
 
     public void actualizarSensor(Sensor sensor){
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.merge(sensor);
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.merge(sensor);
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+            throw e;
+        } finally {
+            em.close();
+        }
     }
 
     public void agregarSensor(Sensor sensor){
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.persist(sensor);
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.persist(sensor);
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+            throw e;
+        } finally {
+            em.close();
+        }
     }
 
     public void eliminarSensor(Sensor sensor){
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
+        try{
+            BDUtils.comenzarTransaccion(em);
 
-        int idSensor = sensor.getIdSensor();
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate(); //deshabilito el check de FKs
+            int idSensor = sensor.getIdSensor();
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate(); //deshabilito el check de FKs
 
-        Sensor sensor1 = em.find(Sensor.class, idSensor);
-        if(sensor1 != null) {
-            em.remove(sensor1);
+            Sensor sensor1 = em.find(Sensor.class, idSensor);
+            if(sensor1 != null) {
+                em.remove(sensor1);
+            }
+
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate(); //habilito el check de FKs
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+            throw e;
+        } finally {
+            em.close();
         }
-
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate(); //habilito el check de FKs
-        em.getTransaction().commit();
     }
 
     public void clean(){
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate(); //deshabilito el check de FKs
-        em.createNativeQuery("DELETE FROM sensor").executeUpdate();
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate(); //habilito el check de FKs
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate(); //deshabilito el check de FKs
+            em.createNativeQuery("DELETE FROM sensor").executeUpdate();
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate(); //habilito el check de FKs
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+            throw e;
+        } finally {
+            em.close();
+        }
     }
 
 

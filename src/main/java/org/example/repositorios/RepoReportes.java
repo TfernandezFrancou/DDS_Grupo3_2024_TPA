@@ -38,33 +38,57 @@ public class RepoReportes {
 
     public void agregarReporte(ReportesDeLaSemana nuevoReporte) {
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.persist(nuevoReporte);
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.persist(nuevoReporte);
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+            throw  e;
+        } finally {
+            em.close();
+        }
     }
 
     public void eliminarReporte(ReportesDeLaSemana reporte){
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        int idReporte = reporte.getIdReportesDeLaSemana();
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
+        try{
+            BDUtils.comenzarTransaccion(em);
+            int idReporte = reporte.getIdReportesDeLaSemana();
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
 
-        ReportesDeLaSemana reporte1 = em.find(ReportesDeLaSemana.class, idReporte);
-        if(reporte1 != null) {
-            em.remove(reporte1);
+            ReportesDeLaSemana reporte1 = em.find(ReportesDeLaSemana.class, idReporte);
+            if(reporte1 != null) {
+                em.remove(reporte1);
+            }
+
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+            throw e;
+        } finally {
+            em.close();
         }
-
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
-        em.getTransaction().commit();
     }
 
     public void clean(){
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
-        em.createNativeQuery("DELETE FROM reportesDeLaSemana").executeUpdate();
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
+            em.createNativeQuery("DELETE FROM reportesDeLaSemana").executeUpdate();
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
+            em.getTransaction().commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+            throw e;
+        }finally {
+            em.close();
+        }
     }
 
     public List<ItemReporteFallasPorHeladera> obtenerReporteFallas() {
@@ -72,6 +96,8 @@ public class RepoReportes {
         List<ItemReporteFallasPorHeladera> reportes = new ArrayList<>();
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteFallasPorHeladera r", ItemReporteFallasPorHeladera.class).getResultList();
+            //lazy initializations
+            reportes.forEach(reporte -> {reporte.getFallas().size();});
         } finally {
             em.close();
         }
@@ -83,6 +109,8 @@ public class RepoReportes {
         List<ItemReporteViandasColocadasPorHeladera> reportes = new ArrayList<>();
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteViandasColocadasPorHeladera r", ItemReporteViandasColocadasPorHeladera.class).getResultList();
+            //lazy initializations
+            reportes.forEach(reporte -> {reporte.getViandasColocadas().size();});
         } finally {
             em.close();
         }
@@ -94,6 +122,8 @@ public class RepoReportes {
         List<ItemReporteViandasDistribuidasPorColaborador> reportes = new ArrayList<>();
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteViandasDistribuidasPorColaborador r", ItemReporteViandasDistribuidasPorColaborador.class).getResultList();
+            //lazy initializations
+            reportes.forEach(reporte ->{reporte.getViandasDistribuidas().size();});
         } finally {
             em.close();
         }
@@ -105,6 +135,8 @@ public class RepoReportes {
         List<ItemReporteViandasRetiradasPorHeladera> reportes = new ArrayList<>();
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteViandasRetiradasPorHeladera r", ItemReporteViandasRetiradasPorHeladera.class).getResultList();
+            //lazy initializations
+            reportes.forEach(reporte->{reporte.getViandasRetiradas().size();});
         } finally {
             em.close();
         }

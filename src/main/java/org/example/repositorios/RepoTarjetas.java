@@ -1,5 +1,6 @@
 package org.example.repositorios;
 
+import com.twilio.rest.serverless.v1.service.Build;
 import org.example.tarjetas.Tarjeta;
 import org.example.tarjetas.TarjetaColaborador;
 import org.example.tarjetas.TarjetaHeladera;
@@ -23,42 +24,88 @@ public class RepoTarjetas {
 
     public void agregarTodas(List<TarjetaHeladera> tarjeta) {
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        tarjeta.forEach(em::persist);
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            tarjeta.forEach(em::persist);
+            em.getTransaction().commit();
+        }catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+            throw e;
+        }finally {
+            em.close();
+        }
     }
 
     public void agregarTodasTarjetasColaboradores(List<TarjetaColaborador> tarjetaColaborador) {
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);//
-        tarjetaColaborador.forEach(em::persist);
-        em.getTransaction().commit();
+        try {
+            BDUtils.comenzarTransaccion(em);//
+            tarjetaColaborador.forEach(em::persist);
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+            throw e;
+        }finally {
+            em.close();
+        }
     }
 
     public void agregar(Tarjeta tarjeta) {
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.persist(tarjeta);
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.persist(tarjeta);
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+            throw e;
+        }
     }
 
     public void clean() {
         EntityManager em = BDUtils.getEntityManager();
-        BDUtils.comenzarTransaccion(em);
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
-        em.createNativeQuery("DELETE FROM Uso").executeUpdate();
-        em.createNativeQuery("DELETE FROM Tarjeta").executeUpdate();
-        em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();//deshabilito el check de FKs
+            em.createNativeQuery("DELETE FROM Uso").executeUpdate();
+            em.createNativeQuery("DELETE FROM Tarjeta").executeUpdate();
+            em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();//habilito el check de FKs
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+            throw e;
+        } finally {
+            em.close();
+        }
     }
 
     public List<Tarjeta> getTarjetas() {
         EntityManager em = BDUtils.getEntityManager();
-        return em.createQuery("SELECT t FROM Tarjeta t", Tarjeta.class).getResultList();
+        List<Tarjeta> tarjetas  = null;
+        try{
+            tarjetas = em.createQuery("SELECT t FROM Tarjeta t", Tarjeta.class).getResultList();
+        //lazy initializations
+        tarjetas.forEach(t -> {t.getUsos().size();});
+        } finally {
+            em.close();
+        }
+        return tarjetas;
     }
 
     public Tarjeta buscarTarjetaPorId(String id) {
         EntityManager em = BDUtils.getEntityManager();
-        return em.find(Tarjeta.class, id);
+        Tarjeta tarjeta = null;
+        try{
+           tarjeta =  em.find(Tarjeta.class, id);
+            //lazy initializations
+           tarjeta.getUsos().size();
+        } finally {
+            em.close();
+        }
+        return tarjeta;
     }
 }
