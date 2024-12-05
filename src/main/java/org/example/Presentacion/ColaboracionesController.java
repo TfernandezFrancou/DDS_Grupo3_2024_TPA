@@ -14,11 +14,11 @@ import java.util.Map;
 
 public class ColaboracionesController {
     public static void getColaboraciones(@NotNull Context context) {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         Usuario user = context.attribute("usuario");
         int idPersona = user.getColaborador().getIdPersona();
         List<Contribucion> contribuciones = RepoContribucion.getInstancia()
                 .obtenerContribucionesPorPersona(idPersona);
-        Map<String, Object> model = new HashMap<>();
         model.put("colaboraciones", contribuciones.stream().map((contribucion -> {
             Map<String, Object> m = new HashMap<>();
             m.put(contribucion.getClass().getSimpleName(), contribucion);

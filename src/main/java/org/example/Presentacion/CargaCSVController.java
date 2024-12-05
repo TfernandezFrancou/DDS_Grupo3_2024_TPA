@@ -2,6 +2,7 @@ package org.example.Presentacion;
 
 import io.javalin.http.Context;
 import io.javalin.http.UploadedFile;
+import org.example.autenticacion.SessionManager;
 import org.example.migracion.MigradorContribucion;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 public class CargaCSVController {
 
     public static void postUploadCSV(@NotNull Context context) {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         UploadedFile csvFile = context.uploadedFile("csv");
 
         if (csvFile != null) {
@@ -23,20 +25,19 @@ public class CargaCSVController {
                 inputStream.close();
                 context.redirect("/views/colaboraciones/carga-csv-correcta.html");
             } catch (Exception ex){
-                Map<String, Object> model = new HashMap<>();
                 model.put("error", ex.getMessage());
                 context.render("/views/colaboraciones/carga-csv-incorrecta.mustache", model);
                 ex.printStackTrace();
             }
         }else {
-            Map<String, Object> model = new HashMap<>();
             model.put("error", "No subiste un archivo");
             context.render("/views/colaboraciones/carga-csv-incorrecta.mustache", model);
         }
     }
 
     public static void getUploadCSV(@NotNull Context context){
-        context.render("/views/colaboraciones/carga-csv.mustache");
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
+        context.render("/views/colaboraciones/carga-csv.mustache", model);
     }
 
 }

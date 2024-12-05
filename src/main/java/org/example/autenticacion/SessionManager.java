@@ -11,6 +11,9 @@ import io.javalin.http.Context;
 import org.example.config.Configuracion;
 import org.example.excepciones.PasswordException;
 import org.example.excepciones.UserException;
+import org.example.personas.Persona;
+import org.example.personas.PersonaHumana;
+import org.example.personas.PersonaJuridica;
 import org.example.repositorios.RepoUsuario;
 import org.hibernate.Session;
 import org.jetbrains.annotations.NotNull;
@@ -119,5 +122,22 @@ public class SessionManager {
         } catch (Exception e) {
             context.redirect("/usuarios/InicioSession");
         }
+    }
+
+    public Map<String, Object> atributosDeSesion(@NotNull Context context) {
+        Map<String, Object> atributos = new HashMap<>();
+        Usuario usuario = context.attribute("usuario");
+        Persona persona = usuario.getColaborador();
+        if (persona instanceof PersonaHumana) {
+            atributos.put("DonacionDeDinero", "true");
+            atributos.put("DonacionDeViandas", "true");
+            atributos.put("DistribucionDeViandas", "true");
+            atributos.put("RegistrarPersonasEnSituacionVulnerable", "true");
+        } else if (persona instanceof PersonaJuridica) {
+            atributos.put("DonacionDeDinero", "true");
+            atributos.put("HacerseCargoDeUnaHeladera", "true");
+            atributos.put("OfrecerProductos", "true");
+        }
+        return atributos;
     }
 }

@@ -2,6 +2,7 @@ package org.example.Presentacion;
 
 import io.javalin.http.Context;
 
+import org.example.autenticacion.SessionManager;
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Entrega;
@@ -23,8 +24,8 @@ import java.util.Optional;
 public class DonarViandasController extends ContribucionController {
 
     public static void postDonarVianda(@NotNull Context context) throws MessagingException {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
-        Map<String, Object> model = new HashMap<>();
         model.put("heladeras", heladeras);
 
         Colaborador colaborador = obtenerRolColaboradorActual(context);
@@ -107,8 +108,8 @@ public class DonarViandasController extends ContribucionController {
     }
 
     public static void getDonarVianda(@NotNull Context context) {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
-        Map<String, Object> model = new HashMap<>();
         model.put("heladeras", heladeras);
         context.render("/views/colaboraciones/donar-viandas.mustache", model);
     }
