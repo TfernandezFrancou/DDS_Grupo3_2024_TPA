@@ -47,7 +47,6 @@ public class MigradorContribucion {
     private void migrarContribucion(PersonaHumana colaborador, Contribucion contribucion) throws MessagingException {
         Persona personaExistente = RepoPersona.getInstancia().buscarPorNombre(colaborador.getNombre());
         if(personaExistente==null){
-            RepoPersona.getInstancia().agregar(colaborador);
             Usuario usuario = colaborador.buscarOCrearUsuario();//ya lo guarda en el repo
             ((Colaborador) colaborador.getRol()).agregarContribucion(contribucion);
             ((Colaborador) colaborador.getRol()).calcularPuntuaje();
