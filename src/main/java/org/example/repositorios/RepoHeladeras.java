@@ -389,8 +389,6 @@ public class RepoHeladeras {
                     .setParameter("idHeladera", idHeladera)
                     .getResultList();
 
-            subs.forEach(subscripcionViandasDisponibles -> {
-            });
         } catch (Exception e){
             e.printStackTrace();
             throw  e;
