@@ -1,6 +1,7 @@
 package tests;
 
 import org.example.broker.Broker;
+import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
@@ -13,11 +14,13 @@ import org.example.personas.roles.Colaborador;
 import org.example.repositorios.*;
 import org.example.subscripcionesHeladeras.*;
 import org.example.tarjetas.Apertura;
+import org.example.tarjetas.Tarjeta;
 import org.example.tarjetas.TarjetaColaborador;
 import org.example.tarjetas.TipoDeApertura;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
@@ -25,10 +28,11 @@ import javax.mail.MessagingException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 
 public class SubscripcionTest {
 
@@ -36,8 +40,10 @@ public class SubscripcionTest {
     private RepoUbicacion repoUbicacion;
     private RepoApertura repoApertura;
 
+    private RepoHeladeras repoHeladeras;
     @Mock
     private CorreoElectronico correoElectronicoMock;
+    private CorreoElectronico correoElectronico;
 
     @BeforeEach
     public void setUp(){
@@ -45,8 +51,8 @@ public class SubscripcionTest {
         this.repoUbicacion.clean();
         this.repoApertura = RepoApertura.getInstancia();
         this.repoApertura.clean();
-        MockitoAnnotations.openMocks(this);
         heladera = new Heladera();
+        MockitoAnnotations.openMocks(this);
         Ubicacion ubicacion = new Ubicacion(0,  0);
         repoUbicacion.agregar(ubicacion);
         heladera.setUbicacion(ubicacion);
@@ -55,6 +61,10 @@ public class SubscripcionTest {
         heladera.actualizarEstadoHeladera(true);
         RepoHeladeras.getInstancia().clean();
         RepoHeladeras.getInstancia().agregar(heladera);
+        correoElectronico = new CorreoElectronico("si@gmail.com");
+        System.setProperty("env","test");
+        repoHeladeras = RepoHeladeras.getInstancia();
+        repoHeladeras.clean();
     }
 
     @Test
@@ -63,13 +73,28 @@ public class SubscripcionTest {
         sensorDeTemperatura.setHeladera(heladera);
 
         PersonaHumana personaMock = new PersonaHumana();
-        personaMock.addMedioDeContacto(correoElectronicoMock);
+        personaMock.addMedioDeContacto(correoElectronico);
         RepoPersona.getInstancia().agregar(personaMock);
-        heladera.getPublisherDesperfecto().suscribir(new SubscripcionDesperfecto(personaMock, correoElectronicoMock));
+        SubscripcionDesperfecto sub = new SubscripcionDesperfecto(heladera,personaMock, correoElectronicoMock);
 
-        sensorDeTemperatura.emitirAlerta("hola");
 
-        Mockito.verify(correoElectronicoMock, times(1)).notificar(any(Mensaje.class));
+        try(MockedStatic<RepoHeladeras> mockedStaticRepoHeladeras = Mockito.mockStatic(RepoHeladeras.class)){
+            repoHeladeras = Mockito.mock(RepoHeladeras.class);
+
+            when(RepoHeladeras.getInstancia()).thenReturn(repoHeladeras);
+            when(repoHeladeras.obtenerSubscripcionesDesperfecto(any(Integer.class)))
+                    .thenReturn(List.of(sub));
+            doNothing().when(repoHeladeras)
+                    .agregarSubscripcion(any(SubscripcionHeladera.class));
+
+            heladera.getPublisherDesperfecto().suscribir(sub);
+
+            sensorDeTemperatura.emitirAlerta("hola");
+
+            Mockito.verify(correoElectronicoMock, times(1))
+                    .notificar(any(Mensaje.class));
+        }
+
     }
 
     @Test
@@ -77,29 +102,73 @@ public class SubscripcionTest {
         Broker broker = new Broker();
 
         PersonaHumana persona = new PersonaHumana();
-        persona.addMedioDeContacto(correoElectronicoMock);
+        persona.addMedioDeContacto(correoElectronico);
         RepoPersona.getInstancia().agregar(persona);
-        SubscripcionViandasFaltantes sub = new SubscripcionViandasFaltantes(persona, correoElectronicoMock, 3);
-        heladera.getPublisherViandasFaltantes().suscribir(sub);
+        SubscripcionViandasFaltantes sub = new SubscripcionViandasFaltantes(heladera,persona, correoElectronicoMock, 3);
 
         PersonaHumana persona2 = new PersonaHumana();
         Colaborador colaborador = new Colaborador();
         persona2.setRol(colaborador);
         colaborador.setTarjetaColaborador(new TarjetaColaborador());
 
-        RepoTarjetas.getInstancia().agregar(colaborador.getTarjetaColaborador());
-        RepoPersona.getInstancia().agregar(persona2);
+        try(MockedStatic<RepoHeladeras> mockedStaticRepoHeladeras = Mockito.mockStatic(RepoHeladeras.class)){
+            try(MockedStatic<RepoApertura> mockedStaticRepoApertura = Mockito.mockStatic(RepoApertura.class)){
+                try(MockedStatic<RepoContribucion> mockedStaticRepoContribucion = Mockito.mockStatic(RepoContribucion.class)){
+                    //mockeo repos para probar solo la funcionalidad
+                    RepoContribucion repoContribucion = Mockito.mock(RepoContribucion.class);
+                    when(RepoContribucion.getInstancia()).thenReturn(repoContribucion);
+                    doNothing().when(repoContribucion).agregarContribucion(any(Contribucion.class));
 
-        broker.gestionarSolicitudApertura(new Apertura(colaborador.getTarjetaColaborador(),heladera, LocalDateTime.now(), TipoDeApertura.SOLICITUD_APERTURA), persona2);
+                    RepoApertura repoApertura = Mockito.mock(RepoApertura.class);
+                    when(RepoApertura.getInstancia()).thenReturn(repoApertura);
+                    doNothing().when(repoApertura).agregarApertura(any(Apertura.class));
+                    when(repoApertura
+                            .existeSolicitudDeAperturaDeTarjetaParaHeladera(
+                                    any(TarjetaColaborador.class),
+                                    any(Heladera.class)
+                            )).thenReturn(true);
 
-        new DonacionDeViandas(heladera, colaborador, List.of(new Vianda()), LocalDate.now()).ejecutarContribucion();
 
-        Mockito.verify(correoElectronicoMock, times(0)).notificar(any(Mensaje.class));
+                    repoHeladeras = Mockito.mock(RepoHeladeras.class);
 
-        broker.gestionarSolicitudApertura(new Apertura( colaborador.getTarjetaColaborador(), heladera, LocalDateTime.now(), TipoDeApertura.SOLICITUD_APERTURA), persona2);
+                    when(RepoHeladeras.getInstancia()).thenReturn(repoHeladeras);
+                    when(repoHeladeras.obtenerSubscripcionesViandasFaltantes(any(Integer.class)))
+                            .thenReturn(List.of(sub));
+                    doNothing().when(repoHeladeras)
+                            .agregarSubscripcion(any(SubscripcionHeladera.class));
 
-        new DonacionDeViandas(heladera, colaborador, List.of(new Vianda()),  LocalDate.now()).ejecutarContribucion();
+                    heladera.getPublisherViandasFaltantes().suscribir(sub);
 
-        Mockito.verify(correoElectronicoMock, times(1)).notificar(any(Mensaje.class));
+                    RepoTarjetas.getInstancia().agregar(colaborador.getTarjetaColaborador());
+                    RepoPersona.getInstancia().agregar(persona2);
+
+                    Apertura solicitudApertura = new Apertura(colaborador.getTarjetaColaborador(),heladera, LocalDateTime.now(), TipoDeApertura.SOLICITUD_APERTURA);
+
+                    when(repoApertura.buscarSolicitudDeApertura(any(Heladera.class),any(Tarjeta.class)))
+                            .thenReturn(solicitudApertura);
+
+                    //ejecuto para probar
+                    broker.gestionarSolicitudApertura(solicitudApertura, persona2);
+
+                    new DonacionDeViandas(heladera, colaborador, List.of(new Vianda()), LocalDate.now())
+                            .ejecutarContribucion();
+
+                    Mockito.verify(correoElectronicoMock,
+                            times(0)).notificar(any(Mensaje.class));
+
+                    //ejecuto para probar
+                    broker.gestionarSolicitudApertura(
+                            new Apertura( colaborador.getTarjetaColaborador(), heladera, LocalDateTime.now(), TipoDeApertura.SOLICITUD_APERTURA)
+                            , persona2);
+
+                    new DonacionDeViandas(heladera, colaborador, List.of(new Vianda()),  LocalDate.now())
+                            .ejecutarContribucion();
+
+                    Mockito.verify(correoElectronicoMock, times(1))
+                            .notificar(any(Mensaje.class));
+                }
+            }
+        }
+
     }
 }

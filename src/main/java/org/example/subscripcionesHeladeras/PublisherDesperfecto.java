@@ -12,15 +12,12 @@ import java.util.List;
 @Getter
 @Setter
 public class PublisherDesperfecto extends PublisherHeladera{
-    // private List<SubscripcionDesperfecto> subscripciones;
 
     public PublisherDesperfecto() {
-        // this.subscripciones = new ArrayList<>();
     }
 
     @Override
     public void suscribir(SubscripcionHeladera subscripcion) {
-        // subscripciones.add((SubscripcionDesperfecto) subscripcion);
         RepoHeladeras.getInstancia().agregarSubscripcion(subscripcion);
     }
 

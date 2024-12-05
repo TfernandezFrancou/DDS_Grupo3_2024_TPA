@@ -29,6 +29,7 @@ public class RepoApertura {
         } catch (Exception e){
             e.printStackTrace();
             BDUtils.rollback(em);
+            throw  e;
         }finally {
             em.close();
         }
@@ -46,6 +47,7 @@ public class RepoApertura {
        } catch (Exception e){
            e.printStackTrace();
            BDUtils.rollback(em);
+           throw  e;
        } finally {
            em.close();
        }
@@ -60,6 +62,7 @@ public class RepoApertura {
         } catch (Exception exception){
             exception.printStackTrace();
             BDUtils.rollback(em);
+            throw  exception;
         }finally {
             em.close();
         }
@@ -68,12 +71,21 @@ public class RepoApertura {
 
     public List<Apertura> obtenerAperturasFehacientes(){
         EntityManager em = BDUtils.getEntityManager();
+        List<Apertura> result = null;
+        try{
+            result = em.createQuery(
+                            "SELECT a FROM Apertura a " +
+                                    "  WHERE a.tipoDeApertura=:tipoDeApertura ", Apertura.class)
+                    .setParameter("tipoDeApertura", TipoDeApertura.APERTURA_FEHACIENTE)
+                    .getResultList();
 
-        return em.createQuery(
-                        "SELECT a FROM Apertura a " +
-                                "  WHERE a.tipoDeApertura=:tipoDeApertura ", Apertura.class)
-                .setParameter("tipoDeApertura", TipoDeApertura.APERTURA_FEHACIENTE)
-                .getResultList();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        } finally {
+            em.close();
+        }
+        return result;
     }
 
     public List<Apertura> obtenerSolicitudesDeAperturas(){
@@ -88,6 +100,7 @@ public class RepoApertura {
                     .getResultList();
         } catch (Exception e){
             e.printStackTrace();
+            throw  e;
         } finally {
             em.close();
         }

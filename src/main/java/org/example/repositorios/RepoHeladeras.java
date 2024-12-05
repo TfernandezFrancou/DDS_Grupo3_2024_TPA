@@ -2,6 +2,7 @@ package org.example.repositorios;
 
 import com.fasterxml.classmate.AnnotationConfiguration;
 import com.fasterxml.classmate.AnnotationInclusion;
+import com.twilio.rest.serverless.v1.service.Build;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.MovimientoViandas;
@@ -298,48 +299,105 @@ public class RepoHeladeras {
 
     public void agregarSubscripcion(SubscripcionHeladera subscripcion) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
-        em.persist(subscripcion);
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.persist(subscripcion);
+            em.getTransaction().commit();
+
+        }catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+            throw  e;
+        }finally {
+            em.close();
+        }
     }
 
     public void eliminarSuscripcion(int idSuscripcion) {
         EntityManager em = BDUtils.getEntityManager();
-        em.getTransaction().begin();
-        em.remove(em.find(SubscripcionHeladera.class, idSuscripcion));
-        em.getTransaction().commit();
+        try{
+            BDUtils.comenzarTransaccion(em);
+            em.remove(em.find(SubscripcionHeladera.class, idSuscripcion));
+            em.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            BDUtils.rollback(em);
+            throw e;
+        } finally {
+            em.close();
+        }
     }
 
     public List<SubscripcionHeladera> obtenerSubscripcionesPorPersona(int idHeladera, int idPersona) {
-        return BDUtils
-                .getEntityManager()
-                .createQuery("from SubscripcionHeladera s where s.subscriptor.id = :idPersona and s.heladera.id = :idHeladera", SubscripcionHeladera.class)
-                .setParameter("idPersona", idPersona)
-                .setParameter("idHeladera", idHeladera)
-                .getResultList();
+        EntityManager em = BDUtils.getEntityManager();
+        List<SubscripcionHeladera> subs = null;
+        try{
+            subs= em.createQuery("from SubscripcionHeladera s where s.subscriptor.id = :idPersona and s.heladera.id = :idHeladera", SubscripcionHeladera.class)
+                    .setParameter("idPersona", idPersona)
+                    .setParameter("idHeladera", idHeladera)
+                    .getResultList();;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw  e;
+        } finally {
+            em.close();
+        }
+
+        return subs;
     }
 
     public List<SubscripcionDesperfecto> obtenerSubscripcionesDesperfecto(int idHeladera) {
-        return BDUtils
-                .getEntityManager()
-                .createQuery("from SubscripcionDesperfecto s where s.heladera.id = :idHeladera", SubscripcionDesperfecto.class)
-                .setParameter("idHeladera", idHeladera)
-                .getResultList();
+        EntityManager em = BDUtils.getEntityManager();
+        List<SubscripcionDesperfecto> subs = null;
+        try{
+            subs= em.createQuery("from SubscripcionDesperfecto s where s.heladera.id = :idHeladera", SubscripcionDesperfecto.class)
+                    .setParameter("idHeladera", idHeladera)
+                    .getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw  e;
+        } finally {
+            em.close();
+        }
+
+        return subs;
     }
 
     public List<SubscripcionViandasFaltantes> obtenerSubscripcionesViandasFaltantes(int idHeladera) {
-        return BDUtils
-                .getEntityManager()
-                .createQuery("from SubscripcionViandasFaltantes s where s.heladera.id = :idHeladera", SubscripcionViandasFaltantes.class)
-                .setParameter("idHeladera", idHeladera)
-                .getResultList();
+        EntityManager em = BDUtils.getEntityManager();
+        List<SubscripcionViandasFaltantes> subs = null;
+        try{
+            subs= em.createQuery("from SubscripcionViandasFaltantes s where s.heladera.id = :idHeladera", SubscripcionViandasFaltantes.class)
+                    .setParameter("idHeladera", idHeladera)
+                    .getResultList();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw  e;
+        } finally {
+            em.close();
+        }
+
+        return subs;
     }
 
     public List<SubscripcionViandasDisponibles> obtenerSubscripcionesViandasDisponibles(int idHeladera) {
-        return BDUtils
-                .getEntityManager()
-                .createQuery("from SubscripcionViandasFaltantes s where s.heladera.id = :idHeladera", SubscripcionViandasDisponibles.class)
-                .setParameter("idHeladera", idHeladera)
-                .getResultList();
+
+        EntityManager em = BDUtils.getEntityManager();
+        List<SubscripcionViandasDisponibles> subs = null;
+        try{
+            subs= em.createQuery("from SubscripcionViandasDisponibles s where s.heladera.idHeladera = :idHeladera", SubscripcionViandasDisponibles.class)
+                    .setParameter("idHeladera", idHeladera)
+                    .getResultList();
+
+            subs.forEach(subscripcionViandasDisponibles -> {
+            });
+        } catch (Exception e){
+            e.printStackTrace();
+            throw  e;
+        } finally {
+            em.close();
+        }
+
+        return subs;
     }
 }
