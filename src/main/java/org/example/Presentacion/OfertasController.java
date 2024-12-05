@@ -33,7 +33,7 @@ import java.util.*;
 public class OfertasController extends ContribucionController {
 
     public static void postCanjearOfera(@NotNull Context context) throws Exception {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
 
         String nombreProducto = context.formParam("nombre");
 
@@ -82,7 +82,7 @@ public class OfertasController extends ContribucionController {
     }
 
     public static void getOfertas(@NotNull Context context) throws Exception {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         Colaborador colaborador = obtenerRolColaboradorActual(context);
         int puntos = (int) colaborador.getPuntuaje();
 
@@ -93,20 +93,20 @@ public class OfertasController extends ContribucionController {
     }
 
     public static void getOfrecerProducto(@NotNull Context context) throws Exception {
-        context.render("views/colaboraciones/ofrecer-producto.mustache");
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
+        context.render("views/colaboraciones/ofrecer-producto.mustache", model);
     }
 
     public static void postOfrecerProducto(@NotNull Context context){
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         try{
             OfrecerProductos contribucion = almacernarOferta(context);
             verificarPuedeHacerContribucion(contribucion,context);
 
             contribucion.ejecutarContribucion();
-            Map<String, Object> model = new HashMap<>();
             model.put("exito", "El registro fue exitoso");
             context.render("views/colaboraciones/ofrecer-producto.mustache", model);
         }catch (Exception exception){
-            Map<String, Object> model = new HashMap<>();
             model.put("error", exception.getMessage());
             System.err.println(exception.getClass());
             System.err.println(Arrays.toString(exception.getStackTrace()));

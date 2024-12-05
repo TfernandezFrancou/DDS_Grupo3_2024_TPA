@@ -1,6 +1,7 @@
 package org.example.Presentacion;
 
 import io.javalin.http.Context;
+import org.example.autenticacion.SessionManager;
 import org.example.incidentes.FallaTecnica;
 import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
 import org.example.reportes.itemsReportes.ItemReporteViandasColocadasPorHeladera;
@@ -18,18 +19,18 @@ import java.util.Map;
 public class ReportesController {
 
     public static void getListaReportes(@NotNull Context context) {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         List<ReportesDeLaSemana> reportes = RepoReportes.getInstancia().obtenerReportes();
-        Map<String, Object> model = new HashMap<>();
         model.put("reportes", reportes);
         context.render("/views/reportes/reportes.mustache", model);
     }
 
     public static void getDetalleFalla(Context context) {
-    int idFalla = Integer.parseInt(context.pathParam("id"));
-    FallaTecnica falla = RepoIncidente.getInstancia().obtenerFallaPorId(idFalla);
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
+        int idFalla = Integer.parseInt(context.pathParam("id"));
+        FallaTecnica falla = RepoIncidente.getInstancia().obtenerFallaPorId(idFalla);
 
         if (falla != null) {
-            Map<String, Object> model = new HashMap<>();
             model.put("falla", falla);
             context.render("/views/fallas/detalle_falla.mustache", model);
         } else {
@@ -38,29 +39,29 @@ public class ReportesController {
     }
 
     public static void getReporteFallas(Context context) {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         List<ItemReporteFallasPorHeladera> reportes = RepoReportes.getInstancia().obtenerReporteFallas();
-        Map<String, Object> model = new HashMap<>();
         model.put("reportes", reportes);
         context.json(model);//TODO esto no es cliente liviano
     }
 
     public static void getReporteViandasColocadas(Context context) {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         List<ItemReporteViandasColocadasPorHeladera> reportes = RepoReportes.getInstancia().obtenerReporteViandasColocadas();
-        Map<String, Object> model = new HashMap<>();
         model.put("reportes", reportes);
         context.json(model);//TODO esto no es cliente liviano
     }
 
     public static void getReporteViandasDistribuidas(Context context) {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         List<ItemReporteViandasDistribuidasPorColaborador> reportes = RepoReportes.getInstancia().obtenerReporteViandasDistribuidas();
-        Map<String, Object> model = new HashMap<>();
         model.put("reportes", reportes);
         context.json(model);//TODO esto no es cliente liviano
     }
 
     public static void getReporteViandasRetiradas(Context context) {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         List<ItemReporteViandasRetiradasPorHeladera> reportes = RepoReportes.getInstancia().obtenerReporteViandasRetiradas();
-        Map<String, Object> model = new HashMap<>();
         model.put("reportes", reportes);
         context.json(model);//TODO esto no es cliente liviano
     }

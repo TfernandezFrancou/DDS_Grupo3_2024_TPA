@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class RegistrarPersonaVulnerableController extends ContribucionController {
     public static void postRegistrarPersonaVulnerable(@NotNull Context context) {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         Colaborador colaborador = obtenerRolColaboradorActual(context);
         try{
             PersonaHumana personaVulnerable = parsearPersonaVulnerable(context);
@@ -111,6 +111,7 @@ public class RegistrarPersonaVulnerableController extends ContribucionController
     }
 
     public static void getRegistrarPersonaVulnerable(@NotNull Context context) {
-        context.render("/views/colaboraciones/registro-persona-vulnerable.mustache");
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
+        context.render("/views/colaboraciones/registro-persona-vulnerable.mustache", model);
     }
 }
