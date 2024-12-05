@@ -11,6 +11,7 @@ import org.example.personas.roles.Colaborador;
 import org.example.repositorios.RepoHeladeras;
 import org.jetbrains.annotations.NotNull;
 
+import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,7 +22,7 @@ import java.util.Optional;
 
 public class DonarViandasController extends ContribucionController {
 
-    public static void postDonarVianda(@NotNull Context context) {
+    public static void postDonarVianda(@NotNull Context context) throws MessagingException {
         List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
         Map<String, Object> model = new HashMap<>();
         model.put("heladeras", heladeras);
@@ -60,7 +61,8 @@ public class DonarViandasController extends ContribucionController {
         Optional<Heladera> heladeraOptional = RepoHeladeras.getInstancia().buscarPorId(idHeladeraInt);
 
         if(heladeraOptional.isPresent()){
-            vianda.setHeladera(heladeraOptional.get());
+            Heladera heladera = heladeraOptional.get();
+            vianda.setHeladera(heladera);
 
             DonacionDeViandas donacionDeViandas = new DonacionDeViandas();
             donacionDeViandas.setViandas(List.of(vianda));
@@ -69,9 +71,17 @@ public class DonarViandasController extends ContribucionController {
             donacionDeViandas.setCantidadDeViandas(1);
             donacionDeViandas.setColaborador(colaborador);
 
+            // TODO: esto no deberia ir en ejecutarContribucion junto con lo otro ?
+            if (heladera.getCapacidadEnViandas() - heladera.getViandasEnHeladera() < donacionDeViandas.getCantidadDeViandas()) {
+                model.put("error", "La heladera esta llena");
+                context.render("/views/colaboraciones/donar-viandas.mustache", model);
+                return;
+            }
+
             // no usamos ejecutarContribucion porque eso involucra lo de las tarjetas
             colaborador.agregarContribucion(donacionDeViandas);
             colaborador.calcularPuntuaje();
+            heladera.notificarCambioViandas(List.of(vianda), List.of());
 
             model.put("exito", "Contribucion registrada con exito");
             context.render("/views/colaboraciones/donar-viandas.mustache", model);
