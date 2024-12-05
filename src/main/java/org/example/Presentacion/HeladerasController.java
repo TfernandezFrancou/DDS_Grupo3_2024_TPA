@@ -105,6 +105,10 @@ public class HeladerasController extends ContribucionController {
             ctx.shutdown();
         } catch (Exception e) {
             System.err.println("Error al buscar en google maps: " + e);
+            Map<String, Object> model = new HashMap<>();
+            model.put("error", "No se encontro la dirección");
+            context.render("views/heladeras/registrar.mustache", model);
+            return;
         }
 
         Ubicacion ubicacion = new Ubicacion(
