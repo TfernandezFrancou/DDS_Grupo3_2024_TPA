@@ -80,10 +80,18 @@
                         <input type="text" class="form-control rounded-pill" id="rubro" required>
                     </div>
                 </div>
-                <div class="form-group mb-3">
-                    <label for="direccion" class="form-label">Dirección</label>
-                    <input type="text" placeholder="CalleEjemplo 123" name="direccion" class="form-control rounded-pill" id="direccion">
+                <div class="row align-items-center">
+                    <div class="col-md-8 mb-3">
+                        <label for="direccion" class="form-label">Dirección</label>
+                        <input type="text" placeholder="CalleEjemplo" name="direccion" class="form-control rounded-pill" id="direccion">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="direccion-altura" class="form-label">Altura</label>
+                        <input type="number" placeholder="123" name="direccion-altura" class="form-control rounded-pill" id="direccion-altura">
+                    </div>
                 </div>
+
                 <div class="form-group mb-3">
                     <label for="localidad" class="form-label">Localidad</label>
                     <input type="text" placeholder="Palermo" name="localidad" class="form-control rounded-pill" id="localidad">
@@ -131,11 +139,11 @@
 
                 <div class="form-group mb-3" style="margin-top:10px;">
                     <label for="username" class="form-label">Nombre de Usuario <span>*</span></label>
-                    <input type="text" name="username" class="form-control rounded-pill" id="username">
+                    <input type="text" name="username" class="form-control rounded-pill" id="username" required>
                 </div>
                 <div class="form-group mb-3">
                     <label for="password" class="form-label">Contraseña <span>*</span></label>
-                    <input type="password" name="password" class="form-control rounded-pill" id="password">
+                    <input type="password" name="password" class="form-control rounded-pill" id="password" required>
                 </div>
             </div>
         </div>
