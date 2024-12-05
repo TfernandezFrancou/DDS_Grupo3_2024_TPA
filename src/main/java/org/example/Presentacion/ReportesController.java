@@ -33,7 +33,7 @@ public class ReportesController {
             model.put("falla", falla);
             context.render("/views/fallas/detalle_falla.mustache", model);
         } else {
-            context.status(404).result("Falla no encontrada");
+            context.status(404).result("Falla no encontrada");//TODO esto no es cliente liviano
         }
     }
 
@@ -41,27 +41,27 @@ public class ReportesController {
         List<ItemReporteFallasPorHeladera> reportes = RepoReportes.getInstancia().obtenerReporteFallas();
         Map<String, Object> model = new HashMap<>();
         model.put("reportes", reportes);
-        context.json(model);
+        context.json(model);//TODO esto no es cliente liviano
     }
 
     public static void getReporteViandasColocadas(Context context) {
         List<ItemReporteViandasColocadasPorHeladera> reportes = RepoReportes.getInstancia().obtenerReporteViandasColocadas();
         Map<String, Object> model = new HashMap<>();
         model.put("reportes", reportes);
-        context.json(model);
+        context.json(model);//TODO esto no es cliente liviano
     }
 
     public static void getReporteViandasDistribuidas(Context context) {
         List<ItemReporteViandasDistribuidasPorColaborador> reportes = RepoReportes.getInstancia().obtenerReporteViandasDistribuidas();
         Map<String, Object> model = new HashMap<>();
         model.put("reportes", reportes);
-        context.json(model);
+        context.json(model);//TODO esto no es cliente liviano
     }
 
     public static void getReporteViandasRetiradas(Context context) {
         List<ItemReporteViandasRetiradasPorHeladera> reportes = RepoReportes.getInstancia().obtenerReporteViandasRetiradas();
         Map<String, Object> model = new HashMap<>();
         model.put("reportes", reportes);
-        context.json(model);
+        context.json(model);//TODO esto no es cliente liviano
     }
 }
