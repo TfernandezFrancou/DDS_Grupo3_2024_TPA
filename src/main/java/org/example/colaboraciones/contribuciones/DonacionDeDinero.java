@@ -10,6 +10,7 @@ import org.example.personas.roles.Colaborador;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Set;
 
@@ -50,7 +51,6 @@ public class DonacionDeDinero extends Contribucion {
         super.ejecutarContribucion();
     }
 
-
     @Override
     public float getCoeficientePuntaje() {
         return 0.5f;
@@ -58,7 +58,12 @@ public class DonacionDeDinero extends Contribucion {
 
     @Override
     public float obtenerPuntaje(){
-        return monto  * this.getCoeficientePuntaje();
+        if (frecuencia == null) {
+            return monto  * this.getCoeficientePuntaje();
+        }
+        long dias = ChronoUnit.DAYS.between(this.getFecha(), LocalDate.now());
+        int pagos = (int) (dias / frecuencia);
+        return monto * pagos * this.getCoeficientePuntaje();
     }
 
 }

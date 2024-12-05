@@ -35,11 +35,7 @@ public class Application {
                     javalinConfig.plugins.enableCors(cors -> {
                         cors.add(it -> it.anyHost());
                     }); // para poder hacer requests de un dominio a otro
-                    //TODO algunas vistas hay que pasarlas a mustache o similar para mostrar datos reales
-                        // TODO vistas faltantes: registro-persona-vulnerable, reporte, reportes, puntos, ofrecer-producto, mis-colaboraciones
-                        // y arreglar la navegacion entre vistas
-                    // javalinConfig.staticFiles.add("/"); //recursos estaticos (HTML, CSS, JS, IMG)
-                    javalinConfig.staticFiles.add("/");
+                    javalinConfig.staticFiles.add("/"); // recursos estaticos (HTML, CSS, JS, IMG)
                     javalinConfig.routing.contextPath = "";
                 })
                 .get("/hello", ctx -> ctx.result("Hello World"))
@@ -48,28 +44,6 @@ public class Application {
         app.exception(IllegalArgumentException.class, (e, ctx) -> {
             ctx.status(400);
         });
-
-//        Heladera origen = new Heladera("Heladera Medrano", new Ubicacion(2222,2222), new Direccion("Medrano", "3322", "Capital Federal"), 3);
-//        Heladera destino = new Heladera("Heladera Santa Fe", new Ubicacion(2222,2222), new Direccion("Santa Fe", "2221", "Capital Federal"), 5);
-//        RepoHeladeras.getInstancia().agregar(origen);
-//        RepoHeladeras.getInstancia().agregar(destino);
-//        Colaborador colaborador = new Colaborador();
-//        PersonaHumana persona = new PersonaHumana("Juan", "Perez", new CorreoElectronico("juanperez@gmail.com"), new Documento(TipoDocumento.DNI, "33221133"), colaborador);
-//        RepoPersona.getInstancia().agregar(persona);
-//        colaborador.agregarContribucion(new DonacionDeDinero(colaborador, LocalDate.now(), 2222));
-//        colaborador.agregarContribucion(new DonacionDeViandas(colaborador, origen, List.of(), LocalDate.now()));
-//        colaborador.agregarContribucion(new DistribucionDeViandas(colaborador, origen, destino, List.of(), "Motivo de distribucion"));
-//        colaborador.agregarContribucion(new HacerseCargoDeUnaHeladera(colaborador, List.of(origen)));
-//        colaborador.agregarContribucion(new DonacionDeDinero(colaborador, LocalDate.now(), 201));
-//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Bicicleta", 300, "/views/imagenes/bici.png"));
-//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Smart TV Marca XJSDJ", 300, "/views/imagenes/tv.ppng.webp"));
-//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Bicicleta", 300, "/views/imagenes/bici.png"));
-//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Bicicleta", 300, "/views/imagenes/bici.png"));
-//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Smart TV Marca XJSDJ", 300, "/views/imagenes/tv.ppng.webp"));
-//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Bicicleta", 300, "/views/imagenes/bici.png"));
-//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Bicicleta", 300, "/views/imagenes/bici.png"));
-//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Smart TV Marca XJSDJ", 300, "/views/imagenes/tv.ppng.webp"));
-//        RepoOfertas.getInstancia().agregarOferta(new Oferta("Bicicleta", 300, "/views/imagenes/bici.png"));
 
         app.get("/api/localidades", new GetLocalidadesHandler());
         app.get("/alertas/{nombre}", new AlertasHandler());
@@ -147,7 +121,7 @@ public class Application {
             for (String ruta: rutasSinSesion){
                 if (ctx.path().startsWith(ruta)) return;
             }
-            //TODO comento esto para que no tengan que iniciar sesion mientras hacen las vistas
+            // comentar esto para trabajar sin loguearse
             SessionManager.getInstancia().validarUsuario(ctx);
         });
 

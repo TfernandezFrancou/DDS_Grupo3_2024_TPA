@@ -147,9 +147,8 @@ public class Heladera {
         this.actualizarEstadoHeladera(true);
     }
 
-    public void desactivarHeladera() throws MessagingException {
+    public void desactivarHeladera() {
         this.actualizarEstadoHeladera(false);
-        this.notificarDesperfecto();
     }
 
     public void autorizarColaborador(Persona personaColaborador) {

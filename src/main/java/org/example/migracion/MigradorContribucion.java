@@ -8,8 +8,6 @@ import org.example.personas.Persona;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.PersonaHumana;
 import org.example.repositorios.RepoPersona;
-import org.example.repositorios.RepoUbicacion;
-import org.example.repositorios.RepoUsuario;
 
 import javax.mail.MessagingException;
 import java.io.*;
@@ -27,8 +25,15 @@ public class MigradorContribucion {
         this.contribuciones = new ArrayList<>();
     }
 
-    public void cargarCSV(FileInputStream archivoCSV) throws IOException, ParseException {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(archivoCSV.getFD()));
+    public void cargarCSVDesdeMemoria(InputStream csvFile) throws IOException, ParseException {
+        this.cargarCSV(new BufferedReader(new InputStreamReader(csvFile)));
+    }
+
+    public void cargarCSVDesdeArchivo(FileInputStream archivoCSV) throws IOException, ParseException {
+        this.cargarCSV(new BufferedReader(new FileReader(archivoCSV.getFD())));
+    }
+
+    private void cargarCSV(BufferedReader bufferedReader) throws IOException, ParseException {
         String linea = "";
         for (int i = 0;(linea = bufferedReader.readLine()) != null; i++) {
             if (i == 0) continue; // ignoro el nombre de las columnas
