@@ -7,6 +7,7 @@ import org.example.colaboraciones.Contribucion;
 import org.example.personas.Persona;
 import org.example.personas.roles.Colaborador;
 import org.example.repositorios.RepoPersona;
+import org.example.validadores.VerificadorContribucion;
 
 public abstract class ContribucionController {
 
@@ -32,6 +33,16 @@ public abstract class ContribucionController {
 
         user.setColaborador(personaUser);//update
         return personaUser;
+    }
+
+    public static void verificarPuedeHacerContribucion(Contribucion contribucion, Context context){
+        if(!VerificadorContribucion.getInstancia()
+                .puedeRealizarContribucion(
+                        obtenerPersonaColaboradorActual(context),
+                        contribucion)
+        ){
+            throw new RuntimeException("No tienes permitido realizar este tipo de contribución");
+        }
     }
 
 }

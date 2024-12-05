@@ -20,7 +20,9 @@ public class DonarDineroController extends ContribucionController {
         } catch (Exception e) {
             donacion = new DonacionDeDinero(colaborador, monto, null);
         }
+
         try {
+            verificarPuedeHacerContribucion(donacion,context);
             donacion.ejecutarContribucion();
             model.put("exito", "La donación fue realizada con éxito");
             context.render("/views/colaboraciones/donar-dinero.mustache", model);

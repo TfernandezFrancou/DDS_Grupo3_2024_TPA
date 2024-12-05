@@ -71,6 +71,15 @@ public class DonarViandasController extends ContribucionController {
             donacionDeViandas.setCantidadDeViandas(1);
             donacionDeViandas.setColaborador(colaborador);
 
+            try{
+                verificarPuedeHacerContribucion(donacionDeViandas,context);
+            } catch (Exception e){
+                e.printStackTrace();
+                model.put("error", e.getMessage());
+                context.render("/views/colaboraciones/donar-viandas.mustache", model);
+            }
+
+
             // TODO: esto no deberia ir en ejecutarContribucion junto con lo otro ?
             if (heladera.getCapacidadEnViandas() - heladera.getViandasEnHeladera() < donacionDeViandas.getCantidadDeViandas()) {
                 model.put("error", "La heladera esta llena");

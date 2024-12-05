@@ -98,8 +98,9 @@ public class OfertasController extends ContribucionController {
 
     public static void postOfrecerProducto(@NotNull Context context){
         try{
-            verificarEsPersonaJuridica(context);
             OfrecerProductos contribucion = almacernarOferta(context);
+            verificarPuedeHacerContribucion(contribucion,context);
+
             contribucion.ejecutarContribucion();
             Map<String, Object> model = new HashMap<>();
             model.put("exito", "El registro fue exitoso");
@@ -112,14 +113,6 @@ public class OfertasController extends ContribucionController {
             context.render("views/colaboraciones/ofrecer-producto.mustache", model);
         }
 
-    }
-
-    private static void verificarEsPersonaJuridica(Context context) throws RuntimeException{
-        Usuario user = context.attribute("usuario");
-        Persona personaUser = user.getColaborador();
-        if (!(personaUser instanceof PersonaJuridica)){
-            throw new RuntimeException("Esta funcionalidad está disponible solo para personas jurídicas.");
-        }
     }
 
     private static OfrecerProductos almacernarOferta(@NotNull Context context) throws RuntimeException{

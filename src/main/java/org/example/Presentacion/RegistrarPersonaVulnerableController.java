@@ -33,14 +33,16 @@ public class RegistrarPersonaVulnerableController extends ContribucionController
             contribucion.agregarPersona(personaVulnerable);
             contribucion.setColaborador(colaborador);
 
+            verificarPuedeHacerContribucion(contribucion,context);
+
             contribucion.ejecutarContribucion();
 
             model.put("exito", "El registro fue exitoso");
             context.render("/views/colaboraciones/registro-persona-vulnerable.mustache", model);
         } catch (Exception exception) {
+            exception.printStackTrace();
             model.put("error", exception.getMessage());
             context.render("/views/colaboraciones/registro-persona-vulnerable.mustache", model);
-            exception.printStackTrace();
         }
     }
 

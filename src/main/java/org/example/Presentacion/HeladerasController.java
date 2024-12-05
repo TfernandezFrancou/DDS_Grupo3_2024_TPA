@@ -1,28 +1,24 @@
 package org.example.Presentacion;
 
-
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.*;
 import io.javalin.http.Context;
-import org.example.autenticacion.SessionManager;
-import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.HacerseCargoDeUnaHeladera;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
-import org.example.incidentes.FallaTecnica;
 import org.example.incidentes.Incidente;
 import org.example.personas.Persona;
 import org.example.personas.roles.Colaborador;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoIncidente;
-import org.example.repositorios.RepoPersona;
 import org.example.repositorios.RepoUbicacion;
 import org.example.subscripcionesHeladeras.SubscripcionDesperfecto;
 import org.example.subscripcionesHeladeras.SubscripcionHeladera;
 import org.example.subscripcionesHeladeras.SubscripcionViandasDisponibles;
 import org.example.subscripcionesHeladeras.SubscripcionViandasFaltantes;
+import org.example.validadores.VerificadorContribucion;
 import org.example.validadores.VerificadorImagenURL;
 import org.jetbrains.annotations.NotNull;
 
@@ -120,13 +116,23 @@ public class HeladerasController extends ContribucionController {
             (float) result.geometry.location.lng
         );
         System.out.println("Latitud: " + ubicacion.getLatitud() + " - Longitud: " + ubicacion.getLongitud());
-        RepoUbicacion.getInstancia().agregar(ubicacion);
+
 
         Heladera heladera = new Heladera(nombre, ubicacion, direccion, capacidad);
 
         Colaborador colaborador = obtenerRolColaboradorActual(context);
 
         HacerseCargoDeUnaHeladera hacerseCargoDeUnaHeladera = new HacerseCargoDeUnaHeladera(colaborador, List.of(heladera));
+        try{
+            verificarPuedeHacerContribucion(hacerseCargoDeUnaHeladera,context);
+        } catch (Exception e){
+            e.printStackTrace();
+            Map<String, Object> model = new HashMap<>();
+            model.put("error", e.getMessage());
+            context.render("views/heladeras/registrar.mustache", model);
+        }
+
+        RepoUbicacion.getInstancia().agregar(ubicacion);
         hacerseCargoDeUnaHeladera.ejecutarContribucion();
 
         context.redirect("/heladeras");
