@@ -9,6 +9,19 @@
     <link rel="stylesheet" href="/styles/estilo-generico.css">
     <link rel="stylesheet" href="/styles/navegacion.css">
     <link rel="icon" type="image/x-icon" href="/views/imagenes/favicon.ico">
+    <style>
+        input.csv-input {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            cursor: pointer;
+            outline: none;
+            opacity: 0;
+            appearance: none;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -42,7 +55,7 @@
                 <div class="csv-form">
                     <div class="file-upload" id="file-upload" style="min-height: 200px; margin-bottom: 30px;">
                         <p style="height: 100%;">Arrastra un archivo CSV o haz clic para seleccionar uno</p>
-                        <input type="file" id="csv" name="csv" accept=".csv">
+                        <input class="csv-input" type="file" id="csv" name="csv" accept=".csv" oninput="handleFile(this)">
                     </div>
                 </div>
                 <div class="button-container">
@@ -53,6 +66,14 @@
         </div>
     </div>
 </div>
+<script>
+    function handleFile(input) {
+        if (input && input.files && input.files.length > 0) {
+            const name = input.files[0].name;
+            document.querySelector('div.csv-form p').innerHTML = name;
+        }
+    }
+</script>
 </body>
 
 </html>

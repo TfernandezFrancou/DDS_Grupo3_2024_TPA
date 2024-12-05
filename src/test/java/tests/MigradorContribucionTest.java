@@ -2,7 +2,6 @@ package tests;
 
 import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.Contribucion;
-import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.DistribucionDeViandas;
 import org.example.colaboraciones.contribuciones.DonacionDeDinero;
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
@@ -64,11 +63,11 @@ public class MigradorContribucionTest {
     }
 
     @Test
-    public void testCargarCSV() throws IOException, ParseException {
+    public void testCargarCSVDesdeArchivo() throws IOException, ParseException {
         // Prepara el archivo CSV de prueba
         FileInputStream fileInputStream = new FileInputStream(pathCSVCorto);
         // Llama al método cargarCSV
-        migradorContribucion.cargarCSV(fileInputStream);
+        migradorContribucion.cargarCSVDesdeArchivo(fileInputStream);
         // Verifica que los datos se cargaron correctamente
         List<PersonaHumana> colaboradores = migradorContribucion.getColaboradores();
         List<Contribucion> contribuciones = migradorContribucion.getContribuciones();
@@ -93,18 +92,18 @@ public class MigradorContribucionTest {
     }
 
     @Test
-    public void testCargarCSVGrande() throws IOException, ParseException {
+    public void testCargarCSVDesdeArchivoGrande() throws IOException, ParseException {
         // Prepara el archivo CSV de prueba
         FileInputStream fileInputStream = new FileInputStream(pathCSVGrande);
         // Llama al método cargarCSV
-        migradorContribucion.cargarCSV(fileInputStream);
+        migradorContribucion.cargarCSVDesdeArchivo(fileInputStream);
         // Verifica que los datos se cargaron correctamente
         Assertions.assertEquals(1000, migradorContribucion.getContribuciones().size());
         Assertions.assertEquals(1000, migradorContribucion.getColaboradores().size());
     }
 
     @Test
-    public void testCargarCSVGrandeParalelo() throws InterruptedException, ParseException {
+    public void testCargarCSVDesdeArchivoGrandeParalelo() throws InterruptedException, ParseException {
         // Define el número de archivos CSV a cargar en paralelo
         int numCSVs = 5;
         ExecutorService executorService = Executors.newFixedThreadPool(numCSVs);
@@ -117,7 +116,7 @@ public class MigradorContribucionTest {
 
                     // Llama al método cargarCSV
                     synchronized (migradorContribucion){ // evito condicion de carrera
-                        migradorContribucion.cargarCSV(fileInputStream);
+                        migradorContribucion.cargarCSVDesdeArchivo(fileInputStream);
                     }
 
                 } catch (IOException | ParseException e) {
@@ -135,7 +134,7 @@ public class MigradorContribucionTest {
     }
 
     @Test
-    public void testCargarCSVParalelo() throws InterruptedException {
+    public void testCargarCSVDesdeArchivoParalelo() throws InterruptedException {
         // Define el número de archivos CSV a cargar en paralelo
         int numCSVs = 20;
         ExecutorService executorService = Executors.newFixedThreadPool(numCSVs);
@@ -148,7 +147,7 @@ public class MigradorContribucionTest {
 
                     // Llama al método cargarCSV
                     synchronized (migradorContribucion){ // evito condicion de carrera
-                        migradorContribucion.cargarCSV(fileInputStream);
+                        migradorContribucion.cargarCSVDesdeArchivo(fileInputStream);
                     }
                 } catch (IOException | ParseException e) {
                     e.printStackTrace();
