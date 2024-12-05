@@ -60,7 +60,15 @@
             <form method="post" action="/heladeras/{{heladera.idHeladera}}/suscripcion-desperfecto">
                 <div class="d-flex flex-row justify-content-between align-items-center">
                     <span class="formulario-input"><strong>Notificarme si la heladera sufrió algun desperfecto</strong></span>
-                    <button type="submit" class="btn btn-primary but boton-nuevo">Suscribirse</button>
+                    <div class="d-flex flex-row gap-3">
+                        <select class="form-select" name="medioDeContacto" required>
+                            <option value="" disabled selected>Medio de Contacto</option>
+                            {{#mediosDeContacto}}
+                                <option value={{idMedioDeContacto}}>{{mail}}{{telefono}}</option>
+                            {{/mediosDeContacto}}
+                        </select>
+                        <button type="submit" class="btn btn-primary but boton-nuevo">Suscribirse</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -84,7 +92,15 @@
                         <input name="cantidad" type="number" required placeholder="5" class="form-control" />
                         <span class="text-nowrap formulario-input"><strong>viandas para llenarla</strong></span>
                     </div>
-                    <button type="submit" class="btn btn-primary but boton-nuevo">Suscribirse</button>
+                    <div class="d-flex flex-row gap-3">
+                        <select class="form-select" name="medioDeContacto" required>
+                            <option value="" disabled selected>Medio de Contacto</option>
+                            {{#mediosDeContacto}}
+                                <option value={{idMedioDeContacto}}>{{mail}}{{telefono}}</option>
+                            {{/mediosDeContacto}}
+                        </select>
+                        <button type="submit" class="btn btn-primary but boton-nuevo">Suscribirse</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -108,7 +124,15 @@
                         <input name="cantidad" type="number" required placeholder="5" class="form-control" />
                         <span class="text-nowrap formulario-input"><strong>viandas</strong></span>
                     </div>
-                    <button type="submit" class="btn btn-primary but boton-nuevo">Suscribirse</button>
+                    <div class="d-flex flex-row gap-3">
+                        <select class="form-select" name="medioDeContacto" required>
+                            <option value="" disabled selected>Medio de Contacto</option>
+                            {{#mediosDeContacto}}
+                                <option value={{idMedioDeContacto}}>{{mail}}{{telefono}}</option>
+                            {{/mediosDeContacto}}
+                        </select>
+                        <button type="submit" class="btn btn-primary but boton-nuevo">Suscribirse</button>
+                    </div>
                 </div>
             </form>
         </div>

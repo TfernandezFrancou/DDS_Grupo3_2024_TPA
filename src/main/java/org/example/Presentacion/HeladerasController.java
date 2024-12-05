@@ -59,6 +59,9 @@ public class HeladerasController extends ContribucionController {
             model.put("tiempoActiva", heladera.obtenerMesesActivos());
 
             Colaborador colaborador = obtenerRolColaboradorActual(context);
+
+            model.put("mediosDeContacto", colaborador.getPersona().getMediosDeContacto());
+
             List<SubscripcionHeladera> subscripciones = RepoHeladeras.getInstancia().obtenerSubscripcionesPorPersona(
                 heladera.getIdHeladera(),
                 colaborador.getPersona().getIdPersona()
@@ -210,51 +213,57 @@ public class HeladerasController extends ContribucionController {
     public static void postSuscripcionDesperfectos(@NotNull Context context) throws Exception {
         Integer idHeladera = context.pathParamAsClass("id", Integer.class).get();
         Colaborador colaborador = obtenerRolColaboradorActual(context);
+        Integer idMedioDeContacto = context.formParamAsClass("medioDeContacto", Integer.class).get();
         Persona persona = colaborador.getPersona();
-        persona.getMediosDeContacto().stream().findFirst().ifPresent(medioDeContacto -> {
-            RepoHeladeras.getInstancia().buscarPorId(idHeladera).ifPresent(heladera -> {
-                SubscripcionDesperfecto s = new SubscripcionDesperfecto(heladera, persona, medioDeContacto);
-                heladera.getPublisherViandasFaltantes().suscribir(s);
-            });
-        });
+        persona.getMediosDeContacto()
+                .stream()
+                .filter(m -> m.getIdMedioDeContacto() == idMedioDeContacto)
+                .findFirst()
+                .ifPresent(medioDeContacto -> {
+                    RepoHeladeras.getInstancia().buscarPorId(idHeladera).ifPresent(heladera -> {
+                        SubscripcionDesperfecto s = new SubscripcionDesperfecto(heladera, persona, medioDeContacto);
+                        heladera.getPublisherViandasFaltantes().suscribir(s);
+                    });
+                });
         context.redirect("/heladeras/" + idHeladera);
-    }
-
-    public static void cancelarSuscripcionDesperfectos(@NotNull Context context) throws Exception {
     }
 
     public static void postSuscripcionViandasFaltantes(@NotNull Context context) throws Exception {
         Integer idHeladera = context.pathParamAsClass("id", Integer.class).get();
         Integer cantidad = context.formParamAsClass("cantidad", Integer.class).get();
+        Integer idMedioDeContacto = context.formParamAsClass("medioDeContacto", Integer.class).get();
         Colaborador colaborador = obtenerRolColaboradorActual(context);
         Persona persona = colaborador.getPersona();
-        persona.getMediosDeContacto().stream().findFirst().ifPresent(medioDeContacto -> {
-            RepoHeladeras.getInstancia().buscarPorId(idHeladera).ifPresent(heladera -> {
-                SubscripcionViandasFaltantes s = new SubscripcionViandasFaltantes(heladera, persona, medioDeContacto, cantidad);
-                heladera.getPublisherViandasFaltantes().suscribir(s);
-            });
-        });
+        persona.getMediosDeContacto()
+                .stream()
+                .filter(m -> m.getIdMedioDeContacto() == idMedioDeContacto)
+                .findFirst()
+                .ifPresent(medioDeContacto -> {
+                    RepoHeladeras.getInstancia().buscarPorId(idHeladera).ifPresent(heladera -> {
+                        SubscripcionViandasFaltantes s = new SubscripcionViandasFaltantes(heladera, persona, medioDeContacto, cantidad);
+                        heladera.getPublisherViandasFaltantes().suscribir(s);
+                    });
+                });
         context.redirect("/heladeras/" + idHeladera);
-    }
-
-    public static void cancelarSuscripcionViandasFaltantes(@NotNull Context context) throws Exception {
     }
 
     public static void postSuscripcionViandasDisponibles(@NotNull Context context) throws Exception {
         Integer idHeladera = context.pathParamAsClass("id", Integer.class).get();
         Integer cantidad = context.formParamAsClass("cantidad", Integer.class).get();
+        Integer idMedioDeContacto = context.formParamAsClass("medioDeContacto", Integer.class).get();
         Colaborador colaborador = obtenerRolColaboradorActual(context);
         Persona persona = colaborador.getPersona();
-        persona.getMediosDeContacto().stream().findFirst().ifPresent(medioDeContacto -> {
-            RepoHeladeras.getInstancia().buscarPorId(idHeladera).ifPresent(heladera -> {
-                SubscripcionViandasDisponibles s = new SubscripcionViandasDisponibles(heladera, persona, medioDeContacto, cantidad);
-                heladera.getPublisherViandasFaltantes().suscribir(s);
-            });
-        });
+        persona.getMediosDeContacto()
+                .stream()
+                .filter(m -> m.getIdMedioDeContacto() == idMedioDeContacto)
+                .findFirst()
+                .ifPresent(medioDeContacto -> {
+                    RepoHeladeras.getInstancia().buscarPorId(idHeladera).ifPresent(heladera -> {
+                        SubscripcionViandasDisponibles s = new SubscripcionViandasDisponibles(heladera, persona, medioDeContacto, cantidad);
+                        heladera.getPublisherViandasFaltantes().suscribir(s);
+                    });
+                });
         context.redirect("/heladeras/" + idHeladera);
-    }
-
-    public static void cancelarSuscripcionViandasDisponibles(@NotNull Context context) throws Exception {
     }
 
     public static void cancelarSuscripcion(@NotNull Context context) throws Exception {
