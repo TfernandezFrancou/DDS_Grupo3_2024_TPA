@@ -129,14 +129,14 @@ public class SessionManager {
         Usuario usuario = context.attribute("usuario");
         Persona persona = usuario.getColaborador();
         if (persona instanceof PersonaHumana) {
-            atributos.put("DonacionDeDinero", "true");
-            atributos.put("DonacionDeViandas", "true");
-            atributos.put("DistribucionDeViandas", "true");
-            atributos.put("RegistrarPersonasEnSituacionVulnerable", "true");
+            atributos.put("DonacionDeDinero?", "true");
+            atributos.put("DonacionDeViandas?", "true");
+            atributos.put("DistribucionDeViandas?", "true");
+            atributos.put("RegistrarPersonasEnSituacionVulnerable?", "true");
         } else if (persona instanceof PersonaJuridica) {
-            atributos.put("DonacionDeDinero", "true");
-            atributos.put("HacerseCargoDeUnaHeladera", "true");
-            atributos.put("OfrecerProductos", "true");
+            atributos.put("DonacionDeDinero?", "true");
+            atributos.put("HacerseCargoDeUnaHeladera?", "true");
+            atributos.put("OfrecerProductos?", "true");
         }
         return atributos;
     }

@@ -23,7 +23,7 @@ public class CargaCSVController {
                 migradorContribucion.cargarCSVDesdeMemoria(inputStream);
                 migradorContribucion.migrarColaboradores();
                 inputStream.close();
-                context.redirect("/views/colaboraciones/carga-csv-correcta.html");
+                context.render("/views/colaboraciones/carga-csv-correcta.mustache",model);
             } catch (Exception ex){
                 model.put("error", ex.getMessage());
                 context.render("/views/colaboraciones/carga-csv-incorrecta.mustache", model);

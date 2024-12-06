@@ -62,7 +62,7 @@ public class DonacionDeDinero extends Contribucion {
 
     @Override
     public float obtenerPuntaje(){
-        if (frecuencia == null) {
+        if (frecuencia == null||frecuencia == 0) {
             return monto  * this.getCoeficientePuntaje();
         }
 
