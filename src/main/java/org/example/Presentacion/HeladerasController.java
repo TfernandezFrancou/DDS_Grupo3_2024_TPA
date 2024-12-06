@@ -9,6 +9,7 @@ import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.HacerseCargoDeUnaHeladera;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
+import org.example.incidentes.FallaTecnica;
 import org.example.incidentes.Incidente;
 import org.example.personas.Persona;
 import org.example.personas.roles.Colaborador;
@@ -212,6 +213,7 @@ public class HeladerasController extends ContribucionController {
         // Este mapeo lo hago para formatear la fecha
         model.put("alertas", resultados.stream().map((alerta) -> {
             Map<String, String> mapped = new HashMap<>();
+            mapped.put("idIncidente", String.valueOf(alerta.getIdIncidente()));
             mapped.put("tipoDeIncidente", alerta.getTipoDeIncidente());
             LocalDateTime fecha = alerta.getFechaDeEmision();
             String formatted = fecha.getDayOfMonth() + "/" + fecha.getMonthValue() + "/" + fecha.getYear();
@@ -220,6 +222,16 @@ public class HeladerasController extends ContribucionController {
         }).toList());
 
         context.render("views/heladeras/alertas.mustache", model);
+    }
+
+    public static void getAlerta(@NotNull Context context) throws Exception {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
+        int idincidente = Integer.parseInt(context.pathParam("idAlerta"));
+        Incidente incidente = RepoIncidente.getInstancia().obtenerIncidentePorId(idincidente);
+
+        model.put("incidente", incidente);
+        context.render("/views/heladeras/detalleFalla.mustache", model);
+        //context.json(model);
     }
 
     public static void postSuscripcionDesperfectos(@NotNull Context context) throws Exception {

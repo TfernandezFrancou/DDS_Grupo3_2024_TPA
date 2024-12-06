@@ -45,10 +45,10 @@
     <div class="container mt-4">
         {{#alertas}}
             <div class="row">
-                <div class="alerta-caja">
-                    <span class="alerta-titulo">Tipo: <strong>{{tipoDeIncidente}}</strong></span>
-                    <span class="alerta-fecha">Fecha: <strong>{{fechaDeEmision}}</strong></span>
-                </div>
+                    <a href="/heladeras/{{idHeladera}}/alertas/{{idIncidente}}" class="alerta-caja">
+                        <span class="alerta-titulo">Tipo: <strong>{{tipoDeIncidente}}</strong></span>
+                        <span class="alerta-fecha">Fecha: <strong>{{fechaDeEmision}}</strong></span>
+                    </a>
             </div>
         {{/alertas}}
     </div>

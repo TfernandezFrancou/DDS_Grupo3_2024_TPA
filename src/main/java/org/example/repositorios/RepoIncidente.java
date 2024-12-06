@@ -164,4 +164,15 @@ public class RepoIncidente {
         }
         return falla;
     }
+
+    public Incidente obtenerIncidentePorId(int idIncidente) {
+        EntityManager em = BDUtils.getEntityManager();
+        Incidente incidente = null;
+        try {
+            incidente = em.find(Incidente.class, idIncidente);
+        } finally {
+            em.close();
+        }
+        return incidente;
+    }
 }

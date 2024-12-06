@@ -67,6 +67,7 @@ public class Application {
                 get("", HeladerasController::getVisualizar);
                 get("{id}", HeladerasController::getCaracteristicas);
                 get("{id}/alertas", HeladerasController::getAlertas);
+                get("{id}/alertas/{idAlerta}", HeladerasController::getAlerta);
                 post("{id}/suscripcion-desperfecto", HeladerasController::postSuscripcionDesperfectos);
                 post("{id}/suscripcion-faltantes", HeladerasController::postSuscripcionViandasFaltantes);
                 post("{id}/suscripcion-disponibles", HeladerasController::postSuscripcionViandasDisponibles);
