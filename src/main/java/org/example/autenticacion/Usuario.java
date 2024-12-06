@@ -56,6 +56,7 @@ public class Usuario {
         this.nombreDeUsuario = nombreDeUsuario;
         this.contrasenia = HashGenerator.hash(contrasenia);// aca se debe hashear la contraseña para mas seguridad
         this.fechaExpiracionContrasenia = fechaExpiracionContrasenia;
+        this.estanDatosCompletos = false;
     }
 
     public Usuario(String nombre, Documento documento, Persona colaborador) {
@@ -63,6 +64,7 @@ public class Usuario {
         this.documento = documento;
         this.colaborador = colaborador;
         this.contrasenia = generarContrasenia();//no se hashea, se espera a que el usuario lo cambie
+        this.estanDatosCompletos = false;
     }
 
     public void cambiarContrasenia(String nuevaContrasenia){

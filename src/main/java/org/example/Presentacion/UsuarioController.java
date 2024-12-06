@@ -63,20 +63,22 @@ public class UsuarioController  {
 
     private static Persona crearPersona(Context context){
         boolean esJuridica = "on".equals(context.formParam("esJuridica"));
-        String direccion = context.formParam("direccion");
+        String direccionNombreCalle = context.formParam("direccion");
+        String direccionAltura = context.formParam("direccion-altura");
         String localidad = context.formParam("localidad");
 
         Direccion direccion1 ;
-        if(!direccion.equals("")){
-            direccion1 = new Direccion();
-            String[] partes = direccion.split(" ");
-            direccion1.setNombreCalle(partes[0]);
-            direccion1.setAltura(partes[1]);
-            if(localidad.equals("")){
-                direccion1.setLocalidad(localidad.toLowerCase());
-            }
-        } else {
+        if(direccionNombreCalle.equals("")){
             direccion1 = null;
+        } else if( direccionAltura.equals("")){
+            throw new RuntimeException("La altura de la calle no es válida");
+        } else if(localidad.equals("")){
+            throw new RuntimeException("La localidad de dirección ingresada no es válida");
+        }else{
+            direccion1 = new Direccion();
+            direccion1.setNombreCalle(direccionNombreCalle);
+            direccion1.setAltura(direccionAltura);
+            direccion1.setLocalidad(localidad.toLowerCase());
         }
 
         String documento = context.formParam("documento");
@@ -116,7 +118,14 @@ public class UsuarioController  {
 
         persona.setNombre(nombre);
         persona.setApellido(apellido);
-        if(!fechaNacimiento.equals("")) persona.setFechaNacimiento(LocalDate.parse(fechaNacimiento));
+        if(!fechaNacimiento.equals("")) {
+            LocalDate fechaNac = LocalDate.parse(fechaNacimiento);
+            if(fechaNac.isAfter(LocalDate.now()) || fechaNac.equals(LocalDate.now()) ){
+                throw new RuntimeException("Fecha de nacimiento no valida");
+            }else{
+                persona.setFechaNacimiento(fechaNac);
+            }
+        }
         if(direccion != null) persona.setDireccion(direccion);
         persona.setDocumento(documento);
 

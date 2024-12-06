@@ -18,13 +18,21 @@
     <nav>
         <ul>
             <li><a href="/colaboraciones">Mis colaboraciones</a></li>
-            <li><a href="/heladeras/registrar">Registrar heladera</a></li>
+            {{#HacerseCargoDeUnaHeladera?}}
+                <li><a href="/heladeras/registrar">Registrar heladera</a></li>
+            {{/HacerseCargoDeUnaHeladera?}}
             <li><a href="/heladeras" class="menu-select">Heladeras</a></li>
             <li><a href="/puntos">Puntos</a></li>
-            <li><a href="/donar-vianda">Donar viandas</a></li>
-            <li><a href="/donar-dinero">Donar dinero</a></li>
+            {{#DonacionDeViandas?}}
+                <li><a href="/donar-vianda">Donar viandas</a></li>
+            {{/DonacionDeViandas?}}
+            {{#DonacionDeDinero?}}
+                <li><a href="/donar-dinero">Donar dinero</a></li>
+            {{/DonacionDeDinero?}}
             <li><a href="/reportes">Reportes</a></li>
-            <li><a href="/registrar-persona-vulnerable">Registrar persona</a></li>
+            {{#RegistrarPersonasEnSituacionVulnerable?}}
+                <li><a href="/registrar-persona-vulnerable">Registrar persona</a></li>
+            {{/RegistrarPersonasEnSituacionVulnerable?}}
             <li><a href="/usuarios/cerrar-sesion" class="text-danger">Cerrar Sesión</a></li>
         </ul>
     </nav>
@@ -37,10 +45,10 @@
     <div class="container mt-4">
         {{#alertas}}
             <div class="row">
-                <div class="alerta-caja">
-                    <span class="alerta-titulo">Tipo: <strong>{{tipoDeIncidente}}</strong></span>
-                    <span class="alerta-fecha">Fecha: <strong>{{fechaDeEmision}}</strong></span>
-                </div>
+                    <a href="/heladeras/{{idHeladera}}/alertas/{{idIncidente}}" class="alerta-caja">
+                        <span class="alerta-titulo">Tipo: <strong>{{tipoDeIncidente}}</strong></span>
+                        <span class="alerta-fecha">Fecha: <strong>{{fechaDeEmision}}</strong></span>
+                    </a>
             </div>
         {{/alertas}}
     </div>

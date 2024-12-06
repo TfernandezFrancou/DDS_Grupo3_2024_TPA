@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", function (){
     const tieneDomicilioSi = document.getElementById("domicilio-si");
     const tieneDomicilioNo = document.getElementById("domicilio-no");
-    const domicilioValor = document.getElementById("domicilio-texto");
+    const domicilioNombreCalle = document.getElementById("domicilio-calle");
+    const domicilioAltura = document.getElementById("domicilio-altura");
+    const domicilioLocalidad = document.getElementById("domicilio-localidad");
 
     const tieneMenoresSi = document.getElementById("menores-si");
     const tieneMenoresNo = document.getElementById("menores-no");
@@ -12,14 +14,20 @@ document.addEventListener("DOMContentLoaded", function (){
 
 
     // Función genérica para habilitar/deshabilitar inputs
-    function configurarHabilitacion(triggerElement, targetElement, desactivarSiValor) {
+    function configurarHabilitacion(triggerElement, desactivarSiValor, ...targetElements) {
         function toggleEstado() {
             if (triggerElement.type === "radio") {
                 const radios = document.querySelectorAll(`input[name="${triggerElement.name}"]`);
                 const valorSeleccionado = Array.from(radios).find(radio => radio.checked)?.value;
-                targetElement.disabled = valorSeleccionado === desactivarSiValor;
+
+                targetElements.forEach(targetElement => {
+                    targetElement.disabled = valorSeleccionado === desactivarSiValor;
+                })
             } else if (triggerElement.tagName === "SELECT") {
-                targetElement.disabled = triggerElement.value === desactivarSiValor;
+
+                targetElements.forEach(targetElement => {
+                   targetElement.disabled = triggerElement.value === desactivarSiValor;
+                })
             }
         }
 
@@ -35,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function (){
         toggleEstado();
     }
 
-    configurarHabilitacion(tieneDomicilioSi, domicilioValor, "no");
-    configurarHabilitacion(tieneMenoresSi, cantMenores, "no");
-    configurarHabilitacion(documento, numeroDocumento, "noTiene");
+    configurarHabilitacion(tieneDomicilioSi,"no", domicilioNombreCalle, domicilioAltura, domicilioLocalidad);
+    configurarHabilitacion(tieneMenoresSi, "no",cantMenores,);
+    configurarHabilitacion(documento, "noTiene", numeroDocumento );
 });

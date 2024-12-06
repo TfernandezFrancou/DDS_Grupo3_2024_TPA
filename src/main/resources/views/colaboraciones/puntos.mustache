@@ -20,22 +20,32 @@
         <nav>
             <ul>
                 <li><a href="/colaboraciones">Mis colaboraciones</a></li>
-                <li><a href="/heladeras/registrar">Registrar heladera</a></li>
+                {{#HacerseCargoDeUnaHeladera?}}
+                    <li><a href="/heladeras/registrar">Registrar heladera</a></li>
+                {{/HacerseCargoDeUnaHeladera?}}
                 <li><a href="/heladeras">Heladeras</a></li>
                 <li><a href="/puntos" class="menu-select">Puntos</a></li>
-                <li><a href="/donar-vianda">Donar viandas</a></li>
-                <li><a href="/donar-dinero">Donar dinero</a></li>
+                {{#DonacionDeViandas?}}
+                    <li><a href="/donar-vianda">Donar viandas</a></li>
+                {{/DonacionDeViandas?}}
+                {{#DonacionDeDinero?}}
+                    <li><a href="/donar-dinero">Donar dinero</a></li>
+                {{/DonacionDeDinero?}}
                 <li><a href="/reportes">Reportes</a></li>
-                <li><a href="/registrar-persona-vulnerable">Registrar persona</a></li>
+                {{#RegistrarPersonasEnSituacionVulnerable?}}
+                    <li><a href="/registrar-persona-vulnerable">Registrar persona</a></li>
+                {{/RegistrarPersonasEnSituacionVulnerable?}}
                 <li><a href="/usuarios/cerrar-sesion" class="text-danger">Cerrar Sesión</a></li>
             </ul>
         </nav>
    </header>
     <div class="container points-container">
         <h2>Tienes <span id="puntos">{{puntos}}</span> puntos</h2>
-        <div class="button-container">
-            <a href="/ofrecer-producto" class="button offer-button">Ofrecer Producto o Servicio</a>
-        </div>
+        {{#OfrecerProductos}}
+            <div class="button-container">
+                <a href="/ofrecer-producto" class="button offer-button">Ofrecer Producto o Servicio</a>
+            </div>
+        {{/OfrecerProductos}}
     </div>
 
     <div class="container row mb-30">

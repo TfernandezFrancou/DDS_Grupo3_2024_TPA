@@ -2,6 +2,13 @@ package org.example.Presentacion;
 
 import io.javalin.http.Context;
 import org.example.reportes.itemsReportes.*;
+import org.example.autenticacion.SessionManager;
+import org.example.incidentes.FallaTecnica;
+import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
+import org.example.reportes.itemsReportes.ItemReporteViandasColocadasPorHeladera;
+import org.example.reportes.itemsReportes.ItemReporteViandasDistribuidasPorColaborador;
+import org.example.reportes.itemsReportes.ItemReporteViandasRetiradasPorHeladera;
+import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoReportes;
 import org.example.reportes.ReportesDeLaSemana;
 import org.jetbrains.annotations.NotNull;
@@ -76,4 +83,3 @@ public class ReportesController {
         ctx.render("views/reportes/reporteRetiradas.mustache", model);
     }
 }
-

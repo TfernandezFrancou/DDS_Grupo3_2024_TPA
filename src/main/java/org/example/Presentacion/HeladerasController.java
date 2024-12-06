@@ -1,12 +1,10 @@
 package org.example.Presentacion;
 
-
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.*;
 import io.javalin.http.Context;
 import org.example.autenticacion.SessionManager;
-import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.HacerseCargoDeUnaHeladera;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
@@ -17,12 +15,12 @@ import org.example.personas.Persona;
 import org.example.personas.roles.Colaborador;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoIncidente;
-import org.example.repositorios.RepoPersona;
 import org.example.repositorios.RepoUbicacion;
 import org.example.subscripcionesHeladeras.SubscripcionDesperfecto;
 import org.example.subscripcionesHeladeras.SubscripcionHeladera;
 import org.example.subscripcionesHeladeras.SubscripcionViandasDisponibles;
 import org.example.subscripcionesHeladeras.SubscripcionViandasFaltantes;
+import org.example.validadores.VerificadorContribucion;
 import org.example.validadores.VerificadorImagenURL;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +32,7 @@ import java.util.*;
 public class HeladerasController extends ContribucionController {
 
     public static void getVisualizar(@NotNull Context context) throws Exception {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         try {
             var heladeras = RepoHeladeras.getInstancia().obtenerTodas();
             model.put("listaheladeras", heladeras);
@@ -45,6 +43,7 @@ public class HeladerasController extends ContribucionController {
     }
 
     public static void getCaracteristicas(@NotNull Context context) throws Exception {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         Optional<Heladera> resultadoBusqueda = Optional.empty();
         try {
             Integer idHeladera = context.pathParamAsClass("id", Integer.class).get();
@@ -55,7 +54,6 @@ public class HeladerasController extends ContribucionController {
 
         if (resultadoBusqueda.isPresent()){
             var heladera = resultadoBusqueda.get();
-            Map<String, Object> model = new HashMap<>();
             model.put("heladera", heladera);
             model.put("tiempoActiva", heladera.obtenerMesesActivos());
 
@@ -84,10 +82,12 @@ public class HeladerasController extends ContribucionController {
     }
 
     public static void getRegistrar(@NotNull Context context) throws Exception {
-        context.render("views/heladeras/registrar.mustache");
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
+        context.render("views/heladeras/registrar.mustache", model);
     }
 
     public static void postRegistrar(@NotNull Context context) throws Exception {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         String nombre = context.formParam("nombre");
         String calle = context.formParam("calle");
         String altura = context.formParam("altura");
@@ -109,7 +109,6 @@ public class HeladerasController extends ContribucionController {
             ctx.shutdown();
         } catch (Exception e) {
             System.err.println("Error al buscar en google maps: " + e);
-            Map<String, Object> model = new HashMap<>();
             model.put("error", "No se encontro la dirección");
             context.render("views/heladeras/registrar.mustache", model);
             return;
@@ -120,27 +119,36 @@ public class HeladerasController extends ContribucionController {
             (float) result.geometry.location.lng
         );
         System.out.println("Latitud: " + ubicacion.getLatitud() + " - Longitud: " + ubicacion.getLongitud());
-        RepoUbicacion.getInstancia().agregar(ubicacion);
+
 
         Heladera heladera = new Heladera(nombre, ubicacion, direccion, capacidad);
 
         Colaborador colaborador = obtenerRolColaboradorActual(context);
 
         HacerseCargoDeUnaHeladera hacerseCargoDeUnaHeladera = new HacerseCargoDeUnaHeladera(colaborador, List.of(heladera));
+        try{
+            verificarPuedeHacerContribucion(hacerseCargoDeUnaHeladera,context);
+        } catch (Exception e){
+            e.printStackTrace();
+            model.put("error", e.getMessage());
+            context.render("views/heladeras/registrar.mustache", model);
+        }
+
+        RepoUbicacion.getInstancia().agregar(ubicacion);
         hacerseCargoDeUnaHeladera.ejecutarContribucion();
 
         context.redirect("/heladeras");
     }
 
     public static void getReporte(@NotNull Context context) throws Exception {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
         model.put("heladeras", heladeras);
         context.render("views/heladeras/reporte.mustache", model);
     }
 
     public static void postReporte(@NotNull Context context) throws Exception {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
         model.put("heladeras", heladeras);
 
@@ -191,9 +199,9 @@ public class HeladerasController extends ContribucionController {
 
 
     public static void getAlertas(@NotNull Context context) throws Exception {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         List<Incidente> resultados = null;
 
-        Map<String, Object> model = new HashMap<>();
         try {
             Integer idHeladera = context.pathParamAsClass("id", Integer.class).get();
             model.put("idHeladera", idHeladera);
@@ -205,6 +213,7 @@ public class HeladerasController extends ContribucionController {
         // Este mapeo lo hago para formatear la fecha
         model.put("alertas", resultados.stream().map((alerta) -> {
             Map<String, String> mapped = new HashMap<>();
+            mapped.put("idIncidente", String.valueOf(alerta.getIdIncidente()));
             mapped.put("tipoDeIncidente", alerta.getTipoDeIncidente());
             LocalDateTime fecha = alerta.getFechaDeEmision();
             String formatted = fecha.getDayOfMonth() + "/" + fecha.getMonthValue() + "/" + fecha.getYear();
@@ -213,6 +222,16 @@ public class HeladerasController extends ContribucionController {
         }).toList());
 
         context.render("views/heladeras/alertas.mustache", model);
+    }
+
+    public static void getAlerta(@NotNull Context context) throws Exception {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
+        int idincidente = Integer.parseInt(context.pathParam("idAlerta"));
+        Incidente incidente = RepoIncidente.getInstancia().obtenerIncidentePorId(idincidente);
+
+        model.put("incidente", incidente);
+        context.render("/views/heladeras/detalleFalla.mustache", model);
+        //context.json(model);
     }
 
     public static void postSuscripcionDesperfectos(@NotNull Context context) throws Exception {

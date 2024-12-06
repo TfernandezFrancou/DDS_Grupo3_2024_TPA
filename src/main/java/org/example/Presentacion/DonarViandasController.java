@@ -2,6 +2,7 @@ package org.example.Presentacion;
 
 import io.javalin.http.Context;
 
+import org.example.autenticacion.SessionManager;
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Entrega;
@@ -23,8 +24,8 @@ import java.util.Optional;
 public class DonarViandasController extends ContribucionController {
 
     public static void postDonarVianda(@NotNull Context context) throws MessagingException {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
-        Map<String, Object> model = new HashMap<>();
         model.put("heladeras", heladeras);
 
         Colaborador colaborador = obtenerRolColaboradorActual(context);
@@ -39,8 +40,14 @@ public class DonarViandasController extends ContribucionController {
 
         Vianda vianda = new Vianda();
         vianda.setDescripcion(tipoComida);
-        vianda.setCalorias(Integer.parseInt(calorias));
-        vianda.setPeso(Float.parseFloat(peso));
+        if(!calorias.equals("")){
+            vianda.setCalorias(Integer.parseInt(calorias));
+        }
+
+        if(!peso.equals("")){
+            vianda.setPeso(Float.parseFloat(peso));
+        }
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         vianda.setFechaCaducidad(LocalDateTime.parse(fechaCaducidad+" 00:00",formatter));
         vianda.setFechaDonacion(LocalDateTime.now());
@@ -71,6 +78,15 @@ public class DonarViandasController extends ContribucionController {
             donacionDeViandas.setCantidadDeViandas(1);
             donacionDeViandas.setColaborador(colaborador);
 
+            try{
+                verificarPuedeHacerContribucion(donacionDeViandas,context);
+            } catch (Exception e){
+                e.printStackTrace();
+                model.put("error", e.getMessage());
+                context.render("/views/colaboraciones/donar-viandas.mustache", model);
+            }
+
+
             // TODO: esto no deberia ir en ejecutarContribucion junto con lo otro ?
             if (heladera.getCapacidadEnViandas() - heladera.getViandasEnHeladera() < donacionDeViandas.getCantidadDeViandas()) {
                 model.put("error", "La heladera esta llena");
@@ -92,8 +108,8 @@ public class DonarViandasController extends ContribucionController {
     }
 
     public static void getDonarVianda(@NotNull Context context) {
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
         List<Heladera> heladeras = RepoHeladeras.getInstancia().obtenerTodas();
-        Map<String, Object> model = new HashMap<>();
         model.put("heladeras", heladeras);
         context.render("/views/colaboraciones/donar-viandas.mustache", model);
     }
