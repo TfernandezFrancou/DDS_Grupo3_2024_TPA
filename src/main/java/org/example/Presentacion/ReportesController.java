@@ -20,7 +20,7 @@ import java.util.Map;
 public class ReportesController {
 
     public static void mostrarFallas(Context ctx) {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(ctx));
         List<ItemReporteFallasPorHeladera> fallas = RepoReportes.getInstancia().obtenerFallasPorHeladera();
 
         // Prepara el modelo con el tamaño de las fallas
@@ -36,7 +36,7 @@ public class ReportesController {
     }
 
     public static void mostrarViandasColocadas(Context ctx) {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(ctx));
         List<ItemReporteViandasColocadasPorHeladera> viandasColocadas = RepoReportes.getInstancia().obtenerViandasColocadasPorHeladera();
 
         // Prepara el modelo con el tamaño de las viandas colocadas
@@ -52,7 +52,7 @@ public class ReportesController {
     }
 
     public static void mostrarViandasDistribuidas(Context ctx) {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(ctx));
         List<ItemReporteViandasDistribuidasPorColaborador> viandasDistribuidas = RepoReportes.getInstancia().obtenerViandasDistribuidasPorColaborador();
 
         // Prepara el modelo con el tamaño de las viandas distribuidas
@@ -68,7 +68,7 @@ public class ReportesController {
     }
 
     public static void mostrarViandasRetiradas(Context ctx) {
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(ctx));
         List<ItemReporteViandasRetiradasPorHeladera> viandasRetiradas = RepoReportes.getInstancia().obtenerViandasRetiradasPorHeladera();
 
         // Prepara el modelo con el tamaño de las viandas retiradas
