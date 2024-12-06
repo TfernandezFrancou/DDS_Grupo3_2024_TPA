@@ -64,9 +64,6 @@ h1 {
 
 /* Foto */
 .foto-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: #e8e8e8;
     padding: 20px;
     border-radius: 8px;

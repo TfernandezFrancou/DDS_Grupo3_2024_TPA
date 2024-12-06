@@ -35,9 +35,13 @@ public class FallaTecnica extends Incidente {
 
     public FallaTecnica(Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) {
         super(heladera, tipoDeIncidente, fechaDeEmision);
+        //foto placeholder
+        this.foto = "https://img.freepik.com/vector-premium/refrigerador-congelador-domestico-almacenamiento-alimentos-icono-vector-estilo-arte-linea-aislar-blanco_456865-713.jpg";
     }
 
     public FallaTecnica() {
         super();
+        //foto placeholder
+        this.foto = "https://img.freepik.com/vector-premium/refrigerador-congelador-domestico-almacenamiento-alimentos-icono-vector-estilo-arte-linea-aislar-blanco_456865-713.jpg";
     }
 }

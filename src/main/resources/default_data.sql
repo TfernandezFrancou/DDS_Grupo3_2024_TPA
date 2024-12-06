@@ -57,7 +57,7 @@ VALUES ('Smith','Morty', (SELECT idPersona FROM persona p
     WHERE d.numeroDocumento = '43244597'));
 
 INSERT INTO incidente (discriminator, fechaDeEmision, solucionado, tipoDeIncidente, descripcion, foto, colaborador_idPersona, heladera_idHeladera )
-VALUES ('FallaTecnica', '2024-10-22 17:47:10', 0, 'Falla Técnica', 'Termostato de heladera no anda hay que cambiarlo','D:\hola\ \fotos\me.jpg',
+VALUES ('FallaTecnica', '2024-10-22 17:47:10', 0, 'Falla Técnica', 'Termostato de heladera no anda hay que cambiarlo','https://img.freepik.com/vector-premium/refrigerador-congelador-domestico-almacenamiento-alimentos-icono-vector-estilo-arte-linea-aislar-blanco_456865-713.jpg',
 (SELECT p.idPersona FROM persona p JOIN personahumana ph ON ph.id_persona=p.idPersona WHERE ph.nombre = 'Jerry' and ph.apellido='Smith'),
 (SELECT idHeladera FROM heladera WHERE nombre = 'MedranoUTN' and fechaInicioFuncionamiento = '2022-01-10'));
 
