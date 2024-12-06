@@ -1,9 +1,9 @@
 package org.example.validadores;
 
-import java.io.IOException;
+import org.example.excepciones.ImagenURLException;
+
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 public class VerificadorImagenURL {
@@ -20,9 +20,9 @@ public class VerificadorImagenURL {
         return instancia;
     }
 
-    public void verifyImagen(String imagenURL){//llevarlo a una clase verify
+    public void verifyImagen(String imagenURL) throws ImagenURLException {//llevarlo a una clase verify
         if(imagenURL!=null && !imagenURL.equals("") && !this.validarImagen(imagenURL)){
-            throw new RuntimeException("La url de la imagen ingresada no es válida o no existe");
+            throw new ImagenURLException("La url de la imagen ingresada no es válida o no existe");
         }
     }
 

@@ -7,12 +7,13 @@ import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.SensorDeTemperatura;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
+import org.example.excepciones.EmailNoRegistradoException;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.personas.contacto.Mensaje;
 import org.example.personas.roles.Colaborador;
 import org.example.repositorios.*;
-import org.example.subscripcionesHeladeras.*;
+import org.example.subscripciones_heladeras.*;
 import org.example.tarjetas.Apertura;
 import org.example.tarjetas.Tarjeta;
 import org.example.tarjetas.TarjetaColaborador;
@@ -28,7 +29,6 @@ import javax.mail.MessagingException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -68,7 +68,7 @@ public class SubscripcionTest {
     }
 
     @Test
-    void subscripcionAIncidentes() throws MessagingException {
+    void subscripcionAIncidentes() throws MessagingException, EmailNoRegistradoException {
         SensorDeTemperatura sensorDeTemperatura = new SensorDeTemperatura();
         sensorDeTemperatura.setHeladera(heladera);
 

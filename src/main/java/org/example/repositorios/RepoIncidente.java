@@ -4,16 +4,14 @@ import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.incidentes.Alerta;
 import org.example.incidentes.FallaTecnica;
 import org.example.incidentes.Incidente;
-import org.example.reportes.itemsReportes.ItemReporte;
-import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
+import org.example.reportes.items_reportes.ItemReporte;
+import org.example.reportes.items_reportes.ItemReporteFallasPorHeladera;
 import org.example.utils.BDUtils;
-import org.hibernate.Criteria;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RepoIncidente {
 
@@ -22,7 +20,7 @@ public class RepoIncidente {
 
     public static RepoIncidente getInstancia() {
         if (instancia == null) {
-            RepoIncidente.instancia = new RepoIncidente();
+            instancia = new RepoIncidente();
         }
         return instancia;
     }
@@ -33,7 +31,7 @@ public class RepoIncidente {
             BDUtils.comenzarTransaccion(em);
             List<Heladera> heladeras = em.createQuery("from Heladera where idHeladera = :idHeladera", Heladera.class)
                     .setParameter("idHeladera",fallaTecnica.getHeladera().getIdHeladera()).getResultList();
-            if(heladeras.size() > 0){
+            if(!heladeras.isEmpty()){
                 fallaTecnica.setHeladera(heladeras.get(0));
             }
             em.merge(fallaTecnica);
@@ -74,11 +72,23 @@ public class RepoIncidente {
     }
 
     public List<Incidente> obtenerTodasLasFallasTecnicas(){
-        return this.obtenerTodas().stream().filter(incidente -> incidente instanceof FallaTecnica).toList();
+        List<Incidente> incidentes = this.obtenerTodas();
+        if(incidentes == null){
+            return List.of();
+        }
+        return incidentes.stream()
+                .filter(FallaTecnica.class::isInstance)
+                .toList();
     }
 
     public List<Incidente> obtenerTodasLasAlertas(){
-        return this.obtenerTodas().stream().filter(incidente -> incidente instanceof Alerta).toList();
+        List<Incidente> incidentes = this.obtenerTodas();
+        if(incidentes == null){
+            return List.of();
+        }
+        return incidentes.stream()
+                .filter(Alerta.class::isInstance)
+                .toList();
     }
 
     public List<Incidente> buscarPorHeladera(Integer idHeladera) {
@@ -106,7 +116,7 @@ public class RepoIncidente {
                         ) || (falla.getFechaDeEmision().equals(inicioSemanaActual) || falla.getFechaDeEmision().equals(finSemanaActual)))
                 )
                 .map(FallaTecnica.class::cast)           // Hago el cast a la clase FallaTecnica
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<Heladera> obtenerHeladerasConFallasTecnicasEnLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual){

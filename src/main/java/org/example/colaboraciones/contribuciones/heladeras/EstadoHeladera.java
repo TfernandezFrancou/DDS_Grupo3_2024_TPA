@@ -1,12 +1,12 @@
 package org.example.colaboraciones.contribuciones.heladeras;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -39,11 +39,7 @@ public class EstadoHeladera {
     public int mesesActivos() {
         int fechaInicioSegundos = (int) fechaHoraInicio.toEpochSecond(ZoneOffset.UTC);
         int fechaFinSegundos;
-        if (this.fechaHoraFin == null) {
-            fechaFinSegundos = (int) LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-        } else {
-            fechaFinSegundos = (int) this.fechaHoraFin.toEpochSecond(ZoneOffset.UTC);
-        }
+        fechaFinSegundos = (int) Objects.requireNonNullElseGet(this.fechaHoraFin, LocalDateTime::now).toEpochSecond(ZoneOffset.UTC);
         int segundos = fechaFinSegundos - fechaInicioSegundos;
         int segundosEnUnMes = 60 * 60 * 24 * 30;
         return segundos / segundosEnUnMes;

@@ -15,6 +15,8 @@ import org.example.repositorios.RepoApertura;
 import org.example.tarjetas.Apertura;
 import org.example.tarjetas.TipoDeApertura;
 import org.example.validadores.VerificadorAperturaHeladera;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.mail.MessagingException;
 import javax.persistence.*;
@@ -69,10 +71,8 @@ public class DistribucionDeViandas extends Contribucion {
     @Override
     public void ejecutarContribucion() throws Exception {
         super.ejecutarContribucion();
-
         this.ejecutarAperturaHeladera(origen, List.of(), viandas);
         this.ejecutarAperturaHeladera(destino, viandas, List.of());
-
     }
 
     private void ejecutarAperturaHeladera(Heladera heladera, List<Vianda> viandasIntroducidas, List<Vianda> viandasSacadas) throws SolicitudInexistente, LimiteDeTiempoSuperado, MessagingException {
@@ -95,12 +95,6 @@ public class DistribucionDeViandas extends Contribucion {
         }else {
             throw new SolicitudInexistente(Configuracion.obtenerProperties("mensaje.apertura-heladera.solicitud-heladera-inexistente"));
         }
-    }
-    public void agregarVianda(Vianda vianda){
-        this.viandas.add(vianda);
-    }
-    public void quitarVianda(Vianda vianda){
-        this.viandas.remove(vianda);
     }
 
     @Override

@@ -3,9 +3,9 @@ package org.example.repositorios;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.contribuciones.*;
 import org.example.utils.BDUtils;
+import org.hibernate.Hibernate;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RepoContribucion {
@@ -14,7 +14,7 @@ public class RepoContribucion {
 
     public static RepoContribucion getInstancia() {
         if (instancia == null) {
-            RepoContribucion.instancia = new RepoContribucion();
+            instancia = new RepoContribucion();
         }
         return instancia;
     }
@@ -98,25 +98,21 @@ public class RepoContribucion {
                     .getResultList();
             //lazy initializations
             result.forEach(contribucion -> {
-                contribucion.getTiposDePersona().size();
-                if(contribucion instanceof HacerseCargoDeUnaHeladera){
-                    HacerseCargoDeUnaHeladera c = (HacerseCargoDeUnaHeladera) contribucion;
-                    c.getHeladerasColocadas().forEach(h-> {
-                        h.getEstadoHeladeraActual().getEstaActiva();
-                        h.getHistorialEstadoHeladera().size();
-                        h.getHistorialMovimientos().size();
-                        h.getColaboradoresAutorizados().size();
+                Hibernate.initialize(contribucion.getTiposDePersona());
+                if(contribucion instanceof HacerseCargoDeUnaHeladera hacerseCargoDeUnaHeladera){
+                    hacerseCargoDeUnaHeladera.getHeladerasColocadas().forEach(h-> {
+                        Hibernate.initialize(h.getEstadoHeladeraActual());
+                        Hibernate.initialize(h.getHistorialEstadoHeladera());
+                        Hibernate.initialize(h.getHistorialMovimientos());
+                        Hibernate.initialize(h.getColaboradoresAutorizados());
                     });
-                } else if(contribucion instanceof RegistrarPersonasEnSituacionVulnerable){
-                    RegistrarPersonasEnSituacionVulnerable c = (RegistrarPersonasEnSituacionVulnerable) contribucion;
-                    c.getTarjetasAEntregar().size();
-                    c.getPersonasRegistradas().size();
-                }else if(contribucion instanceof DonacionDeViandas){
-                    DonacionDeViandas c = (DonacionDeViandas) contribucion;
-                    c.getViandas().size();
-                } else if(contribucion instanceof OfrecerProductos){
-                    OfrecerProductos c = (OfrecerProductos) contribucion;
-                    c.getOfertas().size();
+                } else if(contribucion instanceof RegistrarPersonasEnSituacionVulnerable registrarPersonasEnSituacionVulnerable){
+                    Hibernate.initialize(registrarPersonasEnSituacionVulnerable.getTarjetasAEntregar());
+                    Hibernate.initialize(registrarPersonasEnSituacionVulnerable.getPersonasRegistradas());
+                }else if(contribucion instanceof DonacionDeViandas donacionDeViandas){
+                    Hibernate.initialize(donacionDeViandas.getViandas());
+                } else if(contribucion instanceof OfrecerProductos ofrecerProductos){
+                    Hibernate.initialize(ofrecerProductos.getOfertas());
                 }
             });
         }catch (Exception e){

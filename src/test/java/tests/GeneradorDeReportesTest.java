@@ -3,14 +3,13 @@ package tests;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.incidentes.FallaTecnica;
-import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
 import org.example.reportes.GeneradorDeReportes;
 import org.example.reportes.ReportesDeLaSemana;
-import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
-import org.example.reportes.itemsReportes.ItemReporteViandasColocadasPorHeladera;
-import org.example.reportes.itemsReportes.ItemReporteViandasDistribuidasPorColaborador;
-import org.example.reportes.itemsReportes.ItemReporteViandasRetiradasPorHeladera;
+import org.example.reportes.items_reportes.ItemReporteFallasPorHeladera;
+import org.example.reportes.items_reportes.ItemReporteViandasColocadasPorHeladera;
+import org.example.reportes.items_reportes.ItemReporteViandasDistribuidasPorColaborador;
+import org.example.reportes.items_reportes.ItemReporteViandasRetiradasPorHeladera;
 import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoPersona;
@@ -118,7 +117,7 @@ public class GeneradorDeReportesTest {
     }
 
     @Test
-    public void testGenerarReportesSemanalmente() throws InterruptedException {
+    void testGenerarReportesSemanalmente() throws InterruptedException {
         GeneradorDeReportes generadorDeReportesSpy = Mockito.spy(new GeneradorDeReportes());
 
         // Llamar al método que inicia el scheduler

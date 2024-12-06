@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -50,10 +49,6 @@ public class DonacionDeDinero extends Contribucion {
         this.montoPagado = cantidad;
     }
 
-    @Override
-    public void ejecutarContribucion() throws Exception{
-        super.ejecutarContribucion();
-    }
 
     @Override
     public float getCoeficientePuntaje() {

@@ -4,8 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.Uso;
+import org.example.excepciones.LimiteDeTiempoSuperado;
+import org.example.excepciones.LimiteDeUsosDiariosSuperados;
 import org.example.personas.roles.Rol;
-import org.example.repositorios.RepoTarjetas;
 
 import javax.persistence.*;
 import java.util.List;
@@ -24,7 +25,7 @@ public abstract class Tarjeta {
     @JoinColumn(name = "idTarjeta")
     private List<Uso> usos;
 
-    public abstract void usar(Rol duenio, Heladera heladera) throws Exception;
+    public abstract void usar(Rol duenio, Heladera heladera) throws LimiteDeTiempoSuperado, LimiteDeUsosDiariosSuperados;
 
     @PrePersist
     public void prePersist() {//genera un id string nuevo cuando se guarda en la db

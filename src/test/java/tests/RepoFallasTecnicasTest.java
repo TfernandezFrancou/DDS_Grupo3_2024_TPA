@@ -10,8 +10,8 @@ import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.personas.documentos.Documento;
 import org.example.personas.documentos.TipoDocumento;
 import org.example.recomendacion.Zona;
-import org.example.reportes.itemsReportes.ItemReporte;
-import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
+import org.example.reportes.items_reportes.ItemReporte;
+import org.example.reportes.items_reportes.ItemReporteFallasPorHeladera;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoIncidente;
 import org.example.repositorios.RepoPersona;
@@ -25,8 +25,6 @@ import org.mockito.MockitoAnnotations;
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.mockito.Mockito.when;
 
 public class RepoFallasTecnicasTest {
 

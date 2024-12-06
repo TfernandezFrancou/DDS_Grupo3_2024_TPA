@@ -1,10 +1,10 @@
 package org.example.repositorios;
 
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
+import org.example.excepciones.OfertaException;
 import org.example.utils.BDUtils;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.NoResultException;
 
@@ -22,7 +22,7 @@ public class RepoOfertas {
         return instancia;
     }
 
-    public void agregarOferta(Oferta oferta) {
+    public void agregarOferta(Oferta oferta) throws OfertaException {
         EntityManager em = BDUtils.getEntityManager();
         try {
             BDUtils.comenzarTransaccion(em);
@@ -31,13 +31,13 @@ public class RepoOfertas {
         } catch (Exception e) {
             e.printStackTrace();
             BDUtils.rollback(em);
-            throw new RuntimeException("Error al agregar la oferta: " + e.getMessage(), e);
+            throw new OfertaException("Error al agregar la oferta: " + e.getMessage());
         } finally {
             em.close();
         }
     }
 
-    public void agregarTodas(List<Oferta> ofertas) {
+    public void agregarTodas(List<Oferta> ofertas) throws OfertaException {
         EntityManager em = BDUtils.getEntityManager();
         try {
             BDUtils.comenzarTransaccion(em);
@@ -48,13 +48,13 @@ public class RepoOfertas {
         } catch (Exception e) {
             e.printStackTrace();
             BDUtils.rollback(em);
-            throw new RuntimeException("Error al agregar las ofertas: " + e.getMessage(), e);
+            throw new OfertaException("Error al agregar las ofertas: " + e.getMessage());
         } finally {
             em.close();
         }
     }
 
-    public void eliminarOferta(Oferta oferta) {
+    public void eliminarOferta(Oferta oferta) throws OfertaException {
         EntityManager em = BDUtils.getEntityManager();
         try {
             BDUtils.comenzarTransaccion(em);
@@ -66,7 +66,7 @@ public class RepoOfertas {
         } catch (Exception e) {
             e.printStackTrace();
             BDUtils.rollback(em);
-            throw new RuntimeException("Error al eliminar la oferta: " + e.getMessage(), e);
+            throw new OfertaException("Error al eliminar la oferta: " + e.getMessage());
         } finally {
             em.close();
         }
@@ -94,7 +94,7 @@ public class RepoOfertas {
         }
     }
 
-    public void limpiar() {
+    public void limpiar() throws OfertaException {
         EntityManager em = BDUtils.getEntityManager();
         try {
             BDUtils.comenzarTransaccion(em);
@@ -103,7 +103,7 @@ public class RepoOfertas {
         } catch (Exception e) {
             e.printStackTrace();
             BDUtils.rollback(em);
-            throw new RuntimeException("Error al limpiar el repositorio: " + e.getMessage(), e);
+            throw new OfertaException("Error al limpiar el repositorio: " + e.getMessage());
         } finally {
             em.close();
         }

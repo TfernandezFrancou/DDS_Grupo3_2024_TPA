@@ -6,7 +6,6 @@ import org.example.colaboraciones.contribuciones.*;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.excepciones.PersonaInexistenteException;
-import org.example.incidentes.FallaTecnica;
 import org.example.personas.Persona;
 import org.example.personas.PersonaHumana;
 import org.example.personas.PersonaJuridica;
@@ -15,17 +14,17 @@ import org.example.personas.roles.PersonaEnSituacionVulnerable;
 import org.example.personas.roles.Rol;
 import org.example.personas.roles.Tecnico;
 import org.example.recomendacion.Zona;
-import org.example.reportes.itemsReportes.ItemReporte;
-import org.example.reportes.itemsReportes.ItemReporteViandasDistribuidasPorColaborador;
+import org.example.reportes.items_reportes.ItemReporte;
+import org.example.reportes.items_reportes.ItemReporteViandasDistribuidasPorColaborador;
 import org.example.tarjetas.TarjetaHeladera;
 import org.example.utils.BDUtils;
+import org.hibernate.Hibernate;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class RepoPersona {
 
@@ -33,10 +32,12 @@ public class RepoPersona {
 
     public static RepoPersona getInstancia() {
         if (instancia == null) {
-            RepoPersona.instancia = new RepoPersona();
+            instancia = new RepoPersona();
         }
         return instancia;
     }
+
+    private static final String FIELD_ID_ROL="idRol";
 
     public void agregarTodas(List<Persona> personas) {
         EntityManager em = BDUtils.getEntityManager();
@@ -151,12 +152,11 @@ public class RepoPersona {
             if(persona == null) {
                 throw new PersonaInexistenteException("No existe la persona con id " + idPersona);
             }
-            persona.getMediosDeContacto().size();
-            persona.getContribucionesQuePuedeHacer().size();
-            if(persona.getRol() instanceof Colaborador){
-                Colaborador rol = (Colaborador) persona.getRol();
-                rol.getOfertasCanjeadas().size();
-                rol.getFormasContribucion().size();
+            Hibernate.initialize(persona.getMediosDeContacto());
+            Hibernate.initialize( persona.getContribucionesQuePuedeHacer());
+            if(persona.getRol() instanceof Colaborador rol){
+                Hibernate.initialize(rol.getOfertasCanjeadas());
+                Hibernate.initialize(rol.getFormasContribucion());
             }
         } catch ( Exception e){
             e.printStackTrace();
@@ -183,8 +183,8 @@ public class RepoPersona {
                 throw new PersonaInexistenteException("No existe la persona con nombre " + nombreYApellido);
             }
             //lazy initializations
-            persona.getMediosDeContacto().size();
-            persona.getContribucionesQuePuedeHacer().size();
+            Hibernate.initialize(persona.getMediosDeContacto());
+            Hibernate.initialize(persona.getContribucionesQuePuedeHacer());
         } catch (Exception e){
             e.printStackTrace();
             BDUtils.rollback(em);
@@ -203,36 +203,35 @@ public class RepoPersona {
                         .getResultList();
 
                 personas.forEach(persona -> {
-                    ((Colaborador) persona.getRol()).getOfertasCanjeadas().size();
-                    ((Colaborador) persona.getRol()).getFormasContribucion().size();
+                    Hibernate.initialize(((Colaborador) persona.getRol()).getOfertasCanjeadas());
+                    Hibernate.initialize(((Colaborador) persona.getRol()).getFormasContribucion());
                     List<Contribucion> contribuciones = ((Colaborador) persona.getRol()).getFormasContribucion();
                     contribuciones.forEach(contribucion -> {
-                        if(contribucion instanceof DonacionDeViandas){
-                            DonacionDeViandas c = (DonacionDeViandas) contribucion;
-                            c.getViandas().size();
+                        if(contribucion instanceof DonacionDeViandas donacionDeViandas){
+                            Hibernate.initialize(donacionDeViandas.getViandas());
                         }
                     });
                 });
             } else if(rol.equals(Tecnico.class)){
                 personas=   em.createQuery("SELECT p FROM Persona p JOIN Tecnico t ON p.rol.idrol=t.idrol", Persona.class)
                         .getResultList();
-                personas.forEach(persona -> {
-                    ((Tecnico) persona.getRol()).getAreasDeCobertura().size();
-                });
+                personas.forEach(persona ->
+                        Hibernate.initialize(((Tecnico) persona.getRol()).getAreasDeCobertura())
+                );
 
             }else if(rol.equals(PersonaEnSituacionVulnerable.class)){
                 personas=   em.createQuery("SELECT p FROM Persona p JOIN PersonaEnSituacionVulnerable psv ON p.rol.idrol=psv.idrol", Persona.class)
                         .getResultList();
-                personas.forEach(persona -> {
-                    ((PersonaEnSituacionVulnerable) persona.getRol()).getTarjetaHeladera().getUsos().size();
-                });
+                personas.forEach(persona ->
+                        Hibernate.initialize(((PersonaEnSituacionVulnerable) persona.getRol()).getTarjetaHeladera().getUsos())
+                );
             }
 
             //lazy initializations
             if(personas != null){
                 personas.forEach(p -> {
-                    p.getContribucionesQuePuedeHacer().size();
-                    p.getMediosDeContacto().size();
+                    Hibernate.initialize(p.getContribucionesQuePuedeHacer());
+                    Hibernate.initialize(p.getMediosDeContacto());
                 });
             }
         }catch (Exception e){
@@ -249,13 +248,13 @@ public class RepoPersona {
         Persona persona = null;
         try{
             persona = em.createQuery("SELECT p FROM Persona p WHERE p.rol.idrol=:idRol", Persona.class)
-                    .setParameter("idRol", rol.getIdrol())
+                    .setParameter(FIELD_ID_ROL, rol.getIdrol())
                     .getSingleResult();
             if(persona == null){
                 throw new PersonaInexistenteException("No existe la persona que tiene el rol con id="+rol.getIdrol());
             }
-            persona.getMediosDeContacto().size();
-            persona.getContribucionesQuePuedeHacer().size();
+            Hibernate.initialize(persona.getMediosDeContacto());
+            Hibernate.initialize(persona.getContribucionesQuePuedeHacer());
         } catch (Exception e){
             e.printStackTrace();
             BDUtils.rollback(em);
@@ -266,13 +265,12 @@ public class RepoPersona {
     }
 
     public Colaborador getRolColaboradorById(int idRol) {
-        System.out.println("buscando id rol: "+ idRol);
         EntityManager em = BDUtils.getEntityManager();
         Colaborador colaborador = null;
         try{
             BDUtils.comenzarTransaccion(em);
             colaborador = em.createQuery("SELECT c FROM Colaborador c WHERE c.idrol=:idRol", Colaborador.class)
-                    .setParameter("idRol", idRol)
+                    .setParameter(FIELD_ID_ROL, idRol)
                     .getSingleResult();
             BDUtils.commit(em);
             if(colaborador == null){
@@ -280,8 +278,8 @@ public class RepoPersona {
                 throw new PersonaInexistenteException("No existe el rol colaborador con id="+idRol);
             }
             //lazy initializations
-            colaborador.getFormasContribucion().size();
-            colaborador.getOfertasCanjeadas().size();
+            Hibernate.initialize(colaborador.getFormasContribucion());
+            Hibernate.initialize(colaborador.getOfertasCanjeadas());
         } catch (Exception e){
             e.printStackTrace();
             BDUtils.rollback(em);
@@ -315,27 +313,26 @@ public class RepoPersona {
                     em.createQuery("SELECT p FROM PersonaEnSituacionVulnerable p", Rol.class)
                             .getResultList();
             rolesDepersonasEnSituacionVulnerable.forEach(rol -> {
-                if(rol instanceof PersonaEnSituacionVulnerable){
-                    PersonaEnSituacionVulnerable r = (PersonaEnSituacionVulnerable) rol;
+                if(rol instanceof PersonaEnSituacionVulnerable r){
                     TarjetaHeladera tarjetaHeladera = r.getTarjetaHeladera();
                     if(tarjetaHeladera != null)
-                        tarjetaHeladera.getUsos().size();
+                        Hibernate.initialize(tarjetaHeladera.getUsos());
                 }
             });
              personasHumanas = new ArrayList<>();
             for (Rol rol:rolesDepersonasEnSituacionVulnerable) {
                 int idRol = rol.getIdrol();
-                List<Persona> persona_n=
+                List<Persona> personaN=
                         em.createQuery("SELECT p FROM Persona p WHERE p.rol.idrol=:idRol", Persona.class)
-                                .setParameter("idRol", idRol)
+                                .setParameter(FIELD_ID_ROL, idRol)
                                 .getResultList();
-                if(persona_n.size() == 1){
-                    PersonaHumana ph = em.find(PersonaHumana.class, persona_n.get(0).getIdPersona());
+                if(personaN.size() == 1){
+                    PersonaHumana ph = em.find(PersonaHumana.class, personaN.get(0).getIdPersona());
                     if(ph != null){
                         personasHumanas.add(ph);
                         //lazy initializations
-                        ph.getContribucionesQuePuedeHacer().size();
-                        ph.getMediosDeContacto().size();
+                        Hibernate.initialize(ph.getContribucionesQuePuedeHacer());
+                        Hibernate.initialize(ph.getMediosDeContacto());
                     }
                 }
             }
@@ -369,8 +366,9 @@ public class RepoPersona {
             BDUtils.comenzarTransaccion(em);
             personaActualizada = em.merge(personaUser);
             em.getTransaction().commit();
-            personaActualizada.getMediosDeContacto().size();
-            personaActualizada.getContribucionesQuePuedeHacer().size();
+
+            Hibernate.initialize(personaActualizada.getMediosDeContacto());
+            Hibernate.initialize(personaActualizada.getContribucionesQuePuedeHacer());
         } catch (Exception e) {
             e.printStackTrace();
             BDUtils.rollback(em);

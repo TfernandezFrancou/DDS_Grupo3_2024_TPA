@@ -1,7 +1,6 @@
 package org.example.colaboraciones.contribuciones;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
@@ -56,7 +55,7 @@ public class DonacionDeViandas extends Contribucion {
     }
 
     @Override
-    public void ejecutarContribucion() throws Exception{
+    public void ejecutarContribucion() throws Exception {
         super.ejecutarContribucion();
 
         if(VerificadorAperturaHeladera.getInstancia().puedeAbrirHeladera(heladera, colaborador)){

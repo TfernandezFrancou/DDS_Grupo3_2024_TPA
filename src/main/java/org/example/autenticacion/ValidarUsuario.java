@@ -1,15 +1,11 @@
 package org.example.autenticacion;
 
-
-import org.example.config.Configuracion;
-import org.example.excepciones.UserException;
 import org.example.repositorios.RepoUsuario;
 
 public class ValidarUsuario {
-  private static ValidarUsuario instancia;
+  private static ValidarUsuario instancia = null;
 
-  private ValidarUsuario() {
-  }
+  private ValidarUsuario() {}
 
   public static ValidarUsuario getInstancia() {
     if (instancia == null) {

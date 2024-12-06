@@ -20,7 +20,7 @@ public abstract class Rol {
     @Column(columnDefinition = "INT")
     private boolean estaActivo;
 
-    public Rol(){
+    protected Rol(){
         this.estaActivo = true;
     }
 

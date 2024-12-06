@@ -1,6 +1,7 @@
 package org.example.personas;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.personas.contacto.MedioDeContacto;
@@ -18,12 +19,12 @@ import java.util.Arrays;
 @Setter
 @Entity
 @PrimaryKeyJoinColumn(name = "id_persona")
+@NoArgsConstructor
 public class PersonaHumana extends Persona {
     private String nombre;
     private String apellido;
     private LocalDate fechaNacimiento;
 
-    public PersonaHumana() {}
 
     public PersonaHumana(String nombre, String apellido, MedioDeContacto medioDeContacto, Documento documento, Rol rol) {
         this.nombre = nombre;

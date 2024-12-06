@@ -1,13 +1,12 @@
 package org.example.repositorios;
 
-import com.twilio.rest.serverless.v1.service.Build;
 import org.example.tarjetas.Tarjeta;
 import org.example.tarjetas.TarjetaColaborador;
 import org.example.tarjetas.TarjetaHeladera;
 import org.example.utils.BDUtils;
+import org.hibernate.Hibernate;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RepoTarjetas {
@@ -17,7 +16,7 @@ public class RepoTarjetas {
 
     public static RepoTarjetas getInstancia() {
         if (instancia == null) {
-            RepoTarjetas.instancia = new RepoTarjetas();
+            instancia = new RepoTarjetas();
         }
         return instancia;
     }
@@ -89,7 +88,7 @@ public class RepoTarjetas {
         try{
             tarjetas = em.createQuery("SELECT t FROM Tarjeta t", Tarjeta.class).getResultList();
         //lazy initializations
-        tarjetas.forEach(t -> {t.getUsos().size();});
+        tarjetas.forEach(t -> Hibernate.initialize(t.getUsos().size()));
         } finally {
             em.close();
         }
@@ -102,7 +101,7 @@ public class RepoTarjetas {
         try{
            tarjeta =  em.find(Tarjeta.class, id);
             //lazy initializations
-           tarjeta.getUsos().size();
+            Hibernate.initialize(tarjeta.getUsos());
         } finally {
             em.close();
         }

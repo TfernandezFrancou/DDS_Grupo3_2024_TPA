@@ -1,17 +1,15 @@
 package org.example.repositorios;
 
-import lombok.Getter;
 import org.example.personas.contacto.Mensaje;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import org.example.personas.Persona;
-
-import org.example.personas.contacto.Mensaje;
+;
 import org.example.utils.BDUtils;
 
 import javax.persistence.EntityManager;
-import java.util.List;
+
 
 public class RepoMensajes {
 

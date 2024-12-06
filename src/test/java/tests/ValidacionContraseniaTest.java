@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
 
-public class ValidacionContraseniaTest {
+ class ValidacionContraseniaTest {
 
     private final String contraseniaCorta = "1234";
     private final String contraseniaLarga = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
@@ -27,21 +27,21 @@ public class ValidacionContraseniaTest {
     private final FormatoContrasenia formatoContrasenia = new FormatoContrasenia();
 
     @Test //Verificando que las contraseñas cortas lancen una excepcion
-    public void testClaveMuyCorta()
+    void testClaveMuyCorta()
     {
         Assertions.assertTrue(longitudMinima.condition(contraseniaCorta));
         Assertions.assertFalse(longitudMaxima.condition(contraseniaCorta));
     }
 
     @Test
-    public void testClaveMuyLarga()
+    void testClaveMuyLarga()
     {
         Assertions.assertFalse(longitudMinima.condition(contraseniaLarga));
         Assertions.assertTrue(longitudMaxima.condition(contraseniaLarga));
     }
 
     @Test
-    public void testContraseniaEsValida(){
+    void testContraseniaEsValida(){
 
         Assertions.assertDoesNotThrow(() -> {
             validador.validarContrasenia(contraseniaValida);
@@ -49,58 +49,58 @@ public class ValidacionContraseniaTest {
     }
 
     @Test
-    public void testContraseniaNoEsValida(){
+    void testContraseniaNoEsValida(){
         Assertions.assertThrows(PasswordException.class,() -> {
             validador.validarContrasenia(contraseniaCorta);
         });
     }
 
     @Test
-    public void testClaveConRepeticiones()
+     void testClaveConRepeticiones()
     {
         Assertions.assertTrue(repeticiones.condition(contraseniaConRepes));
     } 
 
     @Test
-    public void testClaveSinRepeticionesException()
+     void testClaveSinRepeticionesException()
     {
         Assertions.assertFalse(repeticiones.condition(contraseniaSinRepes));
     }
 
     @Test
-    public void testClaveDebeTenerAlMenosUnCaracEspecial()
+     void testClaveDebeTenerAlMenosUnCaracEspecial()
     {
         Assertions.assertFalse(formatoContrasenia.condition(contraseniaConEspecial));
     }
 
     @Test
-    public void testNoTieneCaracEspecial()
+     void testNoTieneCaracEspecial()
     {
         Assertions.assertTrue(formatoContrasenia.condition(contraseniaSinEspecial));
     }
 
 
     @Test
-    public void testDebeTenerAlMenosUnDigito()
+     void testDebeTenerAlMenosUnDigito()
     {
         Assertions.assertFalse(formatoContrasenia.condition(contraseniaValida));
     }
 
     @Test
-    public void testNoTieneDigito()
+     void testNoTieneDigito()
     {
         Assertions.assertTrue(formatoContrasenia.condition(contraseniaSinDigito));
     }
 
     @Test
-    public void testContieneUnEspacio()
+     void testContieneUnEspacio()
     {
         Assertions.assertTrue(formatoContrasenia.condition(contraseniaConEspacio));
     }
 
 
     @Test
-    public void estaEnTopPeores()
+     void estaEnTopPeores()
     {
         Assertions.assertTrue(topPeoresContrasenia.condition(contraseniaComun));
     }

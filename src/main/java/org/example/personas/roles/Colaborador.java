@@ -7,6 +7,7 @@ import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.config.Configuracion;
+import org.example.excepciones.EmailNoRegistradoException;
 import org.example.excepciones.NoRegistroDireccionException;
 import org.example.incidentes.FallaTecnica;
 import org.example.personas.Persona;
@@ -20,6 +21,8 @@ import org.example.excepciones.PuntosInsuficienteParaCanjearOferta;
 import org.example.colaboraciones.Contribucion;
 import org.example.repositorios.RepoContribucion;
 import org.example.tarjetas.TipoDeApertura;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import javax.mail.MessagingException;
@@ -29,7 +32,6 @@ import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -48,6 +50,9 @@ public class Colaborador extends Rol {
     @OneToOne
     @JoinColumn(name="id_tarjeta_colaborador")
     private TarjetaColaborador tarjetaColaborador;
+
+    @Transient
+    private static final Logger log = LoggerFactory.getLogger(Colaborador.class);
 
     public Colaborador(){
         this.formasContribucion = new ArrayList<>();
@@ -70,12 +75,12 @@ public class Colaborador extends Rol {
         List<Contribucion> contribuciones = RepoContribucion.getInstancia().obtenerContribucionesPorPersona(this.getPersona().getIdPersona());
 
         for (Contribucion contribucion: contribuciones) {
-            System.out.println("calculando contribucion " + contribucion);
-            System.out.println("puntaje:" + contribucion.obtenerPuntaje());
+            log.info("calculando contribucion {}", contribucion);
+            log.info("puntaje: {}", contribucion.obtenerPuntaje());
             this.puntuaje += contribucion.obtenerPuntaje();
         }
 
-        System.out.println("puntaje final:" + this.puntuaje);
+        log.info("puntaje final: {}", this.puntuaje);
 
         int puntosCanjeados = 0;
 
@@ -86,7 +91,7 @@ public class Colaborador extends Rol {
 
         this.puntuaje -= puntosCanjeados;
 
-        System.out.println("puntaje - ofertas canjeadas:" + this.puntuaje);
+        log.info("puntaje - ofertas canjeadas: {}", this.puntuaje);
 
         if (this.puntuaje < 0) this.puntuaje = 0;
 
@@ -134,7 +139,7 @@ public class Colaborador extends Rol {
         broker.gestionarSolicitudApertura(solicitudDeApertura, this.getPersona());
     }
     //se llama cuando un colaborador reporta una falla
-    public void reportarFallaTecnica(String descripcion, String foto, Heladera heladera, LocalDateTime fechaReportada) throws MessagingException {
+    public void reportarFallaTecnica(String descripcion, String foto, Heladera heladera, LocalDateTime fechaReportada) throws MessagingException, EmailNoRegistradoException {
         FallaTecnica fallaTecnica = new FallaTecnica(this.getPersona(),descripcion,foto,heladera,"Falla Técnica",fechaReportada);
 
         fallaTecnica.reportarIncidente();
@@ -150,10 +155,13 @@ public class Colaborador extends Rol {
                                     contribucion.getFecha().equals(finSemana.toLocalDate())
                             )
                         )
-                .map(contribucion -> ((DonacionDeViandas) contribucion).getViandas())
+                .map(contribucion -> {
+                    assert contribucion instanceof DonacionDeViandas;
+                    return ((DonacionDeViandas) contribucion).getViandas();
+                })
                .filter(Objects::nonNull) //filtro las viandas null
                .flatMap(List::stream)//junto las viandas en un stream
-               .collect(Collectors.toList()); // lo paso a list
+               .toList(); // lo paso a list
     }
 
     public Persona getPersona(){

@@ -3,34 +3,27 @@ package tests;
 import org.example.broker.Broker;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.SensorDeTemperatura;
-import org.example.colaboraciones.contribuciones.heladeras.TemperaturaHeladera;
+import org.example.excepciones.EmailNoRegistradoException;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoSensor;
-import org.junit.Assert;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.MockHandler;
 
 import javax.mail.MessagingException;
 
-import static org.mockito.ArgumentMatchers.any;
-
-public class BrokerTest {
+ class BrokerTest {
 
     private RepoSensor repoSensor;
-    private RepoHeladeras repoHeladeras;
-    private Heladera heladera;
+     private Heladera heladera;
 
     @BeforeEach
     public void setUp(){
         repoSensor = RepoSensor.getInstancia();
         repoSensor.clean();
 
-        repoHeladeras = RepoHeladeras.getInstancia();
+        RepoHeladeras repoHeladeras = RepoHeladeras.getInstancia();
         repoHeladeras.clean();
 
         heladera = new Heladera();
@@ -39,7 +32,7 @@ public class BrokerTest {
     }
 
     @Test
-    public void testMandarTemperaturasHeladerasSinSensorAsociado() throws MessagingException {
+    void testMandarTemperaturasHeladerasSinSensorAsociado() throws MessagingException, EmailNoRegistradoException {
         Broker broker = new Broker();
         int temperatura = 8;
         broker.mandarTemperaturasHeladeras(heladera, temperatura);
@@ -50,7 +43,7 @@ public class BrokerTest {
     }
 
     @Test
-    public void testMandarTemperaturasHeladerasConSensorAsociado() throws MessagingException {
+    void testMandarTemperaturasHeladerasConSensorAsociado() throws MessagingException, EmailNoRegistradoException {
         Broker broker = new Broker();
         int temperatura = 8;
 

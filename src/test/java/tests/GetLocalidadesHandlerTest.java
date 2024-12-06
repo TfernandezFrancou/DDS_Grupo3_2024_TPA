@@ -1,8 +1,8 @@
 package tests;
 
 import io.javalin.http.Context;
-import org.example.Presentacion.GetLocalidadesHandler;
-import org.example.Presentacion.dtos.LocalidadDTO;
+import org.example.presentacion.GetLocalidadesHandler;
+import org.example.presentacion.dtos.LocalidadDTO;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.Uso;
 import org.example.personas.PersonaHumana;

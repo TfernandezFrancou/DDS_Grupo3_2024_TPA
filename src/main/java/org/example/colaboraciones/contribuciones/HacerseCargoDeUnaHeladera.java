@@ -1,7 +1,6 @@
 package org.example.colaboraciones.contribuciones;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
@@ -25,7 +24,7 @@ public class HacerseCargoDeUnaHeladera extends Contribucion {
 
     @OneToMany
     @JoinColumn(name = "id_contribucion_hacerce_cargo_heladera")
-    private List<Heladera> heladerasColocadas;
+    private final List<Heladera> heladerasColocadas;
 
     public HacerseCargoDeUnaHeladera(){
         this.tiposDePersona = Set.of(TipoDePersona.JURIDICA, TipoDePersona.HUMANA);
@@ -44,10 +43,6 @@ public class HacerseCargoDeUnaHeladera extends Contribucion {
     public void ejecutarContribucion() throws Exception{
         RepoHeladeras.getInstancia().agregarTodas(heladerasColocadas);
         super.ejecutarContribucion();
-    }
-
-    public void agregarHeladera(Heladera heladera){
-        this.heladerasColocadas.add(heladera);
     }
 
     @Override

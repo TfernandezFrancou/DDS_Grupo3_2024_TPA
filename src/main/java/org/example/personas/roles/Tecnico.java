@@ -7,7 +7,6 @@ import org.example.incidentes.Incidente;
 import org.example.recomendacion.Zona;
 import org.example.repositorios.RepositorioVisitasTecnicos;
 
-import javax.mail.MessagingException;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -41,7 +40,7 @@ public class Tecnico extends Rol {
                         String fotoUrl,
                         boolean incidenteSolucionado,
                         boolean trabajoCompletado
-    ) throws MessagingException {
+    ) {
         incidente.setSolucionado(incidenteSolucionado);
 
         VisitaHeladera visitaHeladera = new VisitaHeladera(

@@ -5,13 +5,11 @@ import lombok.Setter;
 import org.example.colaboraciones.contribuciones.*;
 import org.example.migracion.TipoColaboracion;
 import org.example.personas.roles.Colaborador;
-import org.example.repositorios.RepoContribucion;
 
 import javax.persistence.*;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -41,7 +39,7 @@ public abstract class Contribucion {
 
     public abstract float getCoeficientePuntaje();
 
-    public void ejecutarContribucion() throws Exception {
+    public void ejecutarContribucion()  throws Exception {
         colaborador.agregarContribucion(this);
         colaborador.calcularPuntuaje();
     }

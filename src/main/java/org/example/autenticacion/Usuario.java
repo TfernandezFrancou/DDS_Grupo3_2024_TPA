@@ -4,22 +4,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.config.Configuracion;
-import org.example.excepciones.PasswordException;
 import org.example.personas.Persona;
 import org.example.personas.contacto.MedioDeContacto;
 import org.example.personas.contacto.Mensaje;
 import org.example.personas.documentos.Documento;
-import org.example.personas.roles.Colaborador;
 import org.example.repositorios.RepoMensajes;
-import org.example.validaciones.VerificadorContrasenia;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import javax.mail.MessagingException;
 import javax.persistence.*;
-import java.security.SecureRandom;
-import java.security.spec.KeySpec;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -39,8 +31,7 @@ public class Usuario {
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private Persona colaborador;
-    private String contrasenia;//la contraseña se debe guardar hasheada, pero bueno
-    private LocalDateTime fechaExpiracionContrasenia;
+    private String contrasenia;//la contraseña se guarda hasheada
 
     @Getter
     @Setter
@@ -52,10 +43,9 @@ public class Usuario {
     @Column(columnDefinition = "INT")
     private Boolean estanDatosCompletos;
 
-    public Usuario(String nombreDeUsuario, String contrasenia, LocalDateTime fechaExpiracionContrasenia) {
+    public Usuario(String nombreDeUsuario, String contrasenia) {
         this.nombreDeUsuario = nombreDeUsuario;
         this.contrasenia = HashGenerator.hash(contrasenia);// aca se debe hashear la contraseña para mas seguridad
-        this.fechaExpiracionContrasenia = fechaExpiracionContrasenia;
         this.estanDatosCompletos = false;
     }
 
@@ -65,24 +55,6 @@ public class Usuario {
         this.colaborador = colaborador;
         this.contrasenia = generarContrasenia();//no se hashea, se espera a que el usuario lo cambie
         this.estanDatosCompletos = false;
-    }
-
-    public void cambiarContrasenia(String nuevaContrasenia){
-        try{
-            VerificadorContrasenia.getInstancia().validarContrasenia(nuevaContrasenia);;
-            this.setContrasenia(HashGenerator.hash(nuevaContrasenia));
-            this.setFechaExpiracionContrasenia(LocalDateTime.now());
-        } catch (PasswordException pEx){
-            System.out.println(pEx.getMessage());
-        }
-    }
-
-    public String getNombreDeUsuario() {
-        return nombreDeUsuario;
-    }
-
-    public void setNombreDeUsuario(String nombreDeUsuario) {
-        this.nombreDeUsuario = nombreDeUsuario;
     }
 
     public Documento getDocumento() {
@@ -109,13 +81,6 @@ public class Usuario {
         this.contrasenia = contrasenia;
     }
 
-    public LocalDateTime getFechaExpiracionContrasenia() {
-        return fechaExpiracionContrasenia;
-    }
-
-    public void setFechaExpiracionContrasenia(LocalDateTime fechaExpiracionContrasenia) {
-        this.fechaExpiracionContrasenia = fechaExpiracionContrasenia;
-    }
 
     public void enviarCredenciales(MedioDeContacto medioDeContacto) throws MessagingException {
         //enviarCredenciales via Mail

@@ -1,6 +1,7 @@
 package tests;
 
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
+import org.example.excepciones.OfertaException;
 import org.example.repositorios.RepoOfertas;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,14 +9,14 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class RepoOfertaTest {
+class RepoOfertaTest {
     private RepoOfertas repoOfertas;
 
     private Oferta oferta1;
     private Oferta oferta2;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws OfertaException {
         repoOfertas = RepoOfertas.getInstancia();
         repoOfertas.limpiar(); // Aseguramos que el repositorio esté limpio antes de cada test
 
@@ -28,7 +29,7 @@ public class RepoOfertaTest {
     }
 
     @Test
-    public void testAgregarOferta() {
+    void testAgregarOferta() throws OfertaException {
         // Agregar una nueva oferta
         repoOfertas.agregarOferta(oferta2);
 
@@ -40,7 +41,7 @@ public class RepoOfertaTest {
     }
 
     @Test
-    public void testEliminarOferta() {
+    void testEliminarOferta() throws OfertaException {
         // Eliminar la oferta inicial
         repoOfertas.eliminarOferta(oferta1);
 
@@ -50,7 +51,7 @@ public class RepoOfertaTest {
     }
 
     @Test
-    public void testObtenerTodas() {
+    void testObtenerTodas() {
         // Verificar que la oferta inicial está presente
         List<Oferta> ofertas = repoOfertas.obtenerTodas();
         Assertions.assertEquals(1, ofertas.size(), "Debe haber una oferta en el repositorio");
@@ -58,7 +59,7 @@ public class RepoOfertaTest {
     }
 
     @Test
-    public void testBuscarPorNombre() {
+    void testBuscarPorNombre() {
         // Buscar la oferta por nombre
         Oferta ofertaBuscada = repoOfertas.buscarPorNombre("Producto 1");
 
@@ -67,15 +68,4 @@ public class RepoOfertaTest {
         Assertions.assertEquals(oferta1.getIdOferta(), ofertaBuscada.getIdOferta(), "La oferta encontrada debe coincidir con la esperada");
     }
 
-    /*@Test
-    public void testAgregarTodas() {
-        // Agregar múltiples ofertas
-        repoOfertas.agregarTodas(List.of(oferta2));
-
-        // Verificar que ambas ofertas están presentes
-        List<Oferta> ofertas = repoOfertas.obtenerTodas();
-        Assertions.assertEquals(2, ofertas.size(), "Debe haber dos ofertas en el repositorio");
-        Assertions.assertTrue(ofertas.contains(oferta1), "La oferta inicial debe estar presente");
-        Assertions.assertTrue(ofertas.contains(oferta2), "La oferta recién agregada debe estar presente");
-    } */
 }

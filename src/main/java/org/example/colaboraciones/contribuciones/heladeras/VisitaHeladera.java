@@ -1,7 +1,7 @@
 package org.example.colaboraciones.contribuciones.heladeras;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.incidentes.Incidente;
 
@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class VisitaHeladera {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +37,4 @@ public class VisitaHeladera {
         this.incidenteASolucionar = incidenteASolucionar;
     }
 
-    public VisitaHeladera() {
-
-    }
 }

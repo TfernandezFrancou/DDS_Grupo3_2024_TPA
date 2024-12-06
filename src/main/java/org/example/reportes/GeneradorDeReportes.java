@@ -1,11 +1,8 @@
 package org.example.reportes;
 
 import lombok.Getter;
-import org.example.reportes.estrategiasReporte.*;
-import org.example.reportes.itemsReportes.ItemReporte;
-import org.example.repositorios.RepoIncidente;
-import org.example.repositorios.RepoHeladeras;
-import org.example.repositorios.RepoPersona;
+import org.example.reportes.estrategias_reporte.*;
+import org.example.reportes.items_reportes.ItemReporte;
 
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
@@ -19,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class GeneradorDeReportes {
 
     private ReportesDeLaSemana reportesSemanaActual ;
-    private List<EstrategiaReporte> estrategiasGenerarReportes ;
+    private final List<EstrategiaReporte> estrategiasGenerarReportes ;
 
     public GeneradorDeReportes() {
         this.estrategiasGenerarReportes = new ArrayList<>();
@@ -56,9 +53,12 @@ public class GeneradorDeReportes {
     }
 
     public void generarReportesSemanalmente(){
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        try(ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1)){
+            // Programar para que se ejecute una vez por semana
+            scheduler.scheduleAtFixedRate(this::generarReportesDeLaSemana, 0, 7, TimeUnit.DAYS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-        // Programar para que se ejecute una vez por semana
-        scheduler.scheduleAtFixedRate(this::generarReportesDeLaSemana, 0, 7, TimeUnit.DAYS);
     }
 }

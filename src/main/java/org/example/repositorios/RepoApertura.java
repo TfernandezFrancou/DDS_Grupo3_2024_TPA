@@ -8,6 +8,7 @@ import org.example.utils.BDUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 public class RepoApertura {
 
@@ -15,7 +16,7 @@ public class RepoApertura {
 
     public static RepoApertura getInstancia() {
         if (instancia == null) {
-            RepoApertura.instancia = new RepoApertura();
+            instancia = new RepoApertura();
         }
         return instancia;
     }
@@ -108,10 +109,12 @@ public class RepoApertura {
         return result;
     }
     public Apertura buscarSolicitudDeApertura(Heladera heladera, Tarjeta tarjeta){
-        return this.obtenerSolicitudesDeAperturas().stream()
+        Optional<Apertura> aperturaResultOP = this.obtenerSolicitudesDeAperturas().stream()
                 .filter(solicitud -> solicitud.getHeladera().getIdHeladera() == (heladera.getIdHeladera())
                         && solicitud.getTarjeta().getIdTarjeta().equals(tarjeta.getIdTarjeta()))
-                .findFirst().get();
+                .findFirst();
+
+        return aperturaResultOP.orElse(null);
     }
 
     public List<Apertura> buscarSolicitudesDeAperturaDeTarjeta(Tarjeta tarjeta){

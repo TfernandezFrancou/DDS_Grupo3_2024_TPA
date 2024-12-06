@@ -3,11 +3,13 @@ package org.example.repositorios;
 import lombok.Getter;
 import org.example.reportes.ReportesDeLaSemana;
 
-import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
-import org.example.reportes.itemsReportes.ItemReporteViandasColocadasPorHeladera;
-import org.example.reportes.itemsReportes.ItemReporteViandasDistribuidasPorColaborador;
-import org.example.reportes.itemsReportes.ItemReporteViandasRetiradasPorHeladera;
+import org.example.reportes.items_reportes.ItemReporteFallasPorHeladera;
+import org.example.reportes.items_reportes.ItemReporteViandasColocadasPorHeladera;
+import org.example.reportes.items_reportes.ItemReporteViandasDistribuidasPorColaborador;
+import org.example.reportes.items_reportes.ItemReporteViandasRetiradasPorHeladera;
 import org.example.utils.BDUtils;
+import org.hibernate.Hibernate;
+
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ public class RepoReportes {
 
     public static RepoReportes getInstancia() {
         if (instancia == null) {
-            RepoReportes.instancia = new RepoReportes();
+            instancia = new RepoReportes();
         }
         return instancia;
     }
@@ -33,10 +35,10 @@ public class RepoReportes {
 
             // Forzar la inicialización de las colecciones LAZY
             for (ReportesDeLaSemana reporte : reportes) {
-                reporte.getReporteCantidadDeFallasPorHeladera().size();
-                reporte.getReporteCantidadDeViandasColocadasPorHeladera().size();
-                reporte.getReporteCantidadDeViandasRetiradasPorHeladera().size();
-                reporte.getReporteCantidadDeviandasDistribuidasPorColaborador().size();
+               Hibernate.initialize(reporte.getReporteCantidadDeFallasPorHeladera());
+                Hibernate.initialize(reporte.getReporteCantidadDeViandasColocadasPorHeladera());
+                Hibernate.initialize(reporte.getReporteCantidadDeViandasRetiradasPorHeladera());
+                Hibernate.initialize(reporte.getReporteCantidadDeviandasDistribuidasPorColaborador());
             }
         } finally {
             em.close();
@@ -105,9 +107,7 @@ public class RepoReportes {
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteFallasPorHeladera r", ItemReporteFallasPorHeladera.class).getResultList();
             //lazy initalizations
-            reportes.forEach(reporte->{
-                reporte.getFallas().size();
-            });
+            reportes.forEach(reporte-> Hibernate.initialize(reporte.getFallas()));
             } finally {
             em.close();
         }
@@ -119,9 +119,7 @@ public class RepoReportes {
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteViandasColocadasPorHeladera r", ItemReporteViandasColocadasPorHeladera.class).getResultList();
             //lazy initializations
-            reportes.forEach(reporte ->{
-                reporte.getViandasColocadas().size();
-            });
+            reportes.forEach(reporte -> Hibernate.initialize(reporte.getViandasColocadas()));
         } finally {
             em.close();
         }
@@ -133,9 +131,7 @@ public class RepoReportes {
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteViandasDistribuidasPorColaborador r", ItemReporteViandasDistribuidasPorColaborador.class).getResultList();
             //lazy initializations
-            reportes.forEach(reporte->{
-                reporte.getViandasDistribuidas().size();
-            });
+            reportes.forEach(reporte-> Hibernate.initialize(reporte.getViandasDistribuidas()));
         } finally {
             em.close();
         }
@@ -146,6 +142,8 @@ public class RepoReportes {
         List<ItemReporteViandasRetiradasPorHeladera> reportes = new ArrayList<>();
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteViandasRetiradasPorHeladera r", ItemReporteViandasRetiradasPorHeladera.class).getResultList();
+            //lazy initializations
+            reportes.forEach(r -> Hibernate.initialize(r.getViandasRetiradas()));
         } finally {
             em.close();
         }

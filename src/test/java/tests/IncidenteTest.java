@@ -2,12 +2,12 @@ package tests;
 
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.heladeras.*;
+import org.example.excepciones.EmailNoRegistradoException;
 import org.example.incidentes.Alerta;
 import org.example.incidentes.Incidente;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
-import org.example.personas.contacto.Mensaje;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.roles.Tecnico;
 import org.example.recomendacion.Zona;
@@ -15,19 +15,15 @@ import org.example.repositorios.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class IncidenteTest {
-
+class IncidenteTest {
 
     private Heladera heladeraMock;
 
@@ -74,7 +70,7 @@ public class IncidenteTest {
 
     //es lo mismo si fuera una falla tecnica ya que llaman al mismo método
     @Test
-    public void testSePuedeReportarUnaAlerta() throws MessagingException {
+    void testSePuedeReportarUnaAlerta() throws MessagingException, EmailNoRegistradoException {
         Heladera heladeraMockSpy = Mockito.spy(heladeraMock);
         Ubicacion ubicacionMockSpy = Mockito.spy(ubicacionMock);
 
@@ -106,9 +102,6 @@ public class IncidenteTest {
         //se desactiva la heladera
         Mockito.verify(heladeraMockSpy, Mockito.times(1)).desactivarHeladera();
 
-        //se avisa al tecnico mas cercano correspondiente // no hay forma de verificarlo
-        //Mockito.verify(correoElectronicoMockSpy, times(1)).notificar(any(Mensaje.class));
-
         //se guarda en el repoIncidentes
 
         List<Incidente> alertasRegistradas = RepoIncidente.getInstancia().obtenerTodasLasAlertas();
@@ -117,7 +110,7 @@ public class IncidenteTest {
     }
 
     @Test
-    public void testUnColaboradorPuedeReportarFallaTecnica() throws MessagingException {
+    void testUnColaboradorPuedeReportarFallaTecnica() throws MessagingException, EmailNoRegistradoException {
         Heladera heladeraMockSpy = Mockito.spy(heladeraMock);
         Ubicacion ubicacionMockSpy = Mockito.spy(ubicacionMock);
 
@@ -155,9 +148,6 @@ public class IncidenteTest {
         //se desactiva la heladera
         Mockito.verify(heladeraMockSpy, Mockito.times(1)).desactivarHeladera();
 
-        //se avisa al tecnico mas cercano correspondiente// no hay forma de verificarlo
-        //Mockito.verify(correoElectronicoMock, times(1)).notificar(any(Mensaje.class));
-
         //se guarda en el repoIncidentes
 
         List<Incidente> fallasTecnicas = RepoIncidente.getInstancia().obtenerTodasLasFallasTecnicas();
@@ -166,7 +156,7 @@ public class IncidenteTest {
     }
 
     @Test
-    public void testSiElSensorDetectaTemperaturaIncorrectaEmiteUnaAlerta() throws MessagingException {
+    void testSiElSensorDetectaTemperaturaIncorrectaEmiteUnaAlerta() throws MessagingException, EmailNoRegistradoException {
         //creo el tecnico mas cercano
         PersonaHumana personaHumana = new PersonaHumana();
         Tecnico rolTecnico = new Tecnico();
@@ -224,14 +214,10 @@ public class IncidenteTest {
 
         //se debe desactivar la heladera
         Assertions.assertEquals(false, heladera.getEstadoHeladeraActual().getEstaActiva());
-
-        //debe avisar al técnico mas cernano//no hay forma de verificarlo
-        //Mockito.verify(correoElectronicoMock, times(1)).notificar(any(Mensaje.class));
-
     }
 
     @Test
-    public void testSiElSensorDetectaMovimientoEmiteUnaAlerta() throws MessagingException {
+    void testSiElSensorDetectaMovimientoEmiteUnaAlerta() throws MessagingException, EmailNoRegistradoException {
         //creo el tecnico mas cercano
         PersonaHumana personaHumana = new PersonaHumana();
         Tecnico rolTecnico = new Tecnico();
@@ -286,13 +272,10 @@ public class IncidenteTest {
         //se debe desactivar la heladera
         Assertions.assertEquals(false, heladera.getEstadoHeladeraActual().getEstaActiva());
 
-        //debe avisar al técnico mas cernano // no hay forma de verificarlo
-        //Mockito.verify(correoElectronicoMock, times(1)).notificar(any(Mensaje.class));
-
     }
 
     @Test
-    public void testSiNoHayTecnicoCercanoNoSeAvisaANadie() throws MessagingException {
+     void testSiNoHayTecnicoCercanoNoSeAvisaANadie() throws MessagingException, EmailNoRegistradoException {
         Ubicacion ubicacionCoverturaTecnico = new Ubicacion(-34.609722F, -58.382592F);// Cerca de Buenos Aires
 
         Zona zonaCovertura = new Zona();
@@ -338,8 +321,6 @@ public class IncidenteTest {
 
         //emito la alerta
         sensorDeMovimiento.notificar();
-
-        //verifico que no se le aviso a nadie// no hay forma de verificarlo
-//        Mockito.verify(correoElectronicoMock, times(0)).notificar(any(Mensaje.class));
+        Assertions.assertFalse(heladera.getEstadoHeladeraActual().getEstaActiva());
     }
 }

@@ -1,9 +1,11 @@
 package org.example.incidentes;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.config.Configuracion;
+import org.example.excepciones.EmailNoRegistradoException;
 import org.example.personas.Persona;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.personas.contacto.CorreoElectronico;
@@ -21,6 +23,7 @@ import java.util.Optional;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="discriminator")
+@NoArgsConstructor
 public abstract class Incidente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,16 +37,15 @@ public abstract class Incidente {
     @Column(columnDefinition = "INT")
     private boolean solucionado;
 
-    public Incidente(Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) {
+    protected Incidente(Heladera heladera, String tipoDeIncidente, LocalDateTime fechaDeEmision) {
         this.heladera = heladera;
         this.tipoDeIncidente = tipoDeIncidente;
         this.fechaDeEmision = fechaDeEmision;
         this.solucionado = false;
     }
 
-    public Incidente() { }
 
-    public void reportarIncidente() throws MessagingException {
+    public void reportarIncidente() throws MessagingException, EmailNoRegistradoException {
         if (heladera.estaActiva()) { //si ya esta desactivada no hago nada
             heladera.desactivarHeladera();
             heladera.notificarDesperfecto();
@@ -52,7 +54,7 @@ public abstract class Incidente {
         this.avisarATecnico();
     }
 
-    private void avisarATecnico() throws MessagingException {
+    private void avisarATecnico() throws MessagingException, EmailNoRegistradoException {
         Optional<Persona> tecnicoCercanoOp = RepoPersona.getInstancia().tecnicoMasCercanoAHeladera(heladera);
 
         if(tecnicoCercanoOp.isPresent()){

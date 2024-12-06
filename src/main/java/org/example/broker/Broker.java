@@ -2,6 +2,7 @@ package org.example.broker;
 
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.SensorDeTemperatura;
+import org.example.excepciones.EmailNoRegistradoException;
 import org.example.incidentes.Alerta;
 import org.example.personas.Persona;
 import org.example.repositorios.RepoApertura;
@@ -10,7 +11,6 @@ import org.example.repositorios.RepoSensor;
 import org.example.tarjetas.Apertura;
 
 import javax.mail.MessagingException;
-import java.util.NoSuchElementException;
 
 public class Broker {
 
@@ -19,7 +19,7 @@ public class Broker {
         RepoApertura.getInstancia().agregarApertura(solicitudDeApertura);
     }
 
-    public void mandarTemperaturasHeladeras(Heladera heladera, int temperatura) throws MessagingException {
+    public void mandarTemperaturasHeladeras(Heladera heladera, int temperatura) throws MessagingException, EmailNoRegistradoException {
         RepoSensor repoSensor = RepoSensor.getInstancia();
 
         SensorDeTemperatura sensor = (SensorDeTemperatura) repoSensor.buscarSensorDeTemperaturaDeHeladera(heladera);
@@ -35,22 +35,9 @@ public class Broker {
             repoSensor.agregarSensor(sensor);
             sensor.notificar();
         }
-
-//        try { // si tiene sensor
-//            SensorDeTemperatura sensor = (SensorDeTemperatura) repoSensor.buscarSensorDeTemperaturaDeHeladera(heladera);
-//            sensor.setTemperatura(temperatura);
-//            sensor.notificar();
-//        } catch (NoSuchElementException ex){ // si no tiene sensor de temperatura
-//            SensorDeTemperatura sensor = new SensorDeTemperatura();
-//            sensor.setHeladera(heladera);
-//            sensor.setTemperatura(temperatura);
-//
-//            repoSensor.agregarSensor(sensor);
-//            sensor.notificar(); // notifico a la heladera para que actualice su estado
-//        }
     }
 
-    public void gestionarAlerta(Alerta alerta) throws MessagingException {
+    public void gestionarAlerta(Alerta alerta) throws MessagingException, EmailNoRegistradoException {
         //aviso al técnico mas cercano y desactivo a la heladera
         alerta.reportarIncidente();
 

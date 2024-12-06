@@ -1,6 +1,7 @@
 package org.example.tarjetas;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class Apertura {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +33,4 @@ public class Apertura {
         this.fechahoraCreacion = fechahoraCreacion;
         this.tipoDeApertura = tipoDeApertura;
     }
-
-    public Apertura(){}
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class VerificadorContrasenia {
     private final List<ValidacionContrasenia> validaciones = Arrays.asList(new CaracterRepetido(), new LongitudMinimaContrasenia(), new ValidacionTopPeoresContrasenia(), new FormatoContrasenia());
-    private static VerificadorContrasenia instancia;
+    private static VerificadorContrasenia instancia = null;
 
     private VerificadorContrasenia() {
     }

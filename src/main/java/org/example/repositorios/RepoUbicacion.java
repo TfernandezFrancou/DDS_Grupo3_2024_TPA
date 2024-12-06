@@ -14,7 +14,7 @@ public class RepoUbicacion {
 
     public static RepoUbicacion getInstancia() {
         if (instancia == null) {
-            RepoUbicacion.instancia = new RepoUbicacion();
+            instancia = new RepoUbicacion();
         }
         return instancia;
     }

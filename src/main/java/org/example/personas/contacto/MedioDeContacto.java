@@ -2,7 +2,6 @@ package org.example.personas.contacto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.autenticacion.Usuario;
 
 import javax.mail.MessagingException;
 import javax.persistence.*;

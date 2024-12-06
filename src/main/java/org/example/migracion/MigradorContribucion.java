@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.autenticacion.Usuario;
 import org.example.colaboraciones.Contribucion;
+import org.example.excepciones.EmailNoRegistradoException;
 import org.example.personas.Persona;
 import org.example.personas.roles.Colaborador;
 import org.example.personas.PersonaHumana;
@@ -43,13 +44,13 @@ public class MigradorContribucion {
         }
     }
 
-    public void migrarColaboradores() throws MessagingException {
+    public void migrarColaboradores() throws MessagingException, EmailNoRegistradoException {
         for (int i = 0; i < colaboradores.size(); i++) {
             this.migrarContribucion(colaboradores.get(i), contribuciones.get(i));
         }
     }
 
-    private void migrarContribucion(PersonaHumana colaborador, Contribucion contribucion) throws MessagingException {
+    private void migrarContribucion(PersonaHumana colaborador, Contribucion contribucion) throws MessagingException, EmailNoRegistradoException {
         Persona personaExistente = RepoPersona.getInstancia().buscarPorNombre(colaborador.getNombre());
         if(personaExistente==null){
             Usuario usuario = colaborador.buscarOCrearUsuario();//ya lo guarda en el repo

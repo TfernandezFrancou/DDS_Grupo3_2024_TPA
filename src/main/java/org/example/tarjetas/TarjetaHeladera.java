@@ -1,6 +1,5 @@
 package org.example.tarjetas;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
@@ -19,10 +18,10 @@ import java.util.ArrayList;
 public class TarjetaHeladera extends Tarjeta{
 
     @Transient
-    private static final int usosMinimosPorDia = 4;
+    private static final int USOS_MINIMOS_POR_DIA = 4;
 
     @Transient
-    private static final int multiplicadorPorHijos = 2;
+    private static final int MULTIPLICADOR_POR_HIJOS = 2;
 
     @Getter
     @Setter
@@ -41,13 +40,13 @@ public class TarjetaHeladera extends Tarjeta{
         this.diaActual = LocalDate.now();
     }
     public void calcularLimiteTarjeta(Integer cantMenores){
-        this.limiteDeUsuarios =  usosMinimosPorDia + multiplicadorPorHijos * cantMenores;
+        this.limiteDeUsuarios =  USOS_MINIMOS_POR_DIA + MULTIPLICADOR_POR_HIJOS * cantMenores;
     }
     @Override
     public void usar(Rol duenio, Heladera heladera) throws LimiteDeUsosDiariosSuperados { // AGREGUE HELADERA AL METODO
-        if(duenio instanceof PersonaEnSituacionVulnerable)
+        if(duenio instanceof PersonaEnSituacionVulnerable pDuenio)
         {
-            if(puedeUsarTarjeta((PersonaEnSituacionVulnerable) duenio)){
+            if(puedeUsarTarjeta(pDuenio)){
                 LocalDateTime fechaActual = LocalDateTime.now();
                 Uso nuevoUso = new Uso(fechaActual, heladera);
 

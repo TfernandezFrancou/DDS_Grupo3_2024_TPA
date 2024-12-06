@@ -1,8 +1,8 @@
 package org.example.personas;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.excepciones.ApiRequestFailedException;
 import org.example.recomendacion.IAdapter;
@@ -16,6 +16,7 @@ import java.util.List;
 @Setter
 @Entity
 @PrimaryKeyJoinColumn(name = "id_persona")
+@NoArgsConstructor
 public class PersonaJuridica extends Persona{
     private String razonSocial;
 
@@ -26,7 +27,6 @@ public class PersonaJuridica extends Persona{
     @Transient
     private IAdapter recomendadorDeUbicaciones;
 
-    public PersonaJuridica(){}
 
     public PersonaJuridica(String razonSocial) {
         this.razonSocial = razonSocial;

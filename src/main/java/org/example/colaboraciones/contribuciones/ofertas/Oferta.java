@@ -1,6 +1,7 @@
 package org.example.colaboraciones.contribuciones.ofertas;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class Oferta {
 
     @Id
@@ -20,7 +22,6 @@ public class Oferta {
     @Column(columnDefinition = "TEXT")//ya que puede ser valores muy largos que en un varchar no entra
     private String imagenURL;
 
-    public Oferta() {}
 
     public Oferta(String nombre, Integer puntosNecesarios, String imagenURL) {
         this.nombre = nombre;

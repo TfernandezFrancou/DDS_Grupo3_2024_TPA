@@ -1,49 +1,33 @@
 package org.example;
 
 import io.javalin.Javalin;
-import org.example.Presentacion.*;
+import io.javalin.plugin.bundled.CorsPluginConfig;
+import org.example.presentacion.*;
 import org.example.autenticacion.SessionManager;
-import org.example.autenticacion.Usuario;
-import org.example.colaboraciones.contribuciones.heladeras.Heladera;
-import org.example.colaboraciones.contribuciones.ofertas.Oferta;
-import org.example.incidentes.Alerta;
-import org.example.incidentes.FallaTecnica;
-import org.example.repositorios.RepoHeladeras;
-import org.example.repositorios.RepoIncidente;
-import org.example.repositorios.RepoOfertas;
 import org.example.utils.BDUtils;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 import javax.persistence.EntityManager;
 import java.io.InputStream;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 public class Application {
 
     public static void main(String[] args) {
         Javalin app = Javalin.create(javalinConfig -> {
-                    javalinConfig.plugins.enableCors(cors -> {
-                        cors.add(it -> it.anyHost());
-                    }); // para poder hacer requests de un dominio a otro
+                    javalinConfig.plugins.enableCors(
+                            cors ->
+                            cors.add(CorsPluginConfig::anyHost)); // para poder hacer requests de un dominio a otro
+
                     javalinConfig.staticFiles.add("/"); // recursos estaticos (HTML, CSS, JS, IMG)
                     javalinConfig.routing.contextPath = "";
                 })
-                .get("/hello", ctx -> ctx.result("Hello World"))
                 .start(8080);
 
-        app.exception(IllegalArgumentException.class, (e, ctx) -> {
-            ctx.status(400);
-        });
+        app.exception(IllegalArgumentException.class, (e, ctx) -> ctx.status(400));
 
         app.get("/api/localidades", new GetLocalidadesHandler());
         app.get("/alertas/{nombre}", new AlertasHandler());
@@ -101,9 +85,7 @@ public class Application {
                 get("", RegistrarPersonaVulnerableController::getRegistrarPersonaVulnerable);
             });
 
-            path("colaboraciones", () -> {
-                get("", ColaboracionesController::getColaboraciones);
-            });
+            path("colaboraciones", () -> get("", ColaboracionesController::getColaboraciones));
 
             path("puntos", () -> {
                 get("", OfertasController::getOfertas);

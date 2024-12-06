@@ -1,17 +1,15 @@
 package org.example.colaboraciones.contribuciones.heladeras;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.colaboraciones.Ubicacion;
-import org.example.colaboraciones.contribuciones.HacerseCargoDeUnaHeladera;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
 import org.example.personas.Persona;
 import org.example.repositorios.RepoHeladeras;
-import org.example.subscripcionesHeladeras.PublisherDesperfecto;
-import org.example.subscripcionesHeladeras.PublisherViandasDisponibles;
-import org.example.subscripcionesHeladeras.PublisherViandasFaltantes;
+import org.example.subscripciones_heladeras.PublisherDesperfecto;
+import org.example.subscripciones_heladeras.PublisherViandasDisponibles;
+import org.example.subscripciones_heladeras.PublisherViandasFaltantes;
 
 import javax.mail.MessagingException;
 import javax.persistence.*;
@@ -19,7 +17,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @Setter
@@ -119,7 +116,7 @@ public class Heladera {
         if (this.estadoHeladeraActual == null) {
             this.estadoHeladeraActual = new EstadoHeladera(nuevoEstado);
             this.historialEstadoHeladera.add(this.estadoHeladeraActual);
-        } else if (this.estadoHeladeraActual.getEstaActiva() != nuevoEstado) {
+        } else if (Boolean.TRUE.equals(this.estadoHeladeraActual.getEstaActiva()) != nuevoEstado) {
             this.estadoHeladeraActual.setFechaHoraFin(LocalDateTime.now());
             this.estadoHeladeraActual = new EstadoHeladera(nuevoEstado);
             this.historialEstadoHeladera.add(this.estadoHeladeraActual);

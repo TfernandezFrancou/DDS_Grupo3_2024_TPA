@@ -1,33 +1,25 @@
 package org.example.repositorios;
 
-import com.fasterxml.classmate.AnnotationConfiguration;
-import com.fasterxml.classmate.AnnotationInclusion;
-import com.twilio.rest.serverless.v1.service.Build;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.MovimientoViandas;
 import org.example.colaboraciones.contribuciones.viandas.Vianda;
-import org.example.reportes.itemsReportes.ItemReporte;
-import org.example.reportes.itemsReportes.ItemReporteViandasColocadasPorHeladera;
-import org.example.reportes.itemsReportes.ItemReporteViandasRetiradasPorHeladera;
-import org.example.subscripcionesHeladeras.SubscripcionDesperfecto;
-import org.example.subscripcionesHeladeras.SubscripcionHeladera;
-import org.example.subscripcionesHeladeras.SubscripcionViandasDisponibles;
-import org.example.subscripcionesHeladeras.SubscripcionViandasFaltantes;
+import org.example.reportes.items_reportes.ItemReporte;
+import org.example.reportes.items_reportes.ItemReporteViandasColocadasPorHeladera;
+import org.example.reportes.items_reportes.ItemReporteViandasRetiradasPorHeladera;
+import org.example.subscripciones_heladeras.SubscripcionDesperfecto;
+import org.example.subscripciones_heladeras.SubscripcionHeladera;
+import org.example.subscripciones_heladeras.SubscripcionViandasDisponibles;
+import org.example.subscripciones_heladeras.SubscripcionViandasFaltantes;
 import org.example.utils.BDUtils;
-import org.hibernate.SessionFactory;
+import org.hibernate.Hibernate;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class RepoHeladeras {
@@ -35,9 +27,11 @@ public class RepoHeladeras {
     private static RepoHeladeras instancia = null;
     private RepoHeladeras() { }
 
+    private static final String FIELD_ID_HELADERA = "idHeladera";
+
     public static RepoHeladeras getInstancia() {
         if (instancia == null) {
-            RepoHeladeras.instancia = new RepoHeladeras();
+            instancia = new RepoHeladeras();
         }
         return instancia;
     }
@@ -90,8 +84,8 @@ public class RepoHeladeras {
             em.persist(heladera);
             em.getTransaction().commit();
             //lazy initializations
-            heladera.getEstadoHeladeraActual();
-            heladera.getHistorialEstadoHeladera().size();
+            Hibernate.initialize(heladera.getEstadoHeladeraActual());
+            Hibernate.initialize(heladera.getHistorialEstadoHeladera());
         } catch (Exception e){
             e.printStackTrace();
             BDUtils.rollback(em);
@@ -170,11 +164,11 @@ public class RepoHeladeras {
     public Heladera buscarHeladera(Heladera heladeraAEncontrar){
 
         EntityManager em = BDUtils.getEntityManager();
-        List<Heladera> heladeras = null;
+        Heladera heladera = null;
         try{
-            heladeras = em.createQuery("FROM Heladera WHERE idHeladera=:idHeladera", Heladera.class)
-                    .setParameter("idHeladera", heladeraAEncontrar.getIdHeladera())
-                    .getResultList();
+            heladera = em.createQuery("FROM Heladera WHERE idHeladera=:idHeladera", Heladera.class)
+                    .setParameter(FIELD_ID_HELADERA, heladeraAEncontrar.getIdHeladera())
+                    .getSingleResult();
 
         } catch (Exception e){
             e.printStackTrace();
@@ -183,8 +177,7 @@ public class RepoHeladeras {
             em.close();
         }
 
-        assert heladeras != null;
-        return heladeras.stream().findFirst().get();
+        return heladera;
     }
     public List<ItemReporte> obtenerCantidadDeViandasColocadasPorHeladeraDeLaSemana(LocalDateTime inicioSemanaActual, LocalDateTime finSemanaActual) {
         return obtenerViandasPorHeladeraDeLaSemana(inicioSemanaActual, finSemanaActual, true);
@@ -218,7 +211,7 @@ public class RepoHeladeras {
 
             List<Vianda> viandas =  movimientosDeLaSemana.stream()
                     .flatMap(extractorFuncion)
-                    .collect(Collectors.toList());
+                    .toList();
 
             if(viandasColocadas){//si necesito viandas colocadas
                 ItemReporteViandasColocadasPorHeladera item = new ItemReporteViandasColocadasPorHeladera();
@@ -250,12 +243,15 @@ public class RepoHeladeras {
             em.close();
         }
 
-        return heladeras.stream().filter(heladera -> heladera.getNombre().equals(nombreABuscar)).findFirst();
+        assert heladeras != null;
+        return heladeras.stream()
+                .filter(heladera -> heladera.getNombre().equals(nombreABuscar))
+                .findFirst();
     }
 
     public Optional<Heladera> buscarPorId(Integer id) {
         EntityManager em = BDUtils.getEntityManager();
-        Optional<Heladera> result = null;
+        Optional<Heladera> result = Optional.empty();
         try{
             result = em
                     .createQuery("from Heladera where idHeladera = :id", Heladera.class)
@@ -265,9 +261,7 @@ public class RepoHeladeras {
                     .findFirst();
 
             //lazy initializations
-            if(!result.isEmpty()){
-                result.get().getHistorialEstadoHeladera().size();
-            }
+            result.ifPresent(heladera -> Hibernate.initialize(heladera.getHistorialEstadoHeladera()));
         }catch (Exception e){
             e.printStackTrace();
             BDUtils.rollback(em);
@@ -286,8 +280,11 @@ public class RepoHeladeras {
                     .getResultList();
 
             //lazy initializations
-            result.forEach(h -> h.getHistorialEstadoHeladera().size());
-            result.forEach(h -> h.getHistorialMovimientos().forEach(hm -> {hm.getViandasSacadas().size();  hm.getViandasIntroducidas().size();}));
+            result.forEach(h -> Hibernate.initialize(h.getHistorialEstadoHeladera()));
+            result.forEach(h -> h.getHistorialMovimientos().forEach(hm -> {
+                Hibernate.initialize(hm.getViandasSacadas());
+                Hibernate.initialize(hm.getViandasIntroducidas());
+            }));
         }catch (Exception e){
             e.printStackTrace();
             BDUtils.rollback(em);
@@ -334,8 +331,8 @@ public class RepoHeladeras {
         try{
             subs= em.createQuery("from SubscripcionHeladera s where s.subscriptor.id = :idPersona and s.heladera.id = :idHeladera", SubscripcionHeladera.class)
                     .setParameter("idPersona", idPersona)
-                    .setParameter("idHeladera", idHeladera)
-                    .getResultList();;
+                    .setParameter(FIELD_ID_HELADERA, idHeladera)
+                    .getResultList();
         } catch (Exception e){
             e.printStackTrace();
             throw  e;
@@ -351,7 +348,7 @@ public class RepoHeladeras {
         List<SubscripcionDesperfecto> subs = null;
         try{
             subs= em.createQuery("from SubscripcionDesperfecto s where s.heladera.id = :idHeladera", SubscripcionDesperfecto.class)
-                    .setParameter("idHeladera", idHeladera)
+                    .setParameter(FIELD_ID_HELADERA, idHeladera)
                     .getResultList();
         } catch (Exception e){
             e.printStackTrace();
@@ -368,7 +365,7 @@ public class RepoHeladeras {
         List<SubscripcionViandasFaltantes> subs = null;
         try{
             subs= em.createQuery("from SubscripcionViandasFaltantes s where s.heladera.id = :idHeladera", SubscripcionViandasFaltantes.class)
-                    .setParameter("idHeladera", idHeladera)
+                    .setParameter(FIELD_ID_HELADERA, idHeladera)
                     .getResultList();
         } catch (Exception e){
             e.printStackTrace();
@@ -386,7 +383,7 @@ public class RepoHeladeras {
         List<SubscripcionViandasDisponibles> subs = null;
         try{
             subs= em.createQuery("from SubscripcionViandasDisponibles s where s.heladera.idHeladera = :idHeladera", SubscripcionViandasDisponibles.class)
-                    .setParameter("idHeladera", idHeladera)
+                    .setParameter(FIELD_ID_HELADERA, idHeladera)
                     .getResultList();
 
         } catch (Exception e){

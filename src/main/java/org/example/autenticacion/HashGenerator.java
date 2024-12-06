@@ -1,5 +1,8 @@
 package org.example.autenticacion;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.MessageDigest;
@@ -8,6 +11,10 @@ import java.security.spec.KeySpec;
 import java.util.Base64;
 
 public class HashGenerator {
+
+    private HashGenerator(){}
+
+    private static final Logger logger = LoggerFactory.getLogger(HashGenerator.class);
 
     // Generar un hash con salt y retornarlo en formato "salt:hash"
     public static String hash(String password) {
@@ -28,7 +35,8 @@ public class HashGenerator {
 
             return saltBase64 + ":" + hashBase64; // Formato: "salt:hash"
         } catch (Exception e) {
-            throw new RuntimeException("Error al generar el hash", e);
+            logger.error("Error al generar el hash", e);
+            return "";
         }
     }
 
@@ -55,7 +63,8 @@ public class HashGenerator {
             // Comparar hashes
             return MessageDigest.isEqual(hashBytes, storedHashBytes);
         } catch (Exception e) {
-            throw new RuntimeException("Error al verificar el hash", e);
+            logger.error("Error al generar el hash", e);
+            return false;
         }
     }
 }

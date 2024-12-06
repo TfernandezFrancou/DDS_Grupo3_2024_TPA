@@ -2,10 +2,8 @@ package org.example.repositorios;
 
 import org.example.colaboraciones.contribuciones.heladeras.VisitaHeladera;
 import org.example.utils.BDUtils;
-import org.hibernate.boot.model.source.internal.hbm.EmbeddableSourceVirtualImpl;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RepositorioVisitasTecnicos {
@@ -15,7 +13,7 @@ public class RepositorioVisitasTecnicos {
 
     public static RepositorioVisitasTecnicos getInstancia() {
         if (instancia == null) {
-            RepositorioVisitasTecnicos.instancia = new RepositorioVisitasTecnicos();
+            instancia = new RepositorioVisitasTecnicos();
         }
         return instancia;
     }

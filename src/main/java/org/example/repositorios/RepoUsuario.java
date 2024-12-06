@@ -10,17 +10,15 @@ import org.example.utils.BDUtils;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class RepoUsuario {
   private static RepoUsuario instancia = null;
 
-  private RepoUsuario() {
-  }
+  private RepoUsuario() {}
 
   public static RepoUsuario getInstancia() {
     if (instancia == null) {
-      RepoUsuario.instancia = new RepoUsuario();
+      instancia = new RepoUsuario();
     }
     return instancia;
   }
@@ -50,7 +48,7 @@ public class RepoUsuario {
       em.close();
     }
 
-    return usuarios1.size() > 0;
+    return !usuarios1.isEmpty();
   }
 
   public Usuario obtenerUsuarioPorDocumento(Documento documento) throws  UserException{

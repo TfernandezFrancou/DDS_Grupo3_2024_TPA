@@ -7,6 +7,8 @@ import javax.persistence.Persistence;
 
 
 public class BDUtils {
+
+    private BDUtils(){}
     private static final EntityManagerFactory factory;
 
     static {
@@ -14,8 +16,7 @@ public class BDUtils {
     }
 
     public static EntityManager getEntityManager() {
-        EntityManager em = factory.createEntityManager();
-        return em;
+        return factory.createEntityManager();
     }
 
     public static EntityTransaction comenzarTransaccion(EntityManager em) {

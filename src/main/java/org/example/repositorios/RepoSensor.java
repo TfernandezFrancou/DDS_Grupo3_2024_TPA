@@ -1,15 +1,12 @@
 package org.example.repositorios;
 
-import com.mysql.cj.util.EscapeTokenizer;
-import lombok.Getter;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
 import org.example.colaboraciones.contribuciones.heladeras.Sensor;
-import org.example.colaboraciones.contribuciones.heladeras.SensorDeTemperatura;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 import org.example.utils.BDUtils;
+import org.hibernate.Hibernate;
 
 public class RepoSensor {
 
@@ -19,7 +16,7 @@ public class RepoSensor {
 
     public static RepoSensor getInstancia(){
         if (instancia == null) {
-            RepoSensor.instancia = new RepoSensor();
+            instancia = new RepoSensor();
         }
         return instancia;
     }
@@ -31,7 +28,7 @@ public class RepoSensor {
             sensor =  em.createQuery("SELECT s FROM Sensor s WHERE TYPE(s) = SensorDeTemperatura AND s.heladera = :heladera", Sensor.class)
                     .setParameter("heladera", heladera)
                     .getSingleResult();
-            sensor.getHeladera().getHistorialEstadoHeladera().size();//lazy initialization
+            Hibernate.initialize(sensor.getHeladera().getHistorialEstadoHeladera());//lazy initialization
 
         } catch (Exception e){
            e.printStackTrace();

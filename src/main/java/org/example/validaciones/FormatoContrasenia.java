@@ -9,7 +9,7 @@ public class FormatoContrasenia extends ValidacionContrasenia {
 
   @Override
   public boolean condition(String password) {
-    return !password.matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_])(?=\\S+$).{8,}");
+    return !password.matches("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_])(?=\\S+$).{8,}");
     /*
       (?=.*[0-9]) Un dígito debe aparecer al menos una vez
       (?=.*[a-z]) Una letra minúscula debe aparecer al menos una vez

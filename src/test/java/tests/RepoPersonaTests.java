@@ -1,6 +1,5 @@
 package tests;
 
-import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.Ubicacion;
 import org.example.colaboraciones.contribuciones.DonacionDeViandas;
 import org.example.colaboraciones.contribuciones.heladeras.Heladera;
@@ -11,8 +10,8 @@ import org.example.personas.roles.Colaborador;
 import org.example.personas.roles.PersonaEnSituacionVulnerable;
 import org.example.personas.roles.Tecnico;
 import org.example.recomendacion.Zona;
-import org.example.reportes.itemsReportes.ItemReporte;
-import org.example.reportes.itemsReportes.ItemReporteViandasDistribuidasPorColaborador;
+import org.example.reportes.items_reportes.ItemReporte;
+import org.example.reportes.items_reportes.ItemReporteViandasDistribuidasPorColaborador;
 import org.example.repositorios.RepoHeladeras;
 import org.example.repositorios.RepoPersona;
 

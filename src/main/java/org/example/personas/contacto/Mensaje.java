@@ -1,6 +1,7 @@
 package org.example.personas.contacto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.personas.Persona;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class Mensaje {
 
     @Id
@@ -35,7 +37,4 @@ public class Mensaje {
         this.fechaDeEnvio = LocalDateTime.now(); // Define fecha actual al enviar el mensaje
     }
 
-    // Constructor sin argumentos necesario para JPA
-    public Mensaje() {
-    }
 }

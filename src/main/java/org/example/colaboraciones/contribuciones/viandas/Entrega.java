@@ -1,6 +1,7 @@
 package org.example.colaboraciones.contribuciones.viandas;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class Entrega {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +19,6 @@ public class Entrega {
     @Enumerated(EnumType.STRING)
     private EstadoEntrega estadoEntrega;
     private LocalDate fechaEntrega;
-
-    public Entrega() {
-    }
 
     public Entrega(EstadoEntrega estadoEntrega, LocalDate fechaEntrega) {
         this.estadoEntrega = estadoEntrega;

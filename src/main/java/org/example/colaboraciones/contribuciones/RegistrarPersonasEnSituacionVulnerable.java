@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.config.Configuracion;
+import org.example.excepciones.EmailNoRegistradoException;
 import org.example.personas.contacto.Mensaje;
 import org.example.repositorios.RepoPersona;
 import org.example.repositorios.RepoTarjetas;
@@ -42,7 +43,7 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
         this.tarjetasEntregadas = cantidad;
     }
 
-    public RegistrarPersonasEnSituacionVulnerable(List<TarjetaHeladera> tarjetasAEntregar) throws MessagingException {
+    public RegistrarPersonasEnSituacionVulnerable(List<TarjetaHeladera> tarjetasAEntregar) throws MessagingException, EmailNoRegistradoException {
         this.personasRegistradas = new ArrayList<>();
         this.tarjetasAEntregar = tarjetasAEntregar;
         this.tiposDePersona = Set.of(TipoDePersona.HUMANA);
@@ -68,12 +69,12 @@ public class RegistrarPersonasEnSituacionVulnerable extends Contribucion {
     }
 
     //cuando se tengan las tarjetas, se las envia al colaborador
-    public void setTarjetasAEntregar(List<TarjetaHeladera> tarjetasAEntregar) throws MessagingException {
+    public void setTarjetasAEntregar(List<TarjetaHeladera> tarjetasAEntregar) throws MessagingException, EmailNoRegistradoException {
         this.tarjetasAEntregar = tarjetasAEntregar;
         this.enviarTarjetasViaMail();
     }
 
-    public void enviarTarjetasViaMail() throws MessagingException {
+    public void enviarTarjetasViaMail() throws MessagingException, EmailNoRegistradoException {
         String titulo = Configuracion.obtenerProperties("mensaje.colaboraciones.tarjetas.titulo");
         String contenido = Configuracion.obtenerProperties("mensaje.contribuciones.tarjetas.contenido")
                 .replace("{detallesDetarjetas}", this.tarjetasAEntregarToString());

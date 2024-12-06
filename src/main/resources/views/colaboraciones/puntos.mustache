@@ -41,11 +41,11 @@
    </header>
     <div class="container points-container">
         <h2>Tienes <span id="puntos">{{puntos}}</span> puntos</h2>
-        {{#OfrecerProductos}}
+        {{#OfrecerProductos?}}
             <div class="button-container">
                 <a href="/ofrecer-producto" class="button offer-button">Ofrecer Producto o Servicio</a>
             </div>
-        {{/OfrecerProductos}}
+        {{/OfrecerProductos?}}
     </div>
 
     <div class="container row mb-30">

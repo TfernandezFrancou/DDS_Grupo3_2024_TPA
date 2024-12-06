@@ -3,8 +3,8 @@ package org.example.personas;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.autenticacion.Usuario;
+import org.example.excepciones.EmailNoRegistradoException;
 import org.example.excepciones.UserException;
-import org.example.migracion.TipoColaboracion;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.colaboraciones.contribuciones.heladeras.Direccion;
 import org.example.personas.contacto.MedioDeContacto;
@@ -46,7 +46,7 @@ public abstract class Persona {
     )
     protected List<TipoContribucion> contribucionesQuePuedeHacer;
 
-    public Persona(){
+    protected Persona(){
         this.mediosDeContacto = new ArrayList<>();
         this.contribucionesQuePuedeHacer = new ArrayList<>();
     }
@@ -55,22 +55,22 @@ public abstract class Persona {
         this.mediosDeContacto.add(medioDeContacto);
     }
 
-    abstract public String getNombre();
+    public abstract String getNombre();
 
     public void addContribucionesQuePuedeHacer(TipoContribucion contribucion){
         this.contribucionesQuePuedeHacer.add(contribucion);
     }
 
-    public CorreoElectronico getEmail() {
+    public CorreoElectronico getEmail() throws EmailNoRegistradoException {
         for (MedioDeContacto medioDeContacto: this.mediosDeContacto) {
-            if (medioDeContacto instanceof CorreoElectronico) {
-                return (CorreoElectronico) medioDeContacto;
+            if (medioDeContacto instanceof CorreoElectronico correoElectronico) {
+                return correoElectronico;
             }
         }
-        throw new RuntimeException("El tecnico no registro su correo electronico");
+        throw new EmailNoRegistradoException("El tecnico no registro su correo electronico");
     }
 
-    public Usuario buscarOCrearUsuario() throws MessagingException {
+    public Usuario buscarOCrearUsuario() throws MessagingException, EmailNoRegistradoException {
         try {
             return RepoUsuario.getInstancia().obtenerUsuarioPorDocumento(documento);
         } catch (UserException userException) {
@@ -79,9 +79,5 @@ public abstract class Persona {
             RepoUsuario.getInstancia().agregarUsuarios(usuario);
             return usuario;
         }
-    }
-
-    public void cambiarRol(Rol nuevoRol){
-        this.rol = nuevoRol;
     }
 }

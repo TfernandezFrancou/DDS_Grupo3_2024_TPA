@@ -4,7 +4,6 @@ import lombok.Getter;
 import org.example.colaboraciones.Contribucion;
 import org.example.colaboraciones.TipoDePersona;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
-import org.example.repositorios.RepoOfertas;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -18,7 +17,7 @@ import java.util.Set;
 public class OfrecerProductos extends Contribucion {
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name ="id_contribucion")
-    private List<Oferta> ofertas;
+    private final List<Oferta> ofertas;
 
     public OfrecerProductos(){
         this.tiposDePersona = Set.of(TipoDePersona.JURIDICA);
@@ -26,11 +25,6 @@ public class OfrecerProductos extends Contribucion {
         this.ofertas = new ArrayList<>();
     }
 
-    @Override
-    public void ejecutarContribucion() throws Exception{
-        super.ejecutarContribucion();
-        //RepoOfertas.getInstancia().agregarTodas(ofertas);
-    }
 
     public void agregarOferta(Oferta oferta){
         this.ofertas.add(oferta);

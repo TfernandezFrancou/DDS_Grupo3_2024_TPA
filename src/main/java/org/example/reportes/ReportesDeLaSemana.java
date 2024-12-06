@@ -2,7 +2,7 @@ package org.example.reportes;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.reportes.itemsReportes.ItemReporte;
+import org.example.reportes.items_reportes.ItemReporte;
 
 import javax.persistence.*;
 import java.time.LocalDate;

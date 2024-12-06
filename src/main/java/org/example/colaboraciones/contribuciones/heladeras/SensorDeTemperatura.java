@@ -2,10 +2,10 @@ package org.example.colaboraciones.contribuciones.heladeras;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.example.excepciones.EmailNoRegistradoException;
 
 import javax.mail.MessagingException;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 
 @Getter
 @Setter
@@ -14,12 +14,12 @@ public class SensorDeTemperatura extends Sensor {
     private int temperatura;
 
     @Override
-    public void notificar() throws MessagingException {
+    public void notificar() throws MessagingException, EmailNoRegistradoException {
         super.notificar();
         this.getHeladera().setTemperaturaActualHeladera(temperatura);
     }
     @Override
-    public boolean getEstadoHeladera() throws MessagingException {
+    public boolean getEstadoHeladera() throws MessagingException, EmailNoRegistradoException {
         TemperaturaHeladera temperaturaHeladera = super.getHeladera().getTemperaturasDeFuncionamiento();
 
         if(temperatura > temperaturaHeladera.getTemperaturaMaxima()
