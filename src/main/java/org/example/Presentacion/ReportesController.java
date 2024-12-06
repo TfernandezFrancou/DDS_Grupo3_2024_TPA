@@ -1,6 +1,7 @@
 package org.example.Presentacion;
 
 import io.javalin.http.Context;
+import org.example.reportes.itemsReportes.*;
 import org.example.autenticacion.SessionManager;
 import org.example.incidentes.FallaTecnica;
 import org.example.reportes.itemsReportes.ItemReporteFallasPorHeladera;
@@ -18,51 +19,67 @@ import java.util.Map;
 
 public class ReportesController {
 
-    public static void getListaReportes(@NotNull Context context) {
-        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
-        List<ReportesDeLaSemana> reportes = RepoReportes.getInstancia().obtenerReportes();
-        model.put("reportes", reportes);
-        context.render("/views/reportes/reportes.mustache", model);
+    public static void mostrarFallas(Context ctx) {
+        Map<String, Object> model = new HashMap<>();
+        List<ItemReporteFallasPorHeladera> fallas = RepoReportes.getInstancia().obtenerFallasPorHeladera();
+
+        // Prepara el modelo con el tamaño de las fallas
+        List<Map<String, String>> fallasModel = fallas.stream()
+                .map(falla -> Map.of(
+                        "heladera", falla.getHeladera().getNombre(),
+                        "cantidadFallas", String.valueOf(fallas.size())
+                ))
+                .toList();
+
+        model.put("fallas", fallasModel);
+        ctx.render("/views/reportes/reportes.mustache", model);
     }
 
-    public static void getDetalleFalla(Context context) {
-        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
-        int idFalla = Integer.parseInt(context.pathParam("id"));
-        FallaTecnica falla = RepoIncidente.getInstancia().obtenerFallaPorId(idFalla);
+    public static void mostrarViandasColocadas(Context ctx) {
+        Map<String, Object> model = new HashMap<>();
+        List<ItemReporteViandasColocadasPorHeladera> viandasColocadas = RepoReportes.getInstancia().obtenerViandasColocadasPorHeladera();
 
-        if (falla != null) {
-            model.put("falla", falla);
-            context.render("/views/fallas/detalle_falla.mustache", model);
-        } else {
-            context.status(404).result("Falla no encontrada");//TODO esto no es cliente liviano
-        }
+        // Prepara el modelo con el tamaño de las viandas colocadas
+        List<Map<String, String>> viandasColocadasModel = viandasColocadas.stream()
+                .map(vianda -> Map.of(
+                        "heladera", vianda.getHeladera().getNombre(),
+                        "cantidadViandas", String.valueOf(viandasColocadas.size())
+                ))
+                .toList();
+
+        model.put("viandasColocadas", viandasColocadasModel);
+        ctx.render("/views/reportes/reporteColocadas.mustache", model);
     }
 
-    public static void getReporteFallas(Context context) {
-        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
-        List<ItemReporteFallasPorHeladera> reportes = RepoReportes.getInstancia().obtenerReporteFallas();
-        model.put("reportes", reportes);
-        context.json(model);//TODO esto no es cliente liviano
+    public static void mostrarViandasDistribuidas(Context ctx) {
+        Map<String, Object> model = new HashMap<>();
+        List<ItemReporteViandasDistribuidasPorColaborador> viandasDistribuidas = RepoReportes.getInstancia().obtenerViandasDistribuidasPorColaborador();
+
+        // Prepara el modelo con el tamaño de las viandas distribuidas
+        List<Map<String, String>> viandasDistribuidasModel = viandasDistribuidas.stream()
+                .map(vianda -> Map.of(
+                        "colaborador", vianda.getColaborador().getNombre(),
+                        "cantidadViandas", String.valueOf(viandasDistribuidas.size())
+                ))
+                .toList();
+
+        model.put("viandasDistribuidas", viandasDistribuidasModel);
+        ctx.render("views/reportes/reporteDistribuidas.mustache", model);
     }
 
-    public static void getReporteViandasColocadas(Context context) {
-        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
-        List<ItemReporteViandasColocadasPorHeladera> reportes = RepoReportes.getInstancia().obtenerReporteViandasColocadas();
-        model.put("reportes", reportes);
-        context.json(model);//TODO esto no es cliente liviano
-    }
+    public static void mostrarViandasRetiradas(Context ctx) {
+        Map<String, Object> model = new HashMap<>();
+        List<ItemReporteViandasRetiradasPorHeladera> viandasRetiradas = RepoReportes.getInstancia().obtenerViandasRetiradasPorHeladera();
 
-    public static void getReporteViandasDistribuidas(Context context) {
-        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
-        List<ItemReporteViandasDistribuidasPorColaborador> reportes = RepoReportes.getInstancia().obtenerReporteViandasDistribuidas();
-        model.put("reportes", reportes);
-        context.json(model);//TODO esto no es cliente liviano
-    }
+        // Prepara el modelo con el tamaño de las viandas retiradas
+        List<Map<String, String>> viandasRetiradasModel = viandasRetiradas.stream()
+                .map(vianda -> Map.of(
+                        "heladera", vianda.getHeladera().getNombre(),
+                        "cantidadViandas", String.valueOf(viandasRetiradas.size())
+                ))
+                .toList();
 
-    public static void getReporteViandasRetiradas(Context context) {
-        Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
-        List<ItemReporteViandasRetiradasPorHeladera> reportes = RepoReportes.getInstancia().obtenerReporteViandasRetiradas();
-        model.put("reportes", reportes);
-        context.json(model);//TODO esto no es cliente liviano
+        model.put("viandasRetiradas", viandasRetiradasModel);
+        ctx.render("views/reportes/reporteRetiradas.mustache", model);
     }
 }

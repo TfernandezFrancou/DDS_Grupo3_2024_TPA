@@ -51,12 +51,11 @@ public class Application {
         app.routes(() -> {
 
             path("reportes", () -> {
-                get("", ReportesController::getListaReportes);
-                get("/fallas/{id}", ReportesController::getDetalleFalla);
-                get("fallas", ReportesController::getReporteFallas);
-                get("viandas-colocadas", ReportesController::getReporteViandasColocadas);
-                get("viandas-distribuidas", ReportesController::getReporteViandasDistribuidas);
-                get("viandas-retiradas", ReportesController::getReporteViandasRetiradas);
+                get("", ReportesController::mostrarFallas);
+                get("fallas", ReportesController::mostrarFallas);
+                get("reporteColocadas", ReportesController::mostrarViandasColocadas);
+                get("reporteDistribuidas", ReportesController::mostrarViandasDistribuidas);
+                get("reporteRetiradas", ReportesController::mostrarViandasRetiradas);
             });
 
             path("heladeras", () -> {

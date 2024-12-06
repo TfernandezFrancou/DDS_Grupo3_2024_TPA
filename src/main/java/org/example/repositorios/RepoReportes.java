@@ -30,6 +30,14 @@ public class RepoReportes {
         List<ReportesDeLaSemana> reportes = new ArrayList<>();
         try {
             reportes = em.createQuery("SELECT r FROM ReportesDeLaSemana r", ReportesDeLaSemana.class).getResultList();
+
+            // Forzar la inicialización de las colecciones LAZY
+            for (ReportesDeLaSemana reporte : reportes) {
+                reporte.getReporteCantidadDeFallasPorHeladera().size();
+                reporte.getReporteCantidadDeViandasColocadasPorHeladera().size();
+                reporte.getReporteCantidadDeViandasRetiradasPorHeladera().size();
+                reporte.getReporteCantidadDeviandasDistribuidasPorColaborador().size();
+            }
         } finally {
             em.close();
         }
@@ -91,52 +99,41 @@ public class RepoReportes {
         }
     }
 
-    public List<ItemReporteFallasPorHeladera> obtenerReporteFallas() {
+    public List<ItemReporteFallasPorHeladera> obtenerFallasPorHeladera() {
         EntityManager em = BDUtils.getEntityManager();
         List<ItemReporteFallasPorHeladera> reportes = new ArrayList<>();
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteFallasPorHeladera r", ItemReporteFallasPorHeladera.class).getResultList();
-            //lazy initializations
-            reportes.forEach(reporte -> {reporte.getFallas().size();});
         } finally {
             em.close();
         }
         return reportes;
     }
-
-    public List<ItemReporteViandasColocadasPorHeladera> obtenerReporteViandasColocadas() {
+    public List<ItemReporteViandasColocadasPorHeladera> obtenerViandasColocadasPorHeladera() {
         EntityManager em = BDUtils.getEntityManager();
         List<ItemReporteViandasColocadasPorHeladera> reportes = new ArrayList<>();
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteViandasColocadasPorHeladera r", ItemReporteViandasColocadasPorHeladera.class).getResultList();
-            //lazy initializations
-            reportes.forEach(reporte -> {reporte.getViandasColocadas().size();});
         } finally {
             em.close();
         }
         return reportes;
     }
-
-    public List<ItemReporteViandasDistribuidasPorColaborador> obtenerReporteViandasDistribuidas() {
+    public List<ItemReporteViandasDistribuidasPorColaborador> obtenerViandasDistribuidasPorColaborador() {
         EntityManager em = BDUtils.getEntityManager();
         List<ItemReporteViandasDistribuidasPorColaborador> reportes = new ArrayList<>();
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteViandasDistribuidasPorColaborador r", ItemReporteViandasDistribuidasPorColaborador.class).getResultList();
-            //lazy initializations
-            reportes.forEach(reporte ->{reporte.getViandasDistribuidas().size();});
         } finally {
             em.close();
         }
         return reportes;
     }
-
-    public List<ItemReporteViandasRetiradasPorHeladera> obtenerReporteViandasRetiradas() {
+    public List<ItemReporteViandasRetiradasPorHeladera> obtenerViandasRetiradasPorHeladera() {
         EntityManager em = BDUtils.getEntityManager();
         List<ItemReporteViandasRetiradasPorHeladera> reportes = new ArrayList<>();
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteViandasRetiradasPorHeladera r", ItemReporteViandasRetiradasPorHeladera.class).getResultList();
-            //lazy initializations
-            reportes.forEach(reporte->{reporte.getViandasRetiradas().size();});
         } finally {
             em.close();
         }

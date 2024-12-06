@@ -73,12 +73,19 @@ h2 {
 }
 
 .alerta-caja {
+    text-decoration: none;
+    color: #333;
     width: 100%;
     border: 1px solid #ccc;
     padding: 10px;
     margin-bottom: 10px;
     background-color: #f9f9f9;
     border-radius: 15px;
+}
+
+.alerta-caja:hover {
+    color: #000;
+    background-color: #d4d3d3
 }
 
 .alerta-fecha {
