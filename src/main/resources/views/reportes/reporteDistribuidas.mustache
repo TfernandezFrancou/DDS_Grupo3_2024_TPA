@@ -30,26 +30,27 @@
     </nav>
 </header>
 
-<div class="container">
-    <h1 class="text-center my-4 reportes">Reportes</h1>
-    <div class="d-flex justify-content-center mb-3">
-        <a href="/reportes" class="btn btn-outline-primary mx-2">Fallas por Heladera</a>
-        <a href="/reportes/reporteColocadas" class="btn btn-outline-primary mx-2">Viandas Colocadas</a>
-        <a href="/reportes/reporteDistribuidas" class="btn btn-outline-primary mx-2">Viandas Distribuidas</a>
-        <a href="/reportes/reporteRetiradas" class="btn btn-outline-primary mx-2">Viandas Retiradas</a>
+    <div class="container">
+        <h1 class="text-center my-4">Reportes</h1>
+        <div class="d-flex justify-content-center mb-3">
+            <a href="/reportes" class="btn btn-outline-primary mx-2">Fallas por Heladera</a>
+            <a href="/reportes/reporteColocadas" class="btn btn-outline-primary mx-2">Viandas Colocadas</a>
+            <a href="/reportes/reporteDistribuidas" class="btn btn-outline-primary mx-2">Viandas Distribuidas</a>
+            <a href="/reportes/reporteRetiradas" class="btn btn-outline-primary mx-2">Viandas Retiradas</a>
+        </div>
     </div>
-</div>
+
 <div class="report-list">
     <div class="report-header">
-        <span class="header-item">Heladera</span>
-        <span class="header-item">Cantidad Fallas</span>
+        <span class="header-item">Colaborador</span>
+        <span class="header-item">Cantidad Distribuidas</span>
     </div>
-    {{#fallas}}
+    {{#viandasDistribuidas}}
         <div class="report-row">
-            <span class="row-item">{{heladera}}</span>
-            <span class="row-item">{{cantidadFallas}}</span>
+            <span class="row-item">{{colaborador}}</span>
+            <span class="row-item">{{cantidadViandas}}</span>
         </div>
-    {{/fallas}}
+    {{/viandasDistribuidas}}
 </div>
 
 </body>
