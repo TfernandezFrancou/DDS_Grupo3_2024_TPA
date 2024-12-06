@@ -104,7 +104,11 @@ public class RepoReportes {
         List<ItemReporteFallasPorHeladera> reportes = new ArrayList<>();
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteFallasPorHeladera r", ItemReporteFallasPorHeladera.class).getResultList();
-        } finally {
+            //lazy initalizations
+            reportes.forEach(reporte->{
+                reporte.getFallas().size();
+            });
+            } finally {
             em.close();
         }
         return reportes;
@@ -114,6 +118,10 @@ public class RepoReportes {
         List<ItemReporteViandasColocadasPorHeladera> reportes = new ArrayList<>();
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteViandasColocadasPorHeladera r", ItemReporteViandasColocadasPorHeladera.class).getResultList();
+            //lazy initializations
+            reportes.forEach(reporte ->{
+                reporte.getViandasColocadas().size();
+            });
         } finally {
             em.close();
         }
@@ -124,6 +132,10 @@ public class RepoReportes {
         List<ItemReporteViandasDistribuidasPorColaborador> reportes = new ArrayList<>();
         try {
             reportes = em.createQuery("SELECT r FROM ItemReporteViandasDistribuidasPorColaborador r", ItemReporteViandasDistribuidasPorColaborador.class).getResultList();
+            //lazy initializations
+            reportes.forEach(reporte->{
+                reporte.getViandasDistribuidas().size();
+            });
         } finally {
             em.close();
         }
