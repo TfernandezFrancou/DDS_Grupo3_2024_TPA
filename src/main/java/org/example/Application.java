@@ -2,12 +2,21 @@ package org.example;
 
 import io.javalin.Javalin;
 import io.javalin.plugin.bundled.CorsPluginConfig;
+import io.prometheus.client.exporter.HTTPServer;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.StatisticsHandler;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
+import org.example.observabilidad.QueuedThreadPoolCollector;
+import org.example.observabilidad.StatisticsHandlerCollector;
 import org.example.presentacion.*;
 import org.example.autenticacion.SessionManager;
 import org.example.utils.BDUtils;
+import org.slf4j.LoggerFactory;
+
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 import javax.persistence.EntityManager;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,7 +25,12 @@ import java.util.List;
 
 public class Application {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
+
+        StatisticsHandler statisticsHandler = new StatisticsHandler();
+        QueuedThreadPool queuedThreadPool = new QueuedThreadPool(200, 8, 60_000);
+
         Javalin app = Javalin.create(javalinConfig -> {
                     javalinConfig.plugins.enableCors(
                             cors ->
@@ -24,9 +38,17 @@ public class Application {
 
                     javalinConfig.staticFiles.add("/"); // recursos estaticos (HTML, CSS, JS, IMG)
                     javalinConfig.routing.contextPath = "";
+
+                    javalinConfig.jetty.server(() -> {
+                        Server server = new Server(queuedThreadPool);
+                        server.setHandler(statisticsHandler);
+                        return server;
+                    });
                 })
                 .start(8080);
         app.exception(IllegalArgumentException.class, (e, ctx) -> ctx.status(400));
+
+        initializePrometheus(statisticsHandler, queuedThreadPool);
 
         app.get("/api/localidades", new GetLocalidadesHandler());
         app.get("/alertas/{nombre}", new AlertasHandler());
@@ -133,5 +155,13 @@ public class Application {
         } finally {
             em.close();
         }
+    }
+
+    private static void initializePrometheus(StatisticsHandler statisticsHandler, QueuedThreadPool queuedThreadPool) throws IOException {
+        StatisticsHandlerCollector.initialize(statisticsHandler);
+        QueuedThreadPoolCollector.initialize(queuedThreadPool);
+        HTTPServer prometheusServer = new HTTPServer(7080);
+        LoggerFactory.getLogger("Main")
+                .info("Prometheus is listening on: http://localhost:7080");
     }
 }
