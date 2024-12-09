@@ -39,6 +39,7 @@
             </ul>
         </nav>
    </header>
+
     <div class="container points-container">
         <h2>Tienes <span id="puntos">{{puntos}}</span> puntos</h2>
         {{#OfrecerProductos?}}
@@ -48,34 +49,60 @@
         {{/OfrecerProductos?}}
     </div>
 
-    <div class="container row mb-30">
-        {{#ofertas}}
-            <div class="col-md-3  col-puntos">
-                <div class="card mb-4 rounded-3 shadow-sm">
-                    <form class="card-body" method="POST" action="/puntos" >
-                        <h3>{{nombre}}</h3>
-                        <input type="hidden" name="nombre" value="{{nombre}}">
-                        {{#imagenURL}}
-                            <img src="{{imagenURL}}" alt="{{nombre}}">
-                        {{/imagenURL}}
-                        {{^imagenURL}}
-                            <img src="/views/imagenes/placeholder.png" alt="{{nombre}}">
-                        {{/imagenURL}}
-
-                        <p>Puntos necesarios: {{puntosNecesarios}}</p>
-                        {{#error}}
-                            <p class="text-danger">{{error}}</p>
-                        {{/error}}
-                        {{#exito}}
-                            <p class="text-success-emphasis">{{exito}}</p>
-                        {{/exito}}
-                        <button class="button canjear-button" type="submit" {{#error}}disabled{{/error}}>
-                            Canjear
-                        </button>
-                    </form>
-                </div>
+    <!-- Sección principal con dos columnas -->
+    <div class="row mt-4">
+        <!-- Columna lateral: Productos canjeados -->
+        <div class="col-md-3">
+            <h3>Productos Canjeados</h3>
+            <div class="row">
+                {{#productosCanjeados}}
+                    <div class="col-12">
+                        <div class="mb-3 shadow-sm bg-white">
+                            <div class=" p-2">
+                                <h6 class="mb-1">{{nombre}}</h6>
+                                <p class="text-muted small mb-0">Lo has canjeado <span class="fw-bold">{{cantidad}}</span> veces</p>
+                            </div>
+                        </div>
+                    </div>
+                {{/productosCanjeados}}
+                {{^productosCanjeados}}
+                    <p class="text-muted">Aún no has canjeado ningún producto.</p>
+                {{/productosCanjeados}}
             </div>
-        {{/ofertas}}
+        </div>
+
+        <!-- Columna principal: Ofertas para canjear -->
+        <div class="col-md-9">
+            <h3>Ofertas Disponibles</h3>
+            <div class="row">
+                {{#ofertas}}
+                    <div class="col-md-4 mb-4">
+                        <div class="card mb-4 rounded-3 shadow-sm">
+                            <form class="card-body" method="POST" action="/puntos">
+                                <h5>{{nombre}}</h5>
+                                <input type="hidden" name="nombre" value="{{nombre}}">
+                                {{#imagenURL}}
+                                    <img src="{{imagenURL}}" alt="{{nombre}}" class="img-fluid rounded">
+                                {{/imagenURL}}
+                                {{^imagenURL}}
+                                    <img src="/views/imagenes/placeholder.png" alt="{{nombre}}" class="img-fluid rounded">
+                                {{/imagenURL}}
+                                <p>Puntos necesarios: {{puntosNecesarios}}</p>
+                                {{#error}}
+                                    <p class="text-danger">{{error}}</p>
+                                {{/error}}
+                                {{#exito}}
+                                    <p class="text-success-emphasis">{{exito}}</p>
+                                {{/exito}}
+                                <button class="button canjear-button" type="submit" {{#error}}disabled{{/error}}>
+                                    Canjear
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {{/ofertas}}
+            </div>
+        </div>
     </div>
 </div>
 </body>

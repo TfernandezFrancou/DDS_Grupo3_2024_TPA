@@ -6,6 +6,7 @@ import org.example.colaboraciones.contribuciones.OfrecerProductos;
 import org.example.colaboraciones.contribuciones.ofertas.Oferta;
 import org.example.excepciones.ContribucionNoPermitidaException;
 import org.example.excepciones.ImagenURLException;
+import org.example.excepciones.OfertaException;
 import org.example.personas.roles.Colaborador;
 import org.example.repositorios.RepoOfertas;
 import org.example.validadores.VerificadorImagenURL;
@@ -41,34 +42,34 @@ public class OfertasController extends ContribucionController {
         }
 
         int puntos = (int) colaborador.getPuntuaje();
-
-        List<Oferta> ofertas = RepoOfertas.getInstancia().obtenerTodas();//se puede canjear mas de una vez una misma oferta
-        List<Map<String,String>> ofertasView = new ArrayList<>();
-        //agrego mensaje de error si corresponde
-        for (Oferta o: ofertas) {
-            if(o.getNombre().equals(nombreProducto) && errorMessage!= null){
+        List<Oferta> ofertas = RepoOfertas.getInstancia().obtenerTodas();
+        List<Map<String, String>> ofertasView = new ArrayList<>();
+        for (Oferta o : ofertas) {
+            if (o.getNombre().equals(nombreProducto) && errorMessage != null) {
                 ofertasView.add(Map.of(
-                        FIELD_NOMBRE,o.getNombre(),
-                        FIELD_IMAGEN_URL,o.getImagenURL(),
+                        FIELD_NOMBRE, o.getNombre(),
+                        FIELD_IMAGEN_URL, o.getImagenURL(),
                         FIELD_PUNTOS_NECESARIOS, o.getPuntosNecesarios().toString(),
                         "error", errorMessage
                 ));
-            } else if(o.getNombre().equals(nombreProducto)){
+            } else if (o.getNombre().equals(nombreProducto)) {
                 ofertasView.add(Map.of(
-                        FIELD_NOMBRE,o.getNombre(),
-                        FIELD_IMAGEN_URL,o.getImagenURL(),
+                        FIELD_NOMBRE, o.getNombre(),
+                        FIELD_IMAGEN_URL, o.getImagenURL(),
                         FIELD_PUNTOS_NECESARIOS, o.getPuntosNecesarios().toString(),
-                        "exito", "canjeado con exito"
+                        "exito", "canjeado con éxito"
                 ));
             } else {
                 ofertasView.add(Map.of(
-                        FIELD_NOMBRE,o.getNombre(),
-                        FIELD_IMAGEN_URL,o.getImagenURL(),
+                        FIELD_NOMBRE, o.getNombre(),
+                        FIELD_IMAGEN_URL, o.getImagenURL(),
                         FIELD_PUNTOS_NECESARIOS, o.getPuntosNecesarios().toString()
                 ));
             }
         }
 
+        List<Map<String, String>>  ofertasCanjeadasView = generarVistaProductosCanjeados(colaborador.getOfertasCanjeadas());
+        model.put("productosCanjeados",ofertasCanjeadasView);
         model.put(FIELD_PUNTOS, puntos);
         model.put("ofertas", ofertasView);
         context.render(VIEW_PUNTOS, model);
@@ -79,11 +80,32 @@ public class OfertasController extends ContribucionController {
         Colaborador colaborador = obtenerRolColaboradorActual(context);
         int puntos = (int) colaborador.getPuntuaje();
 
+
+        List<Map<String, String>>  ofertasCanjeadasView = generarVistaProductosCanjeados(colaborador.getOfertasCanjeadas());
+
+        model.put("productosCanjeados",ofertasCanjeadasView);
         model.put(FIELD_PUNTOS, puntos);
         List<Oferta> ofertas = RepoOfertas.getInstancia().obtenerTodas();
         model.put("ofertas", ofertas);
         context.render(VIEW_PUNTOS, model);
     }
+    private static List<Map<String, String>> generarVistaProductosCanjeados(List<Oferta> ofertasCanjeadas) {
+        Set<String> nombresVistos = new HashSet<>();
+        List<Oferta> ofertasList = ofertasCanjeadas.stream()
+                .filter(oferta -> nombresVistos.add(oferta.getNombre())) // Solo agregar si es nuevo
+                .toList();
+
+        return ofertasList.stream()
+                .map(oferta -> Map.of(
+                        FIELD_NOMBRE, oferta.getNombre(),
+                        "cantidad", String.valueOf(
+                                ofertasCanjeadas.stream()
+                                        .filter(o -> o.getNombre().equalsIgnoreCase(oferta.getNombre()) )
+                                        .toList().size()
+                        )
+                )).toList();
+    }
+
 
     public static void getOfrecerProducto(@NotNull Context context) {
         Map<String, Object> model = new HashMap<>(SessionManager.getInstancia().atributosDeSesion(context));
@@ -107,13 +129,18 @@ public class OfertasController extends ContribucionController {
 
     }
 
-    private static OfrecerProductos almacernarOferta(@NotNull Context context) throws ContribucionNoPermitidaException, ImagenURLException {
+    private static OfrecerProductos almacernarOferta(@NotNull Context context) throws ContribucionNoPermitidaException, ImagenURLException, OfertaException {
         String nombre = context.formParam(FIELD_NOMBRE);
         String puntos = context.formParam(FIELD_PUNTOS);
         assert puntos != null;
         int intPuntos = Integer.parseInt(puntos);
         String fotoUrl = context.formParam("imagen");
 
+        Oferta ofertaExistente = RepoOfertas.getInstancia().buscarPorNombre(nombre);
+
+        if(ofertaExistente != null){
+            throw new OfertaException("Ya existe una oferta con el mismo nombre");
+        }
 
         VerificadorImagenURL verificadorImagenURL = VerificadorImagenURL.getInstancia();
         verificadorImagenURL.verifyImagen(fotoUrl);

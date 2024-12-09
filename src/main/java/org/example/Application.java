@@ -26,7 +26,6 @@ public class Application {
                     javalinConfig.routing.contextPath = "";
                 })
                 .start(8080);
-
         app.exception(IllegalArgumentException.class, (e, ctx) -> ctx.status(400));
 
         app.get("/api/localidades", new GetLocalidadesHandler());
