@@ -16,8 +16,9 @@
         <img src="/views/imagenes/logo.png" alt="Logo" class="logo">
     </div>
     <nav>
-        <ul>
-            <li><a href="/colaboraciones">Mis colaboraciones</a></li>
+            <ul>
+                <li><a href="/carga-csv">Carga CSV</a></li>
+                <li><a href="/colaboraciones">Mis colaboraciones</a></li>
             {{#HacerseCargoDeUnaHeladera?}}
                 <li><a href="/heladeras/registrar">Registrar heladera</a></li>
             {{/HacerseCargoDeUnaHeladera?}}
@@ -42,7 +43,7 @@
 <div class="container">
     <h1 class="text-center my-4 reportes">Reportes</h1>
     <div class="d-flex justify-content-center mb-3">
-        <a href="/reportes" class="btn btn-outline-primary mx-2">Fallas por Heladera</a>
+        <a href="/reportes" class="btn btn-outline-primary mx-2 active">Fallas por Heladera</a>
         <a href="/reportes/reporteColocadas" class="btn btn-outline-primary mx-2">Viandas Colocadas</a>
         <a href="/reportes/reporteDistribuidas" class="btn btn-outline-primary mx-2">Viandas Distribuidas</a>
         <a href="/reportes/reporteRetiradas" class="btn btn-outline-primary mx-2">Viandas Retiradas</a>
