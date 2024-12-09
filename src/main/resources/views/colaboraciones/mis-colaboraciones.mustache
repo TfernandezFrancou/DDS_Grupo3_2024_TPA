@@ -19,6 +19,7 @@
         </div>
         <nav>
             <ul>
+                <li><a href="/carga-csv">Carga CSV</a></li>
                 <li><a href="/colaboraciones" class="menu-select">Mis colaboraciones</a></li>
                 {{#HacerseCargoDeUnaHeladera?}}
                     <li><a href="/heladeras/registrar">Registrar heladera</a></li>
@@ -41,9 +42,9 @@
     </header>
 
     <div class="container">
-        <section class="actions">
-            <a href="/carga-csv">Cargar CSV</a>
-        </section>
+<!--        <section class="actions">-->
+<!--            <a href="/carga-csv">Cargar CSV</a>-->
+<!--        </section>-->
 
         <div class="container row mt-4">
             {{#colaboraciones}}
@@ -128,6 +129,13 @@
                         </div>
                     </div>
                 {{/RegistrarPersonasEnSituacionVulnerable}}
+            {{/colaboraciones}}
+            {{^colaboraciones}}
+                <div class="col-md-12">
+                    <div class="alert alert-info" role="alert">
+                        No hay colaboraciones para mostrar
+                    </div>
+                </div>
             {{/colaboraciones}}
         </div>
     </div>
