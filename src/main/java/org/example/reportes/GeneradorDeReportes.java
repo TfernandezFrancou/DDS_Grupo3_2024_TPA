@@ -17,6 +17,7 @@ public class GeneradorDeReportes {
 
     private ReportesDeLaSemana reportesSemanaActual ;
     private final List<EstrategiaReporte> estrategiasGenerarReportes ;
+    private ScheduledExecutorService scheduler ;
 
     public GeneradorDeReportes() {
         this.estrategiasGenerarReportes = new ArrayList<>();
@@ -50,15 +51,17 @@ public class GeneradorDeReportes {
                 reportesSemanaActual.setReporteCantidadDeViandasRetiradasPorHeladera(items);
             }
         }
+
+        try {
+            scheduler.close(); // cierro el scheduler cuando no se use
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void generarReportesSemanalmente(){
-        try(ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1)){
-            // Programar para que se ejecute una vez por semana
-            scheduler.scheduleAtFixedRate(this::generarReportesDeLaSemana, 0, 7, TimeUnit.DAYS);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
+        scheduler = Executors.newScheduledThreadPool(1);
+        // Programar para que se ejecute una vez por semana
+        scheduler.scheduleAtFixedRate(this::generarReportesDeLaSemana, 0, 7, TimeUnit.DAYS);
     }
 }
