@@ -1,6 +1,7 @@
 package org.example;
 
 import io.javalin.Javalin;
+import io.javalin.http.staticfiles.Location;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import io.prometheus.client.exporter.HTTPServer;
 import org.eclipse.jetty.server.Server;
@@ -36,7 +37,7 @@ public class Application {
                             cors ->
                             cors.add(CorsPluginConfig::anyHost)); // para poder hacer requests de un dominio a otro
 
-                    javalinConfig.staticFiles.add("/"); // recursos estaticos (HTML, CSS, JS, IMG)
+                    javalinConfig.staticFiles.add("/public", Location.CLASSPATH); // recursos estaticos (HTML, CSS, JS, IMG)
                     javalinConfig.routing.contextPath = "";
 
                     javalinConfig.jetty.server(() -> {
@@ -128,8 +129,8 @@ public class Application {
             SessionManager.getInstancia().validarUsuario(ctx);
         });
 
-        EntityManager em = BDUtils.getEntityManager();
-        cargarScriptSql(em);
+        // EntityManager em = BDUtils.getEntityManager();
+        // cargarScriptSql(em);
     }
 
     private static void cargarScriptSql(EntityManager em){
