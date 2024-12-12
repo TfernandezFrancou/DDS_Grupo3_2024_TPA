@@ -1,6 +1,5 @@
 package org.example.personas.contacto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import lombok.Getter;
@@ -25,20 +24,20 @@ public class Telefono extends MedioDeContacto {
     @Transient
     private static final String PHONE_SENDER = Configuracion.obtenerProperties("twilio.phone-sender");
 
-    private String telefonoNumero;
+    private String telefono;
 
     @Transient
     private static final Logger log = LoggerFactory.getLogger(Telefono.class);
 
-    public Telefono(String telefonoNumero) {
-        this.telefonoNumero = telefonoNumero;
+    public Telefono(String telefono) {
+        this.telefono = telefono;
     }
 
     @Override
     public void notificar(Mensaje mensaje){
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Message message = Message.creator(
-             new com.twilio.type.PhoneNumber(telefonoNumero),
+             new com.twilio.type.PhoneNumber(telefono),
              new com.twilio.type.PhoneNumber(PHONE_SENDER),
              mensaje.getTitulo() + "\n" + mensaje.getContenido()
         ).create();
