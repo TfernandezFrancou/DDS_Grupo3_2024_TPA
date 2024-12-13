@@ -5,7 +5,7 @@ import org.example.personas.contacto.Mensaje;
 
 import java.util.List;
 import org.example.personas.Persona;
-;
+
 import org.example.utils.BDUtils;
 
 import javax.persistence.EntityManager;
