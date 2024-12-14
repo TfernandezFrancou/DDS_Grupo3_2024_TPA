@@ -7,9 +7,8 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Userinfo;
-import com.sendgrid.helpers.mail.objects.Email;
 import io.javalin.http.Context;
-import org.example.config.GoogleConfig;
+import org.example.config.Configuracion;
 import org.example.personas.PersonaHumana;
 import org.example.personas.contacto.CorreoElectronico;
 import org.example.repositorios.RepoUsuario;
@@ -27,8 +26,8 @@ public class GoogleAuthController {
             flow = new GoogleAuthorizationCodeFlow.Builder(
                     GoogleNetHttpTransport.newTrustedTransport(),
                     JacksonFactory.getDefaultInstance(),
-                    GoogleConfig.CLIENT_ID,
-                    GoogleConfig.CLIENT_SECRET,
+                    Configuracion.obtenerProperties("google.client-id"),
+                    Configuracion.obtenerProperties("google.client-secret"),
                     Collections.singleton("https://www.googleapis.com/auth/userinfo.profile")
             ).build();
         } catch (IOException | GeneralSecurityException e) {
@@ -38,7 +37,7 @@ public class GoogleAuthController {
 
     public static void login(Context ctx) {
         AuthorizationCodeRequestUrl authorizationUrl = flow.newAuthorizationUrl()
-                .setRedirectUri(GoogleConfig.REDIRECT_URI);
+                .setRedirectUri(Configuracion.obtenerProperties("google.redirect-uri"));
         ctx.redirect(authorizationUrl.build());
     }
 
@@ -50,7 +49,7 @@ public class GoogleAuthController {
         if (code != null) {
             try {
                 TokenResponse tokenResponse = flow.newTokenRequest(code)
-                        .setRedirectUri(GoogleConfig.REDIRECT_URI)
+                        .setRedirectUri(Configuracion.obtenerProperties("google.redirect-uri"))
                         .execute();
                 Oauth2 oauth2 = new Oauth2.Builder(
                         GoogleNetHttpTransport.newTrustedTransport(),
