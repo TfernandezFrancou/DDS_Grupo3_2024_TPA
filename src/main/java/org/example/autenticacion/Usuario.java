@@ -27,7 +27,17 @@ public class Usuario {
     @OneToOne
     private Documento documento;
 
+    @Getter
+    @Setter
     private String nombreDeUsuario;
+
+    @Getter
+    @Setter
+    private String Email;
+
+    @Getter
+    @Setter
+    private String foto;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private Persona colaborador;

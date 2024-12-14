@@ -7,6 +7,8 @@ import io.micrometer.core.instrument.Timer;
 import io.micrometer.prometheusmetrics.PrometheusConfig;
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
 import io.prometheus.metrics.exporter.httpserver.HTTPServer;
+import org.example.autenticacion.GoogleAuthController;
+import org.example.autenticacion.Usuario;
 import org.example.presentacion.*;
 import org.example.autenticacion.SessionManager;
 import org.example.utils.BDUtils;
@@ -33,10 +35,12 @@ public class Application {
 
                     javalinConfig.staticFiles.add("/public", Location.CLASSPATH); // recursos estaticos (HTML, CSS, JS, IMG)
                     javalinConfig.routing.contextPath = "";
-
-
                 })
                 .start(8080);
+
+
+        app.get("/usuarios/login", UsuarioController::loginWithGoogle);
+        app.get("/oauth2callback", UsuarioController::oauth2callback);
 
         PrometheusMeterRegistry registry = initializeMicrometer();
         // Middlewares para capturar métricas HTTP

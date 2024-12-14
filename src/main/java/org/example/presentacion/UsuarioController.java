@@ -1,6 +1,7 @@
 package org.example.presentacion;
 
 import io.javalin.http.Context;
+import org.example.autenticacion.GoogleAuthController;
 import org.example.autenticacion.RegistrarUsuario;
 import org.example.autenticacion.SessionManager;
 import org.example.autenticacion.Usuario;
@@ -36,6 +37,14 @@ public class UsuarioController  {
             model.put("error", e.getMessage());
             context.render("/views/usuarios/InicioSession.mustache",model);
         }
+    }
+
+    public static void loginWithGoogle(@NotNull Context context) {
+        GoogleAuthController.login(context);
+    }
+
+    public static void oauth2callback(@NotNull Context context) {
+        GoogleAuthController.oauth2callback(context);
     }
 
     public static void getCerrarSesion(@NotNull Context context){

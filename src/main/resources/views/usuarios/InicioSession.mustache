@@ -35,6 +35,12 @@
             <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
         </form>
 
+        <!-- Botón de inicio de sesión con Google -->
+        <div class="mt-3">
+            <a href="/usuarios/login" class="btn btn-danger w-100">
+                <i class="bi bi-google"></i> Iniciar sesión con Google
+            </a>
+        </div>
 
         <!-- Link para registro -->
         <div class="mt-3">
@@ -44,28 +50,26 @@
     </div>
 </div>
 
-
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-        const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#password');
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
 
-        togglePassword.addEventListener('click', function () {
-            // Cambia el tipo del input entre 'password' y 'text'
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
+    togglePassword.addEventListener('click', function () {
+        // Cambia el tipo del input entre 'password' y 'text'
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
 
-            // Alterna el ícono entre 'bi-eye-slash-fill' y 'bi-eye-fill'
-            if (this.classList.contains('bi-eye-slash-fill')) {
-                this.classList.remove('bi-eye-slash-fill');
-                this.classList.add('bi-eye-fill');
-            } else {
-                this.classList.remove('bi-eye-fill');
-                this.classList.add('bi-eye-slash-fill');
-            }
-        });
-    </script>
+        // Alterna el ícono entre 'bi-eye-slash-fill' y 'bi-eye-fill'
+        if (this.classList.contains('bi-eye-slash-fill')) {
+            this.classList.remove('bi-eye-slash-fill');
+            this.classList.add('bi-eye-fill');
+        } else {
+            this.classList.remove('bi-eye-fill');
+            this.classList.add('bi-eye-slash-fill');
+        }
+    });
+</script>
 
 </body>
 
