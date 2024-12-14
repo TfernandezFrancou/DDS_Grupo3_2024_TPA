@@ -37,10 +37,7 @@ public class Usuario {
 
     @Getter
     @Setter
-    private String Email;
-
-    @Getter
-    @Setter
+    @Column(columnDefinition = "TEXT")
     private String foto;
 
     @OneToOne(cascade = CascadeType.PERSIST)

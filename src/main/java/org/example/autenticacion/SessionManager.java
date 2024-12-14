@@ -129,6 +129,7 @@ public class SessionManager {
             atributos.put("HacerseCargoDeUnaHeladera?", "true");
             atributos.put("OfrecerProductos?", "true");
         }
+        atributos.put("foto-usuario", usuario.getFoto());
         return atributos;
     }
 }

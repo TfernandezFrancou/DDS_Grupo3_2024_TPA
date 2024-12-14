@@ -74,7 +74,6 @@ public class GoogleAuthController {
                     usuario.setGoogleId(googleUserinfo.getId());
                     usuario.setColaborador(persona);
                     usuario.setNombreDeUsuario(googleUserinfo.getName());
-                    usuario.setEmail(googleUserinfo.getEmail());
                     usuario.setFoto(googleUserinfo.getPicture());
                     usuario.setEstanDatosCompletos(false);
                     RepoUsuario.getInstancia().agregarUsuarios(usuario);
