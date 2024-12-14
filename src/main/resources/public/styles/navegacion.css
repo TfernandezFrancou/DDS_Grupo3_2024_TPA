@@ -27,6 +27,7 @@ header {
 .user-container {
     display: flex;
     align-items: center;
+    margin-right: 20px;
     height: 50px;
     width: 50px;
 }
