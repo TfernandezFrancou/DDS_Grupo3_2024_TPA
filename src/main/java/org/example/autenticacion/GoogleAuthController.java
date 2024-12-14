@@ -9,6 +9,7 @@ import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Userinfo;
 import io.javalin.http.Context;
 import org.example.config.GoogleConfig;
+import org.example.repositorios.RepoUsuario;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -56,9 +57,11 @@ public class GoogleAuthController {
                 usuario.setNombreDeUsuario(googleUserinfo.getName());
                 usuario.setEmail(googleUserinfo.getEmail());
                 usuario.setFoto(googleUserinfo.getPicture());
+                RepoUsuario.getInstancia().agregarUsuarios(usuario);
 
-                ctx.sessionAttribute("user", usuario);
-                ctx.redirect("/");
+                String token = SessionManager.getInstancia().iniciarSesionConGoogle(usuario);
+                ctx.cookie("token", token);
+                ctx.redirect("/heladeras");
             } catch (IOException | GeneralSecurityException e) {
                 e.printStackTrace();
                 ctx.redirect("/login");
