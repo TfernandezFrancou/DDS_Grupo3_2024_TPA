@@ -110,6 +110,24 @@ public class RepoUsuario {
     }
   }
 
+  public Usuario obtenerUsuarioPorGoogleId(String googleId) {
+    EntityManager em = BDUtils.getEntityManager();
+    try {
+      Usuario usuario = em.createQuery(
+                      "SELECT u FROM Usuario u WHERE u.googleId=:googleId", Usuario.class)
+              .setParameter("googleId", googleId)
+              .getSingleResult();
+      if(usuario == null){
+        throw new UserException("Usuario inexistente");
+      }
+      return usuario;
+    } catch (Exception exception){
+      throw new UserException("Usuario inexistente");
+    } finally {
+      em.close();
+    }
+  }
+
   public void clean(){
     EntityManager em = BDUtils.getEntityManager();
     try{

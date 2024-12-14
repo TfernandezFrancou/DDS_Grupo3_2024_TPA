@@ -24,6 +24,10 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idUsuario;
 
+    @Getter
+    @Setter
+    private String googleId;
+
     @OneToOne
     private Documento documento;
 

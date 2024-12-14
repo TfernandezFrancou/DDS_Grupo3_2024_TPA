@@ -41,6 +41,9 @@ public class GoogleAuthController {
 
     public static void oauth2callback(Context ctx) {
         String code = ctx.queryParam("code");
+
+        System.out.println("google code: " + code);
+
         if (code != null) {
             try {
                 TokenResponse tokenResponse = flow.newTokenRequest(code)
@@ -53,11 +56,20 @@ public class GoogleAuthController {
                 ).setApplicationName("SMAACVS").build();
                 Userinfo googleUserinfo = oauth2.userinfo().get().execute();
 
-                Usuario usuario = new Usuario();
-                usuario.setNombreDeUsuario(googleUserinfo.getName());
-                usuario.setEmail(googleUserinfo.getEmail());
-                usuario.setFoto(googleUserinfo.getPicture());
-                RepoUsuario.getInstancia().agregarUsuarios(usuario);
+                System.out.println("google id: " + googleUserinfo.getId());
+
+                Usuario usuario;
+                try {
+                    usuario = RepoUsuario.getInstancia().obtenerUsuarioPorGoogleId(googleUserinfo.getId());
+                } catch (Exception e) {
+                    usuario = new Usuario();
+                    usuario.setGoogleId(googleUserinfo.getId());
+                    usuario.setNombreDeUsuario(googleUserinfo.getName());
+                    usuario.setEmail(googleUserinfo.getEmail());
+                    usuario.setFoto(googleUserinfo.getPicture());
+                    usuario.setEstanDatosCompletos(false);
+                    RepoUsuario.getInstancia().agregarUsuarios(usuario);
+                }
 
                 String token = SessionManager.getInstancia().iniciarSesionConGoogle(usuario);
                 ctx.cookie("token", token);

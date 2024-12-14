@@ -40,7 +40,7 @@ public class Application {
 
 
         app.get("/usuarios/login", UsuarioController::loginWithGoogle);
-        app.get("/oauth2callback", UsuarioController::oauth2callback);
+        app.get("/callback", UsuarioController::oauth2callback);
 
         PrometheusMeterRegistry registry = initializeMicrometer();
         // Middlewares para capturar métricas HTTP
@@ -130,7 +130,7 @@ public class Application {
             });
         });
 
-        List<String> rutasSinSesion = List.of("/usuarios", "/api/localidades", "/views/imagenes", "/styles", "/views/js", "/metrics");
+        List<String> rutasSinSesion = List.of("/usuarios", "/api/localidades", "/views/imagenes", "/styles", "/views/js", "/metrics", "/callback");
         app.before(ctx -> {
             for (String ruta: rutasSinSesion){
                 if (ctx.path().startsWith(ruta)) return;
