@@ -7,8 +7,11 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Userinfo;
+import com.sendgrid.helpers.mail.objects.Email;
 import io.javalin.http.Context;
 import org.example.config.GoogleConfig;
+import org.example.personas.PersonaHumana;
+import org.example.personas.contacto.CorreoElectronico;
 import org.example.repositorios.RepoUsuario;
 
 import java.io.IOException;
@@ -62,8 +65,15 @@ public class GoogleAuthController {
                 try {
                     usuario = RepoUsuario.getInstancia().obtenerUsuarioPorGoogleId(googleUserinfo.getId());
                 } catch (Exception e) {
+                    PersonaHumana persona = new PersonaHumana();
+                    persona.setNombre(googleUserinfo.getGivenName());
+                    persona.setApellido(googleUserinfo.getFamilyName());
+                    if (googleUserinfo.getEmail() != null) {
+                        persona.addMedioDeContacto(new CorreoElectronico(googleUserinfo.getEmail()));
+                    }
                     usuario = new Usuario();
                     usuario.setGoogleId(googleUserinfo.getId());
+                    usuario.setColaborador(persona);
                     usuario.setNombreDeUsuario(googleUserinfo.getName());
                     usuario.setEmail(googleUserinfo.getEmail());
                     usuario.setFoto(googleUserinfo.getPicture());
