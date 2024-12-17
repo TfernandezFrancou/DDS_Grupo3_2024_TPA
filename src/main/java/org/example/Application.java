@@ -38,6 +38,7 @@ public class Application {
                 })
                 .start(8080);
 
+        app.get("", (context) -> context.redirect("/heladeras"));
 
         app.get("/usuarios/login", UsuarioController::loginWithGoogle);
         app.get("/callback", UsuarioController::oauth2callback);
