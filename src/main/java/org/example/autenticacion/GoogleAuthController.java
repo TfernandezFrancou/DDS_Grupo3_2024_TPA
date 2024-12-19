@@ -15,11 +15,18 @@ import org.example.repositorios.RepoUsuario;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class GoogleAuthController {
 
     private static GoogleAuthorizationCodeFlow flow;
+
+    private static List<String> scopes = Arrays.asList(
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile"
+    );
 
     static {
         try {
@@ -28,7 +35,7 @@ public class GoogleAuthController {
                     JacksonFactory.getDefaultInstance(),
                     Configuracion.obtenerProperties("google.client-id"),
                     Configuracion.obtenerProperties("google.client-secret"),
-                    Collections.singleton("https://www.googleapis.com/auth/userinfo.profile")
+                    scopes
             ).build();
         } catch (IOException | GeneralSecurityException e) {
             e.printStackTrace();
